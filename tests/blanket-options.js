@@ -1,6 +1,6 @@
 /* globals blanket, module */
 
-var options = {
+const options = {
   modulePrefix: 'ember-railio-form-components',
   filter: '//.*ember-railio-form-components/.*/',
   antifilter: '//.*(tests|template).*/',
