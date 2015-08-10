@@ -1,0 +1,15 @@
+{{date-picker value=datetime
+              disabled=disabled}}
+{{time-field  value=datetime
+              disabled=disabled}}
+
+<div class="date-time-field-clock"
+     title="Set this date to the current date"
+     {{action "setDatetimeToCurrent"}}>
+     {{fa-icon "clock-o" title="Click this clock to enter the current date and time."}}
+</div>
+<div class="date-time-field-reset"
+     title="Clear this date and time"
+     {{action "clearDateTime"}}>
+  {{fa-icon "times" title="Click this button to clear date and time."}}
+</div>
