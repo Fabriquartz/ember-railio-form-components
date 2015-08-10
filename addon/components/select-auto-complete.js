@@ -53,10 +53,11 @@ export default Ember.Component.extend({
 
   actions: {
     onSelect: function(item) {
-      return this.sendAction('onSelect', item);
+      this.sendAction('onSelect', item);
     },
     onQueryChange: function(query) {
-      return this.set('searchQuery', query);
+      this.set('searchQuery', query);
+      this.sendAction('onQueryChange', query);
     }
   }
 });
