@@ -6,7 +6,7 @@ import {
   proxyIndexOf as indexOf
 } from 'ember-proxy-util';
 
-const { Binding, computed, observer } = Ember;
+const { Binding, computed, observer, run } = Ember;
 
 const get = Ember.get;
 
@@ -90,7 +90,9 @@ export default Ember.Component.extend(PropertyPathMixin, {
 
     hideList() {
       this.set('_searchTerm', null);
-      this.$('.auto-complete__option-list').slideUp();
+      run.once(() => {
+        this.$('.auto-complete__option-list').slideUp();
+      });
     },
 
     selectItem(item) {

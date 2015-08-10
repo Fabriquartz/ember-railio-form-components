@@ -38,7 +38,9 @@ test('auto-complete its option list is shown when input is focused', function(as
 
   assert.equal($list.css('display'), 'block');
 
-  $input.trigger($.Event('focusout'));
+  run(() => {
+    $input.trigger($.Event('focusout'));
+  });
 
   assert.equal($list.css('display'), 'none');
   jQuery.fx.off = false;
@@ -174,6 +176,7 @@ test('typing resets the selection', function(assert) {
 });
 
 test('enter selects the first entry and closes the list', function(assert) {
+  const done = assert.async();
   const willBeSelected = Ember.Object.create({ foo: 'a' });
 
   this.set('content', [
@@ -203,8 +206,11 @@ test('enter selects the first entry and closes the list', function(assert) {
 
   assert.equal(this.get('selection'), willBeSelected);
 
-  const $list = this.$('.auto-complete__option-list');
-  assert.equal($list.css('display'), 'none');
+  run.later(() => {
+    const $list = this.$('.auto-complete__option-list');
+    assert.equal($list.css('display'), 'none');
+    done();
+  }, 500);
 });
 
 test('escape deletes the searchquery and closes the list', function(assert) {
