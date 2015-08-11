@@ -131,6 +131,11 @@ export default Ember.Component.extend(PropertyPathMixin, {
         this.send('selectItem', this.get('content')[0]);
       }
       this.send('hideList');
+    },
+
+    emptySelection() {
+      this.send('selectItem', null);
+      this.send('hideList');
     }
   }
 });

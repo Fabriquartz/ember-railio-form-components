@@ -1,42 +1,49 @@
-{{input classNames="auto-complete__input"
-        classNameBindings="valuesDiffer:different-value"
-        value=value
-        insert-newline="acceptSelection"
-        escape-press="hideList"
-        focus-in="showList"
-        focus-out="hideList"
-        placeholder=prompt
-        disabled=disabled}}
+<div class="auto-complete__input-wrapper">
+  {{input classNames="auto-complete__input"
+          classNameBindings="valuesDiffer:different-value"
+          value=value
+          insert-newline="acceptSelection"
+          escape-press="hideList"
+          focus-in="showList"
+          focus-out="hideList"
+          placeholder=prompt
+          disabled=disabled}}
 
-<ul class="auto-complete__option-list">
-  {{#if content}}
-    {{#if groupLabelPath}}
-      {{#each groupedContent key="@index" as |group|}}
-        <li>
-          <ul class="auto-complete__group-list">
-            <li class="auto-complete__group-list__label">{{group.label}}</li>
-            {{#each group.content key="@index" as |item|}}
-              <li {{ action 'selectItem' item }}
-                  class="auto-complete__option
-                         {{if (is-equal selection item) 'auto-complete__option--selected'}}">
-                {{label-for item optionLabelPath}}
-              </li>
-            {{/each}}
-          </ul>
-        </li>
-      {{/each}}
+  <ul class="auto-complete__option-list">
+    {{#if content}}
+      {{#if groupLabelPath}}
+        {{#each groupedContent key="@index" as |group|}}
+          <li>
+            <ul class="auto-complete__group-list">
+              <li class="auto-complete__group-list__label">{{group.label}}</li>
+              {{#each group.content key="@index" as |item|}}
+                <li {{ action 'selectItem' item }}
+                    class="auto-complete__option
+                           {{if (is-equal selection item) 'auto-complete__option--selected'}}">
+                  {{label-for item optionLabelPath}}
+                </li>
+              {{/each}}
+            </ul>
+          </li>
+        {{/each}}
+      {{else}}
+        {{#each content key="@index" as |item|}}
+          <li {{action 'selectItem' item }}
+              class="auto-complete__option
+                     {{if (is-equal selection item) 'auto-complete__option--selected'}}">
+            {{label-for item optionLabelPath}}
+          </li>
+        {{/each}}
+      {{/if}}
     {{else}}
-      {{#each content key="@index" as |item|}}
-        <li {{action 'selectItem' item }}
-            class="auto-complete__option
-                   {{if (is-equal selection item) 'auto-complete__option--selected'}}">
-          {{label-for item optionLabelPath}}
-        </li>
-      {{/each}}
+      <li class="auto-complete-no-options">
+        No options available...
+      </li>
     {{/if}}
-  {{else}}
-    <li class="auto-complete-no-options">
-      No options available...
-    </li>
-  {{/if}}
-</ul>
+  </ul>
+</div>
+
+<div class="auto-complete__empty-button" title="Empty selection"
+  {{action 'emptySelection'}}>
+  {{fa-icon "times"}}
+</div>
