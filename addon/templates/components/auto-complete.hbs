@@ -19,7 +19,8 @@
               {{#each group.content key="@index" as |item|}}
                 <li {{ action 'selectItem' item }}
                     class="auto-complete__option
-                           {{if (is-equal selection item) 'auto-complete__option--selected'}}">
+                           {{if (is-equal selection item) 'auto-complete__option--selected'}}
+                           {{if (is-equal highlighted item) 'auto-complete__option--highlighted'}}">
                   {{label-for item optionLabelPath}}
                 </li>
               {{/each}}
@@ -30,7 +31,8 @@
         {{#each content key="@index" as |item|}}
           <li {{action 'selectItem' item }}
               class="auto-complete__option
-                     {{if (is-equal selection item) 'auto-complete__option--selected'}}">
+                     {{if (is-equal selection item) 'auto-complete__option--selected'}}
+                     {{if (is-equal highlighted item) 'auto-complete__option--highlighted'}}">
             {{label-for item optionLabelPath}}
           </li>
         {{/each}}

@@ -76,6 +76,25 @@ test('auto-complete items have label set to items optionLabelPath', function(ass
   assert.equal($items[2].innerText.trim(), 'c');
 });
 
+test('auto-complete highlighted item', function(assert) {
+  const highlighted = Ember.Object.create({ foo: 'b' });
+
+  this.set('content', [
+    Ember.Object.create({ foo: 'a' }),
+    highlighted,
+    Ember.Object.create({ foo: 'c' })
+  ]);
+  this.set('highlighted', highlighted);
+
+  this.render(hbs`{{auto-complete content=content
+                                  optionLabelPath="foo"
+                                  highlighted=highlighted}}`);
+
+  const $selected = this.$('.auto-complete__option--highlighted');
+  assert.equal($selected.length, 1);
+  assert.equal($selected[0].innerText.trim(), 'b');
+});
+
 test('auto-complete selected item', function(assert) {
   const selected = Ember.Object.create({ foo: 'b' });
 
@@ -158,7 +177,7 @@ test('typed in query overrides selected value', function(assert) {
   assert.equal($input.val(), 'foo');
 });
 
-test('typing selects the first entry', function(assert) {
+test('typing highlights the first entry', function(assert) {
   const willBeSelected = Ember.Object.create({ foo: 'cat' });
 
   this.set('content', [
@@ -167,7 +186,7 @@ test('typing selects the first entry', function(assert) {
   ]);
 
   this.render(hbs`{{auto-complete content=content
-                                  selection=selection
+                                  highlighted=highlighted
                                   optionLabelPath="foo"}}`);
 
   const $input = this.$('input');
@@ -178,7 +197,7 @@ test('typing selects the first entry', function(assert) {
 
   run.next(() => {
     assert.equal($input.val(), 'a');
-    assert.equal(this.get('selection'), willBeSelected);
+    assert.equal(this.get('highlighted'), willBeSelected);
   });
 });
 
@@ -264,7 +283,7 @@ test('remove button clears the selection and searchQuery', function(assert) {
   });
 });
 
-test('arrow down selects the next option', function(assert) {
+test('arrow down highlights the next option', function(assert) {
   const nowSelected = Ember.Object.create({ foo: 'a' });
   const willBeSelected = Ember.Object.create({ foo: 'b' });
 
@@ -277,6 +296,7 @@ test('arrow down selects the next option', function(assert) {
 
   this.render(hbs`{{auto-complete content=content
                                   selection=selection
+                                  highlighted=highlighted
                                   optionLabelPath="foo"}}`);
 
   const $input = this.$('input');
@@ -290,10 +310,11 @@ test('arrow down selects the next option', function(assert) {
     $input.trigger(event);
   });
 
-  assert.equal($input.val(), 'b');
+  assert.equal($input.val(), 'a');
+  assert.equal(this.get('highlighted'), willBeSelected);
 });
 
-test('arrow up selects the next option', function(assert) {
+test('arrow up highlights the previous option', function(assert) {
   const willBeSelected = Ember.Object.create({ foo: 'a' });
   const nowSelected = Ember.Object.create({ foo: 'b' });
 
@@ -306,6 +327,7 @@ test('arrow up selects the next option', function(assert) {
 
   this.render(hbs`{{auto-complete content=content
                                   selection=selection
+                                  highlighted=highlighted
                                   optionLabelPath="foo"}}`);
 
   const $input = this.$('input');
@@ -319,10 +341,10 @@ test('arrow up selects the next option', function(assert) {
     $input.trigger(event);
   });
 
-  assert.equal($input.val(), 'a');
+  assert.equal(this.get('highlighted'), willBeSelected);
 });
 
-test('arrow up selects the first option when none selected', function(assert) {
+test('arrow up highlights the first option when none selected', function(assert) {
   const willBeSelected = Ember.Object.create({ foo: 'a' });
 
   this.set('content', [
@@ -333,6 +355,7 @@ test('arrow up selects the first option when none selected', function(assert) {
 
   this.render(hbs`{{auto-complete content=content
                                   selection=selection
+                                  highlighted=highlighted
                                   optionLabelPath="foo"}}`);
 
   const $input = this.$('input');
@@ -346,7 +369,7 @@ test('arrow up selects the first option when none selected', function(assert) {
     $input.trigger(event);
   });
 
-  assert.equal($input.val(), 'a');
+  assert.equal(this.get('highlighted'), willBeSelected);
 });
 
 test('click selects an item', function(assert) {
