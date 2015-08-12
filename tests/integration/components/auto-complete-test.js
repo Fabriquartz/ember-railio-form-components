@@ -240,6 +240,30 @@ test('escape deletes the searchquery and closes the list', function(assert) {
   assert.equal($input.val(), '');
 });
 
+test('remove button clears the selection and searchQuery', function(assert) {
+  const selected = Ember.Object.create({ foo: 'a' });
+
+  this.set('content', [selected]);
+  this.set('selection', selected);
+  this.render(hbs`{{auto-complete content=content
+                                  selection=selection
+                                  optionLabelPath="foo"}}`);
+
+  const $input = this.$('input');
+  const $emptyButton = this.$('.auto-complete__empty-button');
+
+  run(() => {
+    $input.val('a');
+    $input.trigger('input');
+    $emptyButton.trigger('click');
+  });
+
+  run.next(() => {
+    assert.equal($input.val(), '');
+    assert.equal(this.get('selection'), null);
+  });
+});
+
 test('arrow down selects the next option', function(assert) {
   const nowSelected = Ember.Object.create({ foo: 'a' });
   const willBeSelected = Ember.Object.create({ foo: 'b' });
