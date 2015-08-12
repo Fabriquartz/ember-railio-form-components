@@ -150,29 +150,36 @@ test('typed in query overrides selected value', function(assert) {
 
   const $input = this.$('input');
   run(() => {
-    this.$('input').val('foo');
-    this.$('input').trigger('input'); // syncs the value;
+    $input.val('foo');
+    $input.trigger('input'); // syncs the value;
     this.set('selection', selected);
   });
 
   assert.equal($input.val(), 'foo');
 });
 
-test('typing resets the selection', function(assert) {
-  const selected = Ember.Object.create({ foo: 'x' });
-  this.set('content', [selected]);
-  this.set('selection', selected);
+test('typing selects the first entry', function(assert) {
+  const willBeSelected = Ember.Object.create({ foo: 'cat' });
+
+  this.set('content', [
+    willBeSelected,
+    Ember.Object.create({ foo: 'dog' })
+  ]);
 
   this.render(hbs`{{auto-complete content=content
-                                  optionLabelPath="foo"
-                                  selection=selection}}`);
+                                  selection=selection
+                                  optionLabelPath="foo"}}`);
 
+  const $input = this.$('input');
   run(() => {
-    this.$('input').val('foo');
-    this.$('input').trigger('input'); // syncs the value;
+    $input.val('a');
+    $input.trigger('input');
   });
 
-  assert.equal(this.get('selection'), null);
+  run.next(() => {
+    assert.equal($input.val(), 'a');
+    assert.equal(this.get('selection'), willBeSelected);
+  });
 });
 
 test('enter selects the first entry and closes the list', function(assert) {

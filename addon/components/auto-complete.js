@@ -45,9 +45,18 @@ export default Ember.Component.extend(PropertyPathMixin, {
 
     set(key, value) {
       this.sendAction('onQueryChange', value);
-
       this.set('_searchTerm', value);
-      this.set('selection', null);
+
+      if (value != null && value !== '') {
+        run.next(() => {
+          const content = this.get('content');
+          if (Ember.isArray(content)) {
+            this.send('selectItem', content[0]);
+          }
+        });
+      } else {
+        this.set('selection', null);
+      }
 
       return this.get('value');
     }
@@ -90,6 +99,7 @@ export default Ember.Component.extend(PropertyPathMixin, {
 
     hideList() {
       this.set('_searchTerm', null);
+      this.sendAction('onQueryChange', null);
       run.once(() => {
         this.$('.auto-complete__option-list').slideUp();
       });
