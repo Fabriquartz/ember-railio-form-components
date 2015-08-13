@@ -64,7 +64,7 @@ export default Ember.Component.extend(PropertyPathMixin, {
     }
   }),
 
-  groupedContent: computed('content.@each', function() {
+  groupedContent: computed('content.[]', function() {
     const groups = Ember.A();
     this.get('content').forEach((item) => {
       const groupPath = this.get('groupLabelPath');

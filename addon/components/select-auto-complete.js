@@ -8,7 +8,7 @@ export default Ember.Component.extend({
 
   layout: layout,
 
-  filteredContent: computed('content.@each', 'searchQuery', function() {
+  filteredContent: computed('content.[]', 'searchQuery', function() {
     const content         = this.get('content');
     const filteredContent = Ember.A();
     const labelPath       = this.get('optionLabelPath');
