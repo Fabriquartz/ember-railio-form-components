@@ -1,6 +1,6 @@
 {
   "name": "ember-railio-form-components",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Addon for all shared railio components.",
   "directories": {
     "doc": "doc",
