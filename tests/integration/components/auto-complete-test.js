@@ -34,7 +34,9 @@ test('auto-complete its option list is shown when input is focused', function(as
   // Disables sliding (and other jq fx), makes testing easier...
   jQuery.fx.off = true;
 
-  $input.trigger($.Event('focusin'));
+  run(() => {
+    $input.trigger($.Event('focusin'));
+  });
 
   assert.equal($list.css('display'), 'block');
 
@@ -373,9 +375,10 @@ test('arrow up highlights the first option when none selected', function(assert)
 });
 
 test('click selects an item', function(assert) {
+  const expectedSelected = Ember.Object.create({ foo: 'b' });
   this.set('content', [
     Ember.Object.create({ foo: 'a' }),
-    Ember.Object.create({ foo: 'b' }),
+    expectedSelected,
     Ember.Object.create({ foo: 'c' })
   ]);
 
@@ -383,8 +386,8 @@ test('click selects an item', function(assert) {
                                   selection=selection
                                   optionLabelPath="foo"}}`);
 
-  const $input = this.$('input');
-  const $firstItem = this.$('.auto-complete__option').first();
+  const $input     = this.$('input');
+  const $firstItem = this.$('.auto-complete__option:eq(1)');
   assert.equal($input.val(), '');
 
   run(() => {
@@ -392,7 +395,8 @@ test('click selects an item', function(assert) {
     $firstItem.click();
   });
 
-  assert.equal($input.val(), 'a');
+  assert.equal($input.val(), 'b');
+  assert.equal(this.get('selection'), expectedSelected);
 });
 
 test('selecting an item sends an optional action', function(assert) {
