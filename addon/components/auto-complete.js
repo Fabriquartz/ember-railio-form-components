@@ -22,6 +22,12 @@ export default Ember.Component.extend(PropertyPathMixin, {
     this._super.apply(this, arguments);
   },
 
+  didInsertElement() {
+    this.$('.auto-complete__option-list').on('mousedown', (e) => {
+      e.preventDefault();
+    });
+  },
+
   _setupValue: observer('optionLabelPath', function() {
     let labelPathBinding = this.get('labelPathBinding');
     const labelPath = this.get('optionLabelPath');
@@ -104,6 +110,11 @@ export default Ember.Component.extend(PropertyPathMixin, {
     }
   },
 
+  click(e) {
+    e.preventDefault();
+    console.log('clicked');
+  },
+
   actions: {
     showList() {
       this.$('.auto-complete__option-list').slideDown();
@@ -113,13 +124,12 @@ export default Ember.Component.extend(PropertyPathMixin, {
       this.set('_searchTerm', null);
       this.send('highlightItem', null);
       this.sendAction('onQueryChange', null);
-      run.once(() => {
-        this.$('.auto-complete__option-list').slideUp();
-      });
+      this.$('.auto-complete__option-list').slideUp();
     },
 
     selectItem(item) {
-      this.set('highlighted', null);
+      this.send('hideList');
+      this.send('highlightItem', null);
       this.set('selection', item);
       this.sendAction('onSelect', item);
     },
