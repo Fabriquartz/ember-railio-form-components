@@ -1,7 +1,25 @@
 import Ember from 'ember';
 import PropertyPathMixin from 'ember-railio-form-components/mixins/property-path-mixin';
 
-export default Ember.TextField.extend(PropertyPathMixin, {
+function handleChanged() {
+  this.send('changed', this.readDOMAttr('value'));
+}
+
+export default Ember.Component.extend(PropertyPathMixin, {
+  tagName: 'input',
+  attributeBindings: [
+    'value'
+  ],
+
   propertyTarget: 'value',
-  attributeBindings: ['value:title']
+
+  input:    handleChanged,
+  change:   handleChanged,
+  focusOut: handleChanged,
+
+  actions: {
+    changed(value) {
+      this.set('value', value);
+    }
+  }
 });

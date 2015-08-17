@@ -112,7 +112,6 @@ export default Ember.Component.extend(PropertyPathMixin, {
 
   click(e) {
     e.preventDefault();
-    console.log('clicked');
   },
 
   actions: {

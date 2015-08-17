@@ -1,66 +1,78 @@
 import Ember from 'ember';
-import LazyInput from 'ember-railio-form-components/components/lazy-input';
+import LazyTextField from 'ember-railio-form-components/components/lazy-text-field';
 import { toNumber, formatNumber } from 'ember-railio-formatting';
 
 const { computed } = Ember;
 
-const set = Ember.set;
+function sliceDecimals(value, decimals) {
+  return Math.floor(value * Math.pow(10, decimals)) / Math.pow(10, decimals);
+}
 
-export default LazyInput.extend({
+export default LazyTextField.extend({
   classNames: ['number-field'],
 
-  attributeBindings: [
-    'formattedValue:value',
-    'formattedValue:title'
-  ],
+  maxDecimals: null,
 
-  maxDecimals: 2,
+  minValue: -Infinity,
+  maxValue:  Infinity,
 
-  formattedValue: computed('value', {
+  propertyTarget: 'numberValue',
+
+  value: computed('numberValue', {
     get() {
-      const value = this.get('value');
+      const value = this.get('numberValue');
       return this._formatValue(value);
     },
 
     set(key, value) {
       let numberValue = value;
 
-      try { numberValue = toNumber(value); } catch (_) {}
+      try {
+        numberValue = toNumber(value);
+
+        const maxDecimals = this.get('maxDecimals');
+        if (maxDecimals != null) {
+          numberValue = sliceDecimals(numberValue, this.get('maxDecimals'));
+        };
+
+        let minValue = this.get('minValue');
+        let maxValue = this.get('maxValue');
+
+        if (numberValue < minValue) { numberValue = minValue; }
+        if (numberValue > maxValue) { numberValue = maxValue; }
+      } catch (_) {}
 
       if (isNaN(numberValue)) {
         numberValue = null;
       }
 
-      this.set('value', numberValue);
+      this.set('numberValue', numberValue);
 
-      return value;
+      return this._formatValue(numberValue);
     }
   }),
 
   keyDown(e) {
-    const value = this.get('value');
+    const value = this.get('numberValue');
 
-    if (e.keyCode === 38) {
-      this.set('value', value + 1);
+    if ([38, 40].indexOf(e.keyCode) !== -1) {
+      this.withLazyDisabled(() => {
+        if (e.keyCode === 38) {
+          this.set('numberValue', value + 1);
+        }
+
+        if (e.keyCode === 40) {
+          this.set('numberValue', value - 1);
+        }
+      });
     }
 
-    if (e.keyCode === 40) {
-      this.set('value', value - 1);
-    }
-
-    if (e.keyCode === 38 || e.keyCode === 40) {
-      this.update();
-    }
+    this._super(...arguments);
   },
 
   _formatValue(value) {
     return formatNumber(value, {
       decimals: this.get('maxDecimals')
     });
-  },
-
-  // Overrides Ember.TextSupport#_elementValueDidChange
-  _elementValueDidChange() {
-    set(this, 'formattedValue', this.readDOMAttr('value'));
   }
 });
