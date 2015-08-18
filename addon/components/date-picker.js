@@ -2,7 +2,6 @@ import Ember from 'ember';
 import LazyTextField from '../components/lazy-text-field';
 
 const { computed } = Ember;
-const set = Ember.set;
 
 const A_DAY = 1000 * 60 * 60 * 24;
 
@@ -81,7 +80,7 @@ export default LazyTextField.extend({
   keyDown(e) {
     const value = this.get('date');
 
-    if (e.keyCode === 38 || e.keyCode === 40) {
+    if ([38, 40].indexOf(e.keyCode) !== -1) {
       this.withLazyDisabled(() => {
         if (e.keyCode === 38) {
           if (e.shiftKey) {
@@ -100,6 +99,8 @@ export default LazyTextField.extend({
         }
       });
     }
+
+    this._super(...arguments);
   },
 
   _formatDate(date) {
@@ -108,10 +109,5 @@ export default LazyTextField.extend({
     const years  = date.getFullYear().toString().slice(-2);
 
     return `${days}-${months}-${years}`;
-  },
-
-  // Overrides Ember.TextSupport#_elementValueDidChange
-  _elementValueDidChange() {
-    set(this, 'formattedValue', this.readDOMAttr('value'));
   }
 });

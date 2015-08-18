@@ -15,6 +15,20 @@ test('displays initial value', function(assert) {
   assert.equal(this.$('input').val(), 'puddy kat');
 });
 
+test('focus in does not lose value', function(assert) {
+  this.set('value', 'test');
+  this.render(hbs`{{lazy-text-field value=value}}`);
+
+  const $input = this.$('input');
+
+  run(() => {
+    $input.trigger('focusin');
+  });
+
+  assert.equal($input.val(), 'test');
+  assert.equal(this.get('value'), 'test');
+});
+
 test('typing with focus does not update value', function(assert) {
   this.set('value', '');
   this.render(hbs`{{lazy-text-field value=value}}`);
@@ -64,8 +78,6 @@ test('when having focus, updates to value are ignored', function(assert) {
 test('when not having focus update to value are propagated', function(assert) {
   this.set('value', '');
   this.render(hbs`{{lazy-text-field value=value}}`);
-
-  const $input = this.$('input');
 
   run(() => {
     this.set('value', 'x');

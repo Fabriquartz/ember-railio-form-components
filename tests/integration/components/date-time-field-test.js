@@ -1,7 +1,8 @@
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 
-moduleForComponent('date-time-field', {
+moduleForComponent('date-time-field', 'Integration | Component | {{date-time-field}}', {
+
   integration: true
 });
 

@@ -4,7 +4,7 @@ import { moduleForComponent, test } from 'ember-qunit';
 
 const { run } = Ember;
 
-moduleForComponent('date-picker', 'Integration | Components | {{date-picker}}', {
+moduleForComponent('date-picker', 'Integration | Component | {{date-picker}}', {
   integration: true
 });
 

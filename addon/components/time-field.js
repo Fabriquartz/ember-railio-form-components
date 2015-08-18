@@ -1,38 +1,30 @@
 import Ember from 'ember';
-import LazyInput from '../components/lazy-input';
+import LazyTextField from '../components/lazy-text-field';
 
 const { computed } = Ember;
-
-const set = Ember.set;
 
 const A_MINUTE = 1000 * 60;
 const AN_HOUR  = A_MINUTE * 60;
 
-export default LazyInput.extend({
+export default LazyTextField.extend({
   classNames:        ['time-field'],
   classNameBindings: ['isValid::invalid'],
 
-  attributeBindings: [
-    'formattedValue:value',
-    'formattedValue:title'
-  ],
+  propertyTarget: 'datetime',
 
-  formattedValue: computed('value', {
+  value: computed('datetime', {
     get() {
-      const value = this.get('value');
+      const value = this.get('datetime');
 
       if (!(value && value.getHours && value.getMinutes)) {
         return null;
       }
 
-      const hours   = value.getHours();
-      const minutes = `0${value.getMinutes()}`.slice(-2);
-
-      return `${hours}:${minutes}`;
+      return this._formatTime(value);
     },
 
     set(key, value) {
-      let date = this.get('value');
+      let date = this.get('datetime');
 
       if (date == null && (value == null || value === '')) {
         return '';
@@ -69,32 +61,36 @@ export default LazyInput.extend({
         date.setMinutes(minutes);
       }
 
-      this.set('value', date);
+      this.set('datetime', date);
 
-      return value;
+      return this._formatTime(date);
     }
   }),
 
+  _formatTime(value) {
+    const hours   = value.getHours();
+    const minutes = `0${value.getMinutes()}`.slice(-2);
+
+    return `${hours}:${minutes}`;
+  },
+
   keyDown(e) {
-    const value = this.get('value');
+    const value = this.get('datetime');
 
     const shift = e.shiftKey ? A_MINUTE : AN_HOUR;
 
-    if (e.keyCode === 38) {
-      this.set('value', new Date(+value + shift));
+    if ([38, 40].indexOf(e.keyCode) !== -1) {
+      this.withLazyDisabled(() => {
+        if (e.keyCode === 38) {
+          this.set('datetime', new Date(+value + shift));
+        }
+
+        if (e.keyCode === 40) {
+          this.set('datetime', new Date(+value - shift));
+        }
+      });
     }
 
-    if (e.keyCode === 40) {
-      this.set('value', new Date(+value - shift));
-    }
-
-    if (e.keyCode === 38 || e.keyCode === 40) {
-      this.update();
-    }
-  },
-
-  // Overrides Ember.TextSupport#_elementValueDidChange
-  _elementValueDidChange() {
-    set(this, 'formattedValue', this.readDOMAttr('value'));
+    this._super(...arguments);
   }
 });
