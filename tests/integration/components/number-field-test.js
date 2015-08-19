@@ -126,6 +126,29 @@ test('value is set to maxValue when value is more than maxValue', function(asser
   assert.equal(this.get('object.number'), 1);
 });
 
+test('gets class \'invalid\' when value is invalid', function(assert) {
+  assert.expect(2);
+  this.set('object', Ember.Object.create());
+  this.on('handleError', function(message) {
+    assert.notEqual(message.indexOf('maximum'), -1, 'gets right error message');
+    assert.ok(true, 'calls errorMessage function');
+  });
+  this.render(hbs`
+    {{number-field object=object
+                   propertyPath="number"
+                   maxValue=1
+                   errorMessage=(action "handleError")}}`);
+
+  const $input = this.$('input');
+
+  run(() => {
+    $input.trigger('focusin');
+    $input.val('2');
+    $input.trigger('input');
+    $input.trigger('focusout');
+  });
+});
+
 test('call errorMessage function when over maxValue', function(assert) {
   assert.expect(2);
   this.set('object', Ember.Object.create());

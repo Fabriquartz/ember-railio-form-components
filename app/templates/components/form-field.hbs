@@ -1,0 +1,9 @@
+{{#if labelText}}
+  <label>{{labelText}}</label>
+{{/if}}
+
+{{#if template}}
+  {{yield (get object propertyPath)}}
+{{else}}
+  {{component type value=(get object propertyPath)}}
+{{/if}}
