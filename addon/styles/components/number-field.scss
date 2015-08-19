@@ -1,0 +1,11 @@
+@keyframes flashInvalid {
+  50%  { border: 1px solid #DC0000; box-shadow: 0 0 2px red; }
+}
+
+.text-field {
+
+  &.flash-invalid, &.flash-invalid:focus {
+    outline: none;
+    animation: flashInvalid 1s linear infinite;
+  }
+}

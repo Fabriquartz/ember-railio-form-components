@@ -40,7 +40,4 @@ export default TextField.extend({
       }
     }
   }
-
-  // classNameBindings: ['isValid::invalid'],
-  // isValid: true,
 });

@@ -20,11 +20,13 @@ export default LazyTextField.extend({
 
   value: computed('numberValue', {
     get() {
+      this.send('errorMessageClear');
       const value = this.get('numberValue');
       return this._formatValue(value);
     },
 
     set(key, value) {
+      this.send('errorMessageClear');
       let numberValue = value;
 
       try {
@@ -38,8 +40,14 @@ export default LazyTextField.extend({
         let minValue = this.get('minValue');
         let maxValue = this.get('maxValue');
 
-        if (numberValue < minValue) { numberValue = minValue; }
-        if (numberValue > maxValue) { numberValue = maxValue; }
+        if (numberValue < minValue) {
+          this.send('errorMessage', `Value '${numberValue}' is invalid; minimum value is ${minValue}`);
+          numberValue = minValue;
+        }
+        if (numberValue > maxValue) {
+          this.send('errorMessage', `Value '${numberValue}' is invalid; maximum value is ${maxValue}`, 3000);
+          numberValue = maxValue;
+        }
       } catch (_) {}
 
       if (isNaN(numberValue)) {

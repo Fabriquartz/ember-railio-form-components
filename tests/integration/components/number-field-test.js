@@ -11,6 +11,7 @@ const { run } = Ember;
 test('empty sets value to null', function(assert) {
   this.set('object', Ember.Object.create());
   this.render(hbs`{{number-field object=object propertyPath="number"}}`);
+
   const $input = this.$('input');
 
   run(() => {
@@ -33,6 +34,7 @@ test('value gets formatted with two decimals', function(assert) {
 test('typing in value gets formatted', function(assert) {
   this.set('object', Ember.Object.create());
   this.render(hbs`{{number-field maxDecimals="2" object=object propertyPath="number"}}`);
+
   const $input = this.$('input');
 
   run(() => {
@@ -76,6 +78,7 @@ test('arrow up increases value by one', function(assert) {
 test('arrow down decreases value by one', function(assert) {
   this.set('object', Ember.Object.create({ number: 2.2 }));
   this.render(hbs`{{number-field maxDecimals="2" object=object propertyPath="number"}}`);
+
   const $input = this.$('input');
 
   assert.equal($input.val(), '2,20');
@@ -92,6 +95,7 @@ test('arrow down decreases value by one', function(assert) {
 test('value is set to minValue when value is less than minValue', function(assert) {
   this.set('object', Ember.Object.create());
   this.render(hbs`{{number-field  minValue=0 object=object propertyPath="number"}}`);
+
   const $input = this.$('input');
 
   run(() => {
@@ -108,6 +112,7 @@ test('value is set to minValue when value is less than minValue', function(asser
 test('value is set to maxValue when value is more than maxValue', function(assert) {
   this.set('object', Ember.Object.create());
   this.render(hbs`{{number-field  maxValue=1 object=object propertyPath="number"}}`);
+
   const $input = this.$('input');
 
   run(() => {
@@ -119,4 +124,27 @@ test('value is set to maxValue when value is more than maxValue', function(asser
 
   assert.equal($input.val(), '1');
   assert.equal(this.get('object.number'), 1);
+});
+
+test('call errorMessage function when over maxValue', function(assert) {
+  assert.expect(2);
+  this.set('object', Ember.Object.create());
+  this.on('handleError', function(message) {
+    assert.notEqual(message.indexOf('maximum'), -1, 'gets right error message');
+    assert.ok(true, 'calls errorMessage function');
+  });
+  this.render(hbs`
+    {{number-field object=object
+                   propertyPath="number"
+                   maxValue=1
+                   errorMessage=(action "handleError")}}`);
+
+  const $input = this.$('input');
+
+  run(() => {
+    $input.trigger('focusin');
+    $input.val('2');
+    $input.trigger('input');
+    $input.trigger('focusout');
+  });
 });
