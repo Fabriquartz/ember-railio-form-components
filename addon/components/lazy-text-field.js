@@ -6,9 +6,9 @@ const { computed, run } = Ember;
 export default TextField.extend({
   attributeBindings: ['_lazyValue:value'],
 
-  _lazyValue: computed('value', 'lostFocus', function() {
+  _lazyValue: computed('_value', 'lostFocus', function() {
     if (!this.get('isFocused')) {
-      return this.get('value');
+      return this.get('_value');
     }
   }),
 
@@ -18,7 +18,6 @@ export default TextField.extend({
 
   focusOut() {
     this.set('isFocused', false);
-    this.notifyPropertyChange('lostFocus');
     this._super(...arguments);
   },
 
@@ -28,9 +27,7 @@ export default TextField.extend({
 
     callback.call(this);
 
-    run.next(() => {
-      this.set('isFocused', originalFocus);
-    });
+    run.next(() => this.set('isFocused', originalFocus));
   },
 
   actions: {

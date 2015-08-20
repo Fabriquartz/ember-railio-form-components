@@ -29,9 +29,15 @@ test('focus in does not lose value', function(assert) {
   assert.equal(this.get('value'), 'test');
 });
 
-test('typing with focus does not update value', function(assert) {
+test('typing with focus does not call updated', function(assert) {
+  assert.expect(1);
+
   this.set('value', '');
-  this.render(hbs`{{lazy-text-field value=value}}`);
+  this.on('update', function() {
+    assert.ok(false, 'calls update');
+  });
+
+  this.render(hbs`{{lazy-text-field value=value updated=(action "update")}}`);
 
   const $input = this.$('input');
 
@@ -44,9 +50,15 @@ test('typing with focus does not update value', function(assert) {
   assert.equal(this.get('value'), '');
 });
 
-test('losing focus updates the value', function(assert) {
+test('losing focus sends updated', function(assert) {
+  assert.expect(2);
+
   this.set('value', '');
-  this.render(hbs`{{lazy-text-field value=value}}`);
+  this.on('update', function(value) {
+    assert.equal(value, 'x', 'calls update with new value');
+  });
+
+  this.render(hbs`{{lazy-text-field value=value updated=(action "update")}}`);
 
   const $input = this.$('input');
 
@@ -58,7 +70,7 @@ test('losing focus updates the value', function(assert) {
     $input.trigger('focusout');
   });
 
-  assert.equal(this.get('value'), 'x');
+  assert.equal(this.get('value'), '');
 });
 
 test('when having focus, updates to value are ignored', function(assert) {
@@ -72,7 +84,7 @@ test('when having focus, updates to value are ignored', function(assert) {
     this.set('value', 'x');
   });
 
-  assert.equal(this.$('input').val(), '');
+  assert.equal($input.val(), '');
 });
 
 test('when not having focus update to value are propagated', function(assert) {

@@ -1,49 +1,31 @@
 import Ember from 'ember';
-import PropertyPathMixin from 'ember-railio-form-components/mixins/property-path-mixin';
 
 function handleChanged() {
   this.send('changed', this.readDOMAttr('value'));
 }
 
-export default Ember.Component.extend(PropertyPathMixin, {
+export default Ember.Component.extend({
   tagName: 'input',
   classNames: ['text-field'],
-  classNameBindings: ['isValid::flash-invalid'],
-  attributeBindings: ['value'],
+  attributeBindings: ['_value:value'],
 
-  isValid: true,
-
-  propertyTarget: 'value',
-
-  input: function() {
-    this.set('isValid', true);
-    handleChanged.call(this);
-  },
-  change:   function() {
-    this.set('isValid', true);
-    handleChanged.call(this);
-  },
+  input:    handleChanged,
+  change:   handleChanged,
   focusOut: handleChanged,
+
+  didReceiveAttrs: function() {
+    let value = this.getAttr('value');
+    if (typeof this.formatValue === 'function') {
+      value = this.formatValue(value);
+    }
+    this.set('_value', value);
+  },
 
   actions: {
     changed(value) {
-      this.set('value', value);
-    },
-    errorMessage(message, later) {
-      this.set('isValid', false);
-
-      if (typeof this.attrs.errorMessage === 'function') {
-        this.attrs.errorMessage(message);
-
-        if (later != null && later > 0) {
-          Ember.run.later(() => {
-            this.set('isValid', true);
-          }, later);
-        }
+      if (typeof this.attrs.updated === 'function') {
+        this.attrs.updated(value);
       }
-    },
-    errorMessageClear() {
-      this.set('isValid', true);
     }
   }
 });

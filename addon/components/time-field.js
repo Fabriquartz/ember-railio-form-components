@@ -1,29 +1,53 @@
-import Ember from 'ember';
 import LazyTextField from '../components/lazy-text-field';
-
-const { computed } = Ember;
 
 const A_MINUTE = 1000 * 60;
 const AN_HOUR  = A_MINUTE * 60;
 
 export default LazyTextField.extend({
   classNames:        ['time-field'],
-  classNameBindings: ['isValid::invalid'],
 
-  propertyTarget: 'datetime',
+  didReceiveAttrs: function() {
+    this.set('datetime', this.getAttr('value'));
+    this._super(...arguments);
+  },
 
-  value: computed('datetime', {
-    get() {
-      const value = this.get('datetime');
+  formatValue(value) {
+    if (!(value && value.getHours && value.getMinutes)) {
+      return null;
+    }
 
-      if (!(value && value.getHours && value.getMinutes)) {
-        return null;
+    const hours   = value.getHours();
+    const minutes = `0${value.getMinutes()}`.slice(-2);
+
+    return `${hours}:${minutes}`;
+  },
+
+  keyDown(e) {
+    const value = this.get('datetime');
+
+    const shift = e.shiftKey ? A_MINUTE : AN_HOUR;
+
+    if ([38, 40].indexOf(e.keyCode) !== -1) {
+      this.withLazyDisabled(() => {
+        if (e.keyCode === 38) {
+          this.send('changed', new Date(+value + shift));
+        }
+
+        if (e.keyCode === 40) {
+          this.send('changed', new Date(+value - shift));
+        }
+      });
+    }
+
+    this._super(...arguments);
+  },
+
+  actions: {
+    changed(value) {
+      if (value instanceof Date) {
+        return this._super(value);
       }
 
-      return this._formatTime(value);
-    },
-
-    set(key, value) {
       let date = this.get('datetime');
 
       if (date == null && (value == null || value === '')) {
@@ -60,37 +84,7 @@ export default LazyTextField.extend({
         date.setHours(hours);
         date.setMinutes(minutes);
       }
-
-      this.set('datetime', date);
-
-      return this._formatTime(date);
+      this._super(date);
     }
-  }),
-
-  _formatTime(value) {
-    const hours   = value.getHours();
-    const minutes = `0${value.getMinutes()}`.slice(-2);
-
-    return `${hours}:${minutes}`;
-  },
-
-  keyDown(e) {
-    const value = this.get('datetime');
-
-    const shift = e.shiftKey ? A_MINUTE : AN_HOUR;
-
-    if ([38, 40].indexOf(e.keyCode) !== -1) {
-      this.withLazyDisabled(() => {
-        if (e.keyCode === 38) {
-          this.set('datetime', new Date(+value + shift));
-        }
-
-        if (e.keyCode === 40) {
-          this.set('datetime', new Date(+value - shift));
-        }
-      });
-    }
-
-    this._super(...arguments);
   }
 });

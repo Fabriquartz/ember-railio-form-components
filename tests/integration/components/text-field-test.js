@@ -26,9 +26,15 @@ test('changing value changes input text', function(assert) {
   assert.equal(this.$('input').val(), 'gnitset');
 });
 
-test('typing changes value', function(assert) {
+test(`typing doesn't change value but sends updated`, function(assert) {
+  assert.expect(2);
+
   this.set('value', '');
-  this.render(hbs`{{text-field value=value}}`);
+  this.on('update', function(value) {
+    assert.equal(value, 'x', 'calls update function with new value');
+  });
+
+  this.render(hbs`{{text-field value=value updated=(action "update")}}`);
 
   const $input = this.$('input');
 
@@ -37,12 +43,18 @@ test('typing changes value', function(assert) {
     $input.trigger('input');
   });
 
-  assert.equal(this.get('value'), 'x');
+  assert.equal(this.get('value'), '');
 });
 
-test('leaving the input changes value', function(assert) {
+test('leaving the input triggers change', function(assert) {
+  assert.expect(2);
+
   this.set('value', '');
-  this.render(hbs`{{text-field value=value}}`);
+  this.on('update', function(value) {
+    assert.equal(value, 'x', 'calls update function with new value');
+  });
+
+  this.render(hbs`{{text-field value=value updated=(action "update")}}`);
 
   const $input = this.$('input');
 
@@ -51,12 +63,18 @@ test('leaving the input changes value', function(assert) {
     $input.trigger('blur');
   });
 
-  assert.equal(this.get('value'), 'x');
+  assert.equal(this.get('value'), '');
 });
 
 test('"change" changes value', function(assert) {
+  assert.expect(2);
+
   this.set('value', '');
-  this.render(hbs`{{text-field value=value}}`);
+  this.on('update', function(value) {
+    assert.equal(value, 'x', 'calls update function with new value');
+  });
+
+  this.render(hbs`{{text-field value=value updated=(action "update")}}`);
 
   const $input = this.$('input');
 
@@ -65,5 +83,5 @@ test('"change" changes value', function(assert) {
     $input.trigger('change');
   });
 
-  assert.equal(this.get('value'), 'x');
+  assert.equal(this.get('value'), '');
 });

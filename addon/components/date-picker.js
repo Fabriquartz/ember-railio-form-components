@@ -1,7 +1,4 @@
-import Ember from 'ember';
 import LazyTextField from '../components/lazy-text-field';
-
-const { computed } = Ember;
 
 const A_DAY = 1000 * 60 * 60 * 24;
 
@@ -17,27 +14,60 @@ function today() {
 
 export default LazyTextField.extend({
   classNames:        ['date-picker'],
-  classNameBindings: ['isValid::invalid'],
 
-  propertyTarget: 'date',
+  didReceiveAttrs: function() {
+    this.set('date', this.getAttr('value'));
+    this._super(...arguments);
+  },
 
-  value: computed('date', {
-    get() {
-      const value = this.get('date');
+  keyDown(e) {
+    const value = this.get('date');
 
-      if (!(value && value.getDate && value.getMonth && value.getFullYear)) {
-        return null;
+    if ([38, 40].indexOf(e.keyCode) !== -1) {
+      this.withLazyDisabled(() => {
+        if (e.keyCode === 38) {
+          if (e.shiftKey) {
+            this.send('changed', new Date(value.setMonth(value.getMonth() + 1)));
+          } else {
+            this.send('changed', new Date(+value + A_DAY));
+          }
+        }
+
+        if (e.keyCode === 40) {
+          if (e.shiftKey) {
+            this.send('changed', new Date(value.setMonth(value.getMonth() - 1)));
+          } else {
+            this.send('changed', new Date(+value - A_DAY));
+          }
+        }
+      });
+    }
+
+    this._super(...arguments);
+  },
+
+  formatValue(value) {
+    if (!(value && value.getDate && value.getMonth && value.getFullYear)) {
+      return null;
+    }
+
+    const days   = `0${value.getDate()}`.slice(-2);
+    const months = `0${value.getMonth() + 1}`.slice(-2);
+    const years  = value.getFullYear().toString().slice(-2);
+
+    return `${days}-${months}-${years}`;
+  },
+
+  actions: {
+    changed(value) {
+      if (value instanceof Date) {
+        return this._super(value);
       }
 
-      return this._formatDate(value);
-    },
-
-    set(key, value) {
       let date = this.get('date');
 
       if (value == null || value === '') {
-        this.set('date', null);
-        return '';
+        return this._super(null);
       }
 
       if (date == null) {
@@ -71,43 +101,7 @@ export default LazyTextField.extend({
       date.setMonth(months);
       date.setDate(days);
 
-      this.set('date', date);
-
-      return this._formatDate(date);
+      this._super(date);
     }
-  }),
-
-  keyDown(e) {
-    const value = this.get('date');
-
-    if ([38, 40].indexOf(e.keyCode) !== -1) {
-      this.withLazyDisabled(() => {
-        if (e.keyCode === 38) {
-          if (e.shiftKey) {
-            this.set('date', new Date(value.setMonth(value.getMonth() + 1)));
-          } else {
-            this.set('date', new Date(+value + A_DAY));
-          }
-        }
-
-        if (e.keyCode === 40) {
-          if (e.shiftKey) {
-            this.set('date', new Date(value.setMonth(value.getMonth() - 1)));
-          } else {
-            this.set('date', new Date(+value - A_DAY));
-          }
-        }
-      });
-    }
-
-    this._super(...arguments);
-  },
-
-  _formatDate(date) {
-    const days   = `0${date.getDate()}`.slice(-2);
-    const months = `0${date.getMonth() + 1}`.slice(-2);
-    const years  = date.getFullYear().toString().slice(-2);
-
-    return `${days}-${months}-${years}`;
   }
 });

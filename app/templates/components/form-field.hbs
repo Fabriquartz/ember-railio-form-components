@@ -2,8 +2,10 @@
   <label>{{labelText}}</label>
 {{/if}}
 
-{{#if template}}
+{{#if hasBlock}}
+template
   {{yield (get object propertyPath)}}
 {{else}}
-  {{component type value=(get object propertyPath)}}
+component
+  {{component type value=(get object propertyPath) updated=(action "update")}}
 {{/if}}

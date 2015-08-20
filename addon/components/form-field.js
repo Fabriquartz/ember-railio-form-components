@@ -50,5 +50,16 @@ export default Ember.Component.extend({
     defineProperty(this, 'isValid', computed(errorsPath, isValidComputedProperty));
     defineProperty(this, 'isChanged', reads(`object.${changedPath}IsChanged`));
     defineProperty(this, 'isDifferent', reads(`object.${propertyPath}IsDifferent`));
+  },
+
+  actions: {
+    update: function(value) {
+      const object       = this.get('object');
+      const propertyPath = this. get('propertyPath');
+
+      if (typeof this.attrs.updated === 'function') {
+        this.attrs.updated(object, propertyPath, value);
+      }
+    }
   }
 });
