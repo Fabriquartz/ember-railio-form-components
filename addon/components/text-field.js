@@ -11,7 +11,36 @@ export default Ember.Component.extend({
 
   input:    handleChanged,
   change:   handleChanged,
-  focusOut: handleChanged,
+
+  focusIn: function() {
+    if (typeof this.attrs.focusIn === 'function') {
+      this.attrs.focusIn();
+    }
+  },
+
+  focusOut: function() {
+    if (typeof this.attrs.focusOut === 'function') {
+      this.attrs.focusOut();
+    }
+    handleChanged.call(this);
+  },
+
+  keyUp: function(e) {
+    if (typeof this.attrs.keyUp === 'function') {
+      this.attrs.keyUp();
+    }
+    if (e.keyCode === 13) {
+      if (typeof this.attrs.enter === 'function') {
+        this.attrs.enter();
+      }
+    }
+
+    if (e.keyCode === 27) {
+      if (typeof this.attrs.escape === 'function') {
+        this.attrs.escape();
+      }
+    }
+  },
 
   didReceiveAttrs: function() {
     let value = this.getAttr('value');

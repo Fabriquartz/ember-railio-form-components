@@ -128,6 +128,32 @@ test(`Shows a given template and aliasses value`, function(assert) {
   assert.equal(templateText, 'Value string', 'shows aliasses value');
 });
 
+test(`Passes update action to block template`, function(assert) {
+  this.set('object', Ember.Object.create({
+    stringValue: 'Value string'
+  }));
+  this.on('update', function(object, propertyPath, value) {
+    object.set(propertyPath, value);
+  });
+
+  this.render(hbs`
+    {{#form-field updated=(action "update")
+                  object=object
+                  propertyPath="stringValue"
+                  as |value updated|}}
+      {{text-field value=value updated=updated}}
+    {{/form-field}}`);
+
+  const $input = this.$('input');
+
+  run(() => {
+    $input.val('Another value');
+    $input.trigger('input');
+  });
+
+  assert.equal(this.get('object.stringValue'), 'Another value');
+});
+
 test(`Shows a component depending on the given type`, function(assert) {
   this.set('object', Ember.Object.create({
     name: 'John White'

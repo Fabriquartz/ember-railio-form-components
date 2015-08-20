@@ -5,7 +5,7 @@ import { moduleForComponent, test } from 'ember-qunit';
 
 const { run } = Ember;
 
-moduleForComponent('auto-complete', {
+moduleForComponent('auto-complete', 'Integration | Component | {{auto-complete}}', {
   integration: true
 });
 
@@ -35,13 +35,13 @@ test('auto-complete its option list is shown when input is focused', function(as
   jQuery.fx.off = true;
 
   run(() => {
-    $input.trigger($.Event('focusin'));
+    $input.trigger('focusIn');
   });
 
   assert.equal($list.css('display'), 'block');
 
   run(() => {
-    $input.trigger($.Event('focusout'));
+    $input.trigger('focusout');
   });
 
   assert.equal($list.css('display'), 'none');
@@ -78,25 +78,6 @@ test('auto-complete items have label set to items optionLabelPath', function(ass
   assert.equal($items[2].innerText.trim(), 'c');
 });
 
-test('auto-complete highlighted item', function(assert) {
-  const highlighted = Ember.Object.create({ foo: 'b' });
-
-  this.set('content', [
-    Ember.Object.create({ foo: 'a' }),
-    highlighted,
-    Ember.Object.create({ foo: 'c' })
-  ]);
-  this.set('highlighted', highlighted);
-
-  this.render(hbs`{{auto-complete content=content
-                                  optionLabelPath="foo"
-                                  highlighted=highlighted}}`);
-
-  const $selected = this.$('.auto-complete__option--highlighted');
-  assert.equal($selected.length, 1);
-  assert.equal($selected[0].innerText.trim(), 'b');
-});
-
 test('auto-complete selected item', function(assert) {
   const selected = Ember.Object.create({ foo: 'b' });
 
@@ -109,7 +90,7 @@ test('auto-complete selected item', function(assert) {
 
   this.render(hbs`{{auto-complete content=content
                                   optionLabelPath="foo"
-                                  selection=selection}}`);
+                                  value=selection}}`);
 
   const $selected = this.$('.auto-complete__option--selected');
   assert.equal($selected.length, 1);
@@ -123,37 +104,18 @@ test('default value of input is selected label', function(assert) {
 
   this.render(hbs`{{auto-complete content=content
                                   optionLabelPath="foo"
-                                  selection=selection}}`);
+                                  value=selection}}`);
 
   const $input = this.$('input');
 
   assert.equal($input.val(), 'x');
 });
 
-test('selected value labels is a changes', function(assert) {
-  const selected = Ember.Object.create({ foo: { bar: 'baz' } });
-
-  this.set('content', [selected]);
-  this.set('selection', selected);
-
-  this.render(hbs`{{auto-complete content=content
-                                  optionLabelPath="foo.bar"
-                                  selection=selection}}`);
-
-  const $input = this.$('input');
-
-  assert.equal($input.val(), 'baz');
-
-  run(() => selected.set('foo.bar', 'quux'));
-
-  assert.equal($input.val(), 'quux');
-});
-
 test('typing sends out onQueryChange event', function(assert) {
   assert.expect(1);
-  this.render(hbs`{{auto-complete onQueryChange="onQueryChange"}}`);
 
   this.on('onQueryChange', (query) => assert.equal(query, 'foo'));
+  this.render(hbs`{{auto-complete onQueryChange=(action "onQueryChange")}}`);
 
   run(() => {
     this.$('input').val('foo');
@@ -161,34 +123,13 @@ test('typing sends out onQueryChange event', function(assert) {
   });
 });
 
-test('typed in query overrides selected value', function(assert) {
-  const selected = Ember.Object.create({ foo: 'x' });
-  this.set('content', [selected]);
-
-  this.render(hbs`{{auto-complete content=content
-                                  optionLabelPath="foo"
-                                  selection=selection}}`);
-
-  const $input = this.$('input');
-  run(() => {
-    $input.val('foo');
-    $input.trigger('input'); // syncs the value;
-    this.set('selection', selected);
-  });
-
-  assert.equal($input.val(), 'foo');
-});
-
 test('typing highlights the first entry', function(assert) {
-  const willBeSelected = Ember.Object.create({ foo: 'cat' });
-
   this.set('content', [
-    willBeSelected,
+    Ember.Object.create({ foo: 'cat' }),
     Ember.Object.create({ foo: 'dog' })
   ]);
 
   this.render(hbs`{{auto-complete content=content
-                                  highlighted=highlighted
                                   optionLabelPath="foo"}}`);
 
   const $input = this.$('input');
@@ -197,10 +138,10 @@ test('typing highlights the first entry', function(assert) {
     $input.trigger('input');
   });
 
-  run.next(() => {
-    assert.equal($input.val(), 'a');
-    assert.equal(this.get('highlighted'), willBeSelected);
-  });
+  const $highlighted = this.$('.auto-complete__option--highlighted');
+
+  assert.equal($input.val(), 'a');
+  assert.equal($highlighted.text().trim(), 'cat');
 });
 
 test('enter selects the first entry and closes the list', function(assert) {
@@ -213,13 +154,16 @@ test('enter selects the first entry and closes the list', function(assert) {
     Ember.Object.create({ foo: 'c' })
   ]);
 
+  this.on('update', function(value) {
+    this.set('selection', value);
+  });
+
   this.render(hbs`{{auto-complete content=content
-                                  selection=selection
+                                  value=selection
+                                  updated=(action "update")
                                   optionLabelPath="foo"}}`);
 
   const $input = this.$('input');
-
-  assert.equal(this.get('selection'), undefined);
 
   run(() => {
     jQuery.fx.off = true;
@@ -266,8 +210,13 @@ test('remove button clears the selection and searchQuery', function(assert) {
 
   this.set('content', [selected]);
   this.set('selection', selected);
+  this.on('update', function(value) {
+    this.set('selection', value);
+  });
+
   this.render(hbs`{{auto-complete content=content
-                                  selection=selection
+                                  value=selection
+                                  updated=(action "update")
                                   optionLabelPath="foo"}}`);
 
   const $input = this.$('input');
@@ -297,7 +246,7 @@ test('arrow down highlights the next option', function(assert) {
   this.set('selection', nowSelected);
 
   this.render(hbs`{{auto-complete content=content
-                                  selection=selection
+                                  value=selection
                                   highlighted=highlighted
                                   optionLabelPath="foo"}}`);
 
@@ -328,7 +277,7 @@ test('arrow up highlights the previous option', function(assert) {
   this.set('selection', nowSelected);
 
   this.render(hbs`{{auto-complete content=content
-                                  selection=selection
+                                  value=selection
                                   highlighted=highlighted
                                   optionLabelPath="foo"}}`);
 
@@ -356,7 +305,7 @@ test('arrow up highlights the first option when none selected', function(assert)
   ]);
 
   this.render(hbs`{{auto-complete content=content
-                                  selection=selection
+                                  value=selection
                                   highlighted=highlighted
                                   optionLabelPath="foo"}}`);
 
@@ -382,8 +331,13 @@ test('click selects an item', function(assert) {
     Ember.Object.create({ foo: 'c' })
   ]);
 
+  this.on('update', function(value) {
+    this.set('selection', value);
+  });
+
   this.render(hbs`{{auto-complete content=content
-                                  selection=selection
+                                  value=selection
+                                  updated=(action "update")
                                   optionLabelPath="foo"}}`);
 
   const $input     = this.$('input');
@@ -397,23 +351,4 @@ test('click selects an item', function(assert) {
 
   assert.equal($input.val(), 'b');
   assert.equal(this.get('selection'), expectedSelected);
-});
-
-test('selecting an item sends an optional action', function(assert) {
-  assert.expect(1);
-  const item = Ember.Object.create({ foo: 'a' });
-  this.set('content', [item]);
-  this.on('callback', (object) => assert.equal(object, item));
-
-  this.render(hbs`{{auto-complete content=content
-                                  onSelect="callback"
-                                  optionLabelPath="foo"}}`);
-
-  const $input = this.$('input');
-  const $firstItem = this.$('.auto-complete__option').first();
-
-  run(() => {
-    $input.trigger('focusin');
-    $firstItem.click();
-  });
 });

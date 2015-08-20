@@ -4,8 +4,9 @@
 
 {{#if hasBlock}}
 template
-  {{yield (get object propertyPath)}}
+  {{yield (get object propertyPath) (action "update")}}
 {{else}}
-component
-  {{component type value=(get object propertyPath) updated=(action "update")}}
+  {{component type value=(get object propertyPath)
+                   updated=(action "update")
+                   disabled=disabled}}
 {{/if}}
