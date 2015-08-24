@@ -352,3 +352,24 @@ test('click selects an item', function(assert) {
   assert.equal($input.val(), 'b');
   assert.equal(this.get('selection'), expectedSelected);
 });
+
+test('auto-complete changes content', function(assert) {
+  const object1 = Ember.Object.create();
+  const object2 = Ember.Object.create();
+  const object3 = Ember.Object.create();
+
+  this.set('content', Ember.A([object1, object2, object3]));
+
+  this.render(hbs`{{auto-complete content=content}}`);
+
+  let $items = this.$('.auto-complete__option');
+  assert.equal($items.length, 3);
+
+  run(() => {
+    const newArray = Ember.A([object1, object3]);
+    this.set('content', newArray);
+  });
+
+  $items = this.$('.auto-complete__option');
+  assert.equal($items.length, 2);
+});

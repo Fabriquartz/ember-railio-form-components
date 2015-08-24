@@ -34,3 +34,23 @@ test('filters content depending on search query', function(assert) {
   assert.equal($items[0].innerText.trim(), 'dog');
   assert.equal($items[1].innerText.trim(), 'lion');
 });
+
+test('calls onQueryChange', function(assert) {
+  assert.expect(1);
+
+  this.on('queryChanged', function(query) {
+    assert.equal(query, 'o', 'calls onQueryChange with new query');
+  });
+
+  this.render(hbs`
+    {{select-auto-complete content=content
+                           optionLabelPath="foo"
+                           onQueryChange=(action "queryChanged")}}`);
+
+  const $input = this.$('input');
+
+  run(() => {
+    $input.val('o');
+    $input.trigger('input');
+  });
+});
