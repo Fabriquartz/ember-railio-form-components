@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import TextField from './text-field';
+import TextField from 'ember-railio-form-components/components/text-field';
 
 const { computed, run } = Ember;
 
