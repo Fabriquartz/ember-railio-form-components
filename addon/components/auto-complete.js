@@ -73,6 +73,9 @@ export default Ember.Component.extend({
   keyUp(e) {
     if ([38, 40].indexOf(e.keyCode) !== -1) {
       this.set('arrowKeyDown', false);
+    } else if (e.keyCode === 27) {
+      this.send('queryChanged', null);
+      this.send('hideList');
     }
   },
 
@@ -86,7 +89,6 @@ export default Ember.Component.extend({
     },
 
     hideList() {
-      this.set('query', null);
       this.send('highlightItem', null);
       this.sendAction('onQueryChange', null);
       this.$('.auto-complete__option-list').slideUp();

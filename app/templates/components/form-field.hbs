@@ -3,7 +3,6 @@
 {{/if}}
 
 {{#if hasBlock}}
-template
   {{yield (get object propertyPath) (action "update")}}
 {{else}}
   {{component type value=(get object propertyPath)
