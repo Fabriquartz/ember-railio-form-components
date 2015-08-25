@@ -53,39 +53,39 @@ test('typing in value gets formatted', function(assert) {
 });
 
 test('arrow up increases value by one', function(assert) {
-  this.set('number', 2.2);
+  this.set('number', 1.345);
   this.render(hbs`
-    {{number-field maxDecimals="2" value=number updated=(action "update")}}
+    {{number-field value=number updated=(action "update")}}
   `);
 
   const $input = this.$('input');
 
-  assert.equal($input.val(), '2,20');
+  assert.equal($input.val(), '1,345');
 
   run(() => {
     $input.trigger('focusin');
     $input.trigger($.Event('keydown', { keyCode: 38 }));
   });
 
-  assert.equal($input.val(), '3,20');
-  assert.inDelta(this.get('number'), 3.2, 0.01);
+  assert.equal($input.val(), '2,345');
+  assert.inDelta(this.get('number'), 2.345, 0.01);
 });
 
 test('arrow down decreases value by one', function(assert) {
-  this.set('number', 2.2);
+  this.set('number', 8.456);
   this.render(hbs`
-    {{number-field maxDecimals="2" value=number updated=(action "update")}}
+    {{number-field value=number updated=(action "update")}}
   `);
 
   const $input = this.$('input');
 
-  assert.equal($input.val(), '2,20');
+  assert.equal($input.val(), '8,456');
 
   run(() => {
     $input.trigger('focusin');
     $input.trigger($.Event('keydown', { keyCode: 40 }));
   });
 
-  assert.equal($input.val(), '1,20');
-  assert.inDelta(this.get('number'), 1.2, 0.01);
+  assert.equal($input.val(), '7,456');
+  assert.inDelta(this.get('number'), 7.456, 0.01);
 });

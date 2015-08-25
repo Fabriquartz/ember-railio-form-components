@@ -5,6 +5,21 @@ function sliceDecimals(value, decimals) {
   return Math.floor(value * Math.pow(10, decimals)) / Math.pow(10, decimals);
 }
 
+function increaseNumber(value, add) {
+  const stringValue = value.toString();
+
+  const decimalIndex = stringValue.indexOf('.');
+  let decimalsAmount = 0;
+
+  if (decimalIndex !== -1) {
+    decimalsAmount = stringValue.slice(decimalIndex + 1).length;
+  }
+
+  const increasedValue = value + add;
+
+  return parseFloat(increasedValue.toFixed(decimalsAmount));
+}
+
 export default LazyTextField.extend({
   classNames: ['number-field'],
 
@@ -25,11 +40,11 @@ export default LazyTextField.extend({
     if ([38, 40].indexOf(e.keyCode) !== -1) {
       this.withLazyDisabled(() => {
         if (e.keyCode === 38) {
-          this.send('changed', value + 1);
+          this.send('changed', increaseNumber(value, 1));
         }
 
         if (e.keyCode === 40) {
-          this.send('changed', value - 1);
+          this.send('changed', increaseNumber(value, -1));
         }
       });
     }
