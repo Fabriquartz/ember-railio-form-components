@@ -373,3 +373,33 @@ test('auto-complete changes content', function(assert) {
   $items = this.$('.auto-complete__option');
   assert.equal($items.length, 2);
 });
+
+test('when selection changes from elsewhere, it changes here', function(assert) {
+  const selected = Ember.Object.create({ foo: 'a' });
+  const option   = Ember.Object.create({ foo: 'b' });
+
+  this.set('content', [selected, option]);
+  this.set('selection', selected);
+  this.on('update', function(value) {
+    this.set('selection', value);
+  });
+
+  this.render(hbs`{{auto-complete content=content
+                                  value=selection
+                                  updated=(action "update")
+                                  optionLabelPath="foo"}}`);
+
+  const $input = this.$('input');
+
+  run(() => {
+    this.set('selection', option);
+  });
+
+  assert.equal($input.val(), 'b', 'input set to new selection');
+
+  run(() => {
+    this.set('selection', null);
+  });
+
+  assert.equal($input.val(), '', 'input made empty (new selection)');
+});
