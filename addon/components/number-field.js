@@ -6,8 +6,11 @@ function sliceDecimals(value, decimals) {
 }
 
 function increaseNumber(value, add) {
-  const stringValue = value.toString();
+  if (value == null || typeof value !== 'number') {
+    value = 0;
+  }
 
+  const stringValue = value.toString();
   const decimalIndex = stringValue.indexOf('.');
   let decimalsAmount = 0;
 

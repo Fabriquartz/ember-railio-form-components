@@ -59,7 +59,6 @@ test('arrow up increases value by one', function(assert) {
   `);
 
   const $input = this.$('input');
-
   assert.equal($input.val(), '1,345');
 
   run(() => {
@@ -71,6 +70,23 @@ test('arrow up increases value by one', function(assert) {
   assert.inDelta(this.get('number'), 2.345, 0.01);
 });
 
+test('arrow up when empty sets value to 1', function(assert) {
+  this.render(hbs`
+    {{number-field value=number updated=(action "update")}}
+  `);
+
+  const $input = this.$('input');
+  assert.equal($input.val(), '');
+
+  run(() => {
+    $input.trigger('focusin');
+    $input.trigger($.Event('keydown', { keyCode: 38 }));
+  });
+
+  assert.equal($input.val(), '1');
+  assert.inDelta(this.get('number'), 1, 0.01);
+});
+
 test('arrow down decreases value by one', function(assert) {
   this.set('number', 8.456);
   this.render(hbs`
@@ -78,7 +94,6 @@ test('arrow down decreases value by one', function(assert) {
   `);
 
   const $input = this.$('input');
-
   assert.equal($input.val(), '8,456');
 
   run(() => {
@@ -88,4 +103,21 @@ test('arrow down decreases value by one', function(assert) {
 
   assert.equal($input.val(), '7,456');
   assert.inDelta(this.get('number'), 7.456, 0.01);
+});
+
+test('arrow down when empty sets value to -1', function(assert) {
+  this.render(hbs`
+    {{number-field value=number updated=(action "update")}}
+  `);
+
+  const $input = this.$('input');
+  assert.equal($input.val(), '');
+
+  run(() => {
+    $input.trigger('focusin');
+    $input.trigger($.Event('keydown', { keyCode: 40 }));
+  });
+
+  assert.equal($input.val(), '-1');
+  assert.inDelta(this.get('number'), -1, 0.01);
 });
