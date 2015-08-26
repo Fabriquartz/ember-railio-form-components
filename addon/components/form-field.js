@@ -64,7 +64,7 @@ export default Ember.Component.extend({
       const object       = this.get('object');
       const propertyPath = this. get('propertyPath');
 
-      if (typeof this.attrs.updated === 'function') {
+      if (!this.get('disabled') && typeof this.attrs.updated === 'function') {
         this.attrs.updated(object, propertyPath, value);
       }
     }

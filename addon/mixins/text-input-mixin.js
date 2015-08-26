@@ -5,7 +5,7 @@ function handleChanged() {
 }
 
 export default Ember.Mixin.create({
-  attributeBindings: ['_value:value'],
+  attributeBindings: ['_value:value', 'disabled'],
 
   input:    handleChanged,
   change:   handleChanged,

@@ -7,7 +7,7 @@ function handleChanged() {
 export default Ember.Component.extend({
   tagName:           'input',
   type:              'checkbox',
-  attributeBindings: ['type', 'value:checked'],
+  attributeBindings: ['type', 'value:checked', 'disabled'],
   classNames:        ['check-box'],
 
   change: handleChanged,
