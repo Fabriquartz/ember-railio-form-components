@@ -24,7 +24,7 @@ export default Ember.Component.extend({
     });
 
     const $input = this.$('.auto-complete__input');
-    $input.on('focusIn', () => this.send('showList'));
+    $input.on('focusIn click', () => this.send('showList'));
   },
 
   didReceiveAttrs: function() {
