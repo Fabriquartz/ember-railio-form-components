@@ -42,13 +42,11 @@ export default Ember.Component.extend({
   }),
 
   didReceiveAttrs: function() {
-    console.log();
-    // REMOVE THIS COMMENT OR MOVE IT TO THE COMPONENTS
-    // if (!this.attrs.update) {
-    //   throw new Error(`You must provide an 'update' action to '{{form-field}}.`);
-    // } else if (typeof this.attrs.update !== 'function') {
-    //   throw new Error(`The 'update' action on '{{form-field}} must be a function.`);
-    // }
+    if (!this.attrs.updated) {
+      throw new Error(`You must provide an 'update' action to '{{form-field}}.`);
+    } else if (typeof this.attrs.updated !== 'function') {
+      throw new Error(`The 'update' action on '{{form-field}} must be a function.`);
+    }
     const originPath   = this.get('originPath');
     const propertyPath = this.get('propertyPath');
     const errorsPath   = this.get('errorsPath');
