@@ -16,6 +16,6 @@
     "font-awesome": "~4.4.0"
   },
   "resolutions": {
-    "ember": "2.0.0"
+    "ember": "2.0.1"
   }
 }
