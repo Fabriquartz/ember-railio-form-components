@@ -5,18 +5,24 @@ import hbs from 'htmlbars-inline-precompile';
 const { run } = Ember;
 
 moduleForComponent('form-field', 'Integration | Component | {{form-field}}', {
-  integration: true
+  integration: true,
+  beforeEach: function() {
+    this.on('update', function(object, propertyPath, value) {
+      object.set(propertyPath, value);
+    });
+  }
 });
 
 test(`Renders a div with class 'form-field'`, function(assert) {
-  this.render(hbs `{{form-field}}`);
+  this.render(hbs `{{form-field updated=(action 'update')}}`);
 
   const $component = this.$('div.form-field');
   assert.equal($component.length, 1);
 });
 
 test(`By default shows propertyPath as label`, function(assert) {
-  this.render(hbs `{{form-field propertyPath="number"}}`);
+  this.render(hbs `{{form-field propertyPath="number"
+                                updated=(action 'update')}}`);
 
   const $labels = this.$('.form-field').find('label');
 
@@ -27,7 +33,8 @@ test(`By default shows propertyPath as label`, function(assert) {
 });
 
 test(`Splices label on camelcase`, function(assert) {
-  this.render(hbs `{{form-field propertyPath="numberValue"}}`);
+  this.render(hbs `{{form-field propertyPath="numberValue"
+                                updated=(action 'update')}}`);
 
   const labelText  = this.$('.form-field').find('label').text();
 
@@ -35,7 +42,8 @@ test(`Splices label on camelcase`, function(assert) {
 });
 
 test(`Shows no label when label=false`, function(assert) {
-  this.render(hbs `{{form-field label=false}}`);
+  this.render(hbs `{{form-field label=false
+                                updated=(action 'update')}}`);
 
   const $labels = this.$('.form-field').find('label');
 
@@ -43,7 +51,8 @@ test(`Shows no label when label=false`, function(assert) {
 });
 
 test(`Shows given String as label`, function(assert) {
-  this.render(hbs `{{form-field label="Object nr."}}`);
+  this.render(hbs `{{form-field label="Object nr."
+                                updated=(action 'update')}}`);
 
   const labelText  = this.$('.form-field').find('label').text();
 
@@ -57,7 +66,9 @@ test(`Gets class 'invalid' when object.errors.propertyPath has errors`, function
     })
   }));
 
-  this.render(hbs`{{form-field object=object propertyPath="numberValue"}}`);
+  this.render(hbs`{{form-field object=object
+                               propertyPath="numberValue"
+                               updated=(action 'update')}}`);
 
   const $component = this.$('.form-field');
 
@@ -73,7 +84,9 @@ test(`Gets class 'changed' when value is unsaved`, function(assert) {
     numberValueIsChanged: true
   }));
 
-  this.render(hbs`{{form-field object=object propertyPath="numberValue"}}`);
+  this.render(hbs`{{form-field object=object
+                               propertyPath="numberValue"
+                               updated=(action 'update')}}`);
 
   const $component = this.$('.form-field');
   assert.ok($component.hasClass('form-field--changed'));
@@ -89,8 +102,10 @@ test(`Gets class 'changed' when origin value is unsaved`, function(assert) {
   }));
 
   this.render(hbs`
-    {{form-field object=object originPath="number" propertyPath="numberValue"}}
-  `);
+    {{form-field object=object
+                 originPath="number"
+                 propertyPath="numberValue"
+                 updated=(action 'update')}}`);
 
   const $component = this.$('.form-field');
   assert.ok($component.hasClass('form-field--changed'));
@@ -101,7 +116,9 @@ test(`Gets class 'different' when values are different`, function(assert) {
     numberValueIsDifferent: true
   }));
 
-  this.render(hbs`{{form-field object=object propertyPath="numberValue"}}`);
+  this.render(hbs`{{form-field object=object
+                               propertyPath="numberValue"
+                               updated=(action 'update')}}`);
 
   const $component = this.$('.form-field');
   assert.ok($component.hasClass('form-field--different'));
@@ -117,7 +134,9 @@ test(`Shows a given template and aliasses value`, function(assert) {
   }));
 
   this.render(hbs`
-    {{#form-field object=object propertyPath="stringValue" as |value|}}
+    {{#form-field object=object
+                  updated=(action 'update')
+                  propertyPath="stringValue" as |value|}}
       <div class="aGivenTemplateClass">{{value}}</div>
     {{/form-field}}`);
 
@@ -160,7 +179,10 @@ test(`Shows a component depending on the given type`, function(assert) {
   }));
 
   this.render(hbs`
-    {{form-field type="text-field" object=object propertyPath="name"}}`);
+    {{form-field type="text-field"
+                 object=object
+                 propertyPath="name"
+                 updated=(action 'update')}}`);
 
   const $input = this.$('.form-field').find('input.text-field');
   assert.equal($input.length, 1, 'shows the component depending on given type');
