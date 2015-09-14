@@ -21,7 +21,7 @@ export default Ember.Component.extend({
       const value = item.get(labelPath);
 
       if (fuzzyMatch(value, searchQuery)) {
-        return filteredContent.push(item);
+        return filteredContent.pushObject(item);
       }
     });
 
@@ -52,9 +52,6 @@ export default Ember.Component.extend({
   },
 
   actions: {
-    onSelect: function(item) {
-      this.sendAction('onSelect', item);
-    },
     onQueryChange: function(query) {
       this.set('searchQuery', query);
       this.sendAction('onQueryChange', query);

@@ -1,13 +1,13 @@
 <div class="auto-complete__input-wrapper">
-  {{input classNames="auto-complete__input"
-          classNameBindings="valuesDiffer:different-value"
-          value=value
-          insert-newline="acceptSelection"
-          escape-press="hideList"
-          focus-in="showList"
-          focus-out="hideList"
-          placeholder=prompt
-          disabled=disabled}}
+  {{text-field value=query
+               classNames="auto-complete__input"
+               placeholder=prompt
+               disabled=disabled
+               updated=(action "queryChanged")
+               enter=(action "acceptSelection")
+               focusIn=(action "showList")
+               focusOut=(action "hideList")
+               escape=(action "hideList") }}
 
   <ul class="auto-complete__option-list">
     {{#if content}}

@@ -4,8 +4,13 @@ import { moduleForComponent, test } from 'ember-qunit';
 
 const { run } = Ember;
 
-moduleForComponent('date-field', {
-  integration: true
+moduleForComponent('date-picker', 'Integration | Component | {{date-picker}}', {
+  integration: true,
+  beforeEach: function() {
+    this.on('update', function(value) {
+      this.set('value', value);
+    });
+  }
 });
 
 function fillIn(input, value) {
@@ -22,9 +27,7 @@ function arrowKey(input, upOrDown, shift = false) {
 
   run(() => {
     input.trigger('focusin');
-    input.trigger('input');
     input.trigger($.Event('keydown', { keyCode, shiftKey: shift }));
-    input.trigger('focusout');
   });
 }
 function arrowUp(input, shift)   { arrowKey(input, 'up', shift);   }
@@ -32,7 +35,7 @@ function arrowDown(input, shift) { arrowKey(input, 'down', shift); }
 
 test('date gets formatted to date string', function(assert) {
   this.set('value', new Date(2015, 0, 1));
-  this.render(hbs`{{date-picker value=value}}`);
+  this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
   const $input = this.$('input');
   assert.equal($input.val(), '01-01-15');
@@ -46,7 +49,7 @@ test('null is an option', function(assert) {
 });
 
 test('filling in a date works', function(assert) {
-  this.render(hbs`{{date-picker value=value}}`);
+  this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
   const $input = this.$('input');
 
@@ -58,7 +61,7 @@ test('filling in a date works', function(assert) {
 
 test('typing in an empty value', function(assert) {
   this.set('value', new Date(2015, 0, 1));
-  this.render(hbs`{{date-picker value=value}}`);
+  this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
   const $input = this.$('input');
 
@@ -69,7 +72,7 @@ test('typing in an empty value', function(assert) {
 });
 
 test('typing in date shorthands', function(assert) {
-  this.render(hbs`{{date-picker value=value}}`);
+  this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
   const $input = this.$('input');
   const year  = (new Date()).getFullYear();
@@ -108,7 +111,7 @@ test('typing in date shorthands', function(assert) {
 });
 
 test('typing in with different separators', function(assert) {
-  this.render(hbs`{{date-picker value=value}}`);
+  this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
   const $input = this.$('input');
 
@@ -117,20 +120,20 @@ test('typing in with different separators', function(assert) {
   assert.equal($input.val(), '05-05-15');
   assert.equal(+this.get('value'), +(new Date(2015, 4, 5)));
 
-  fillIn($input, '05/05/15');
+  fillIn($input, '06/05/15');
 
-  assert.equal($input.val(), '05-05-15');
-  assert.equal(+this.get('value'), +(new Date(2015, 4, 5)));
+  assert.equal($input.val(), '06-05-15');
+  assert.equal(+this.get('value'), +(new Date(2015, 4, 6)));
 
   fillIn($input, '05\\05\\15');
 
   assert.equal($input.val(), '05-05-15');
   assert.equal(+this.get('value'), +(new Date(2015, 4, 5)));
 
-  fillIn($input, '05,05,15');
+  fillIn($input, '06,05,15');
 
-  assert.equal($input.val(), '05-05-15');
-  assert.equal(+this.get('value'), +(new Date(2015, 4, 5)));
+  assert.equal($input.val(), '06-05-15');
+  assert.equal(+this.get('value'), +(new Date(2015, 4, 6)));
 
   fillIn($input, '05.05.15');
 
@@ -140,7 +143,7 @@ test('typing in with different separators', function(assert) {
 
 test('arrow up increases date by one day', function(assert) {
   this.set('value', new Date(2015, 0, 1));
-  this.render(hbs`{{date-picker value=value}}`);
+  this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
   const $input = this.$('input');
 
@@ -159,7 +162,7 @@ test('arrow up increases date by one day', function(assert) {
 
 test('shift + arrow up increases date by one month', function(assert) {
   this.set('value', new Date(2015, 0));
-  this.render(hbs`{{date-picker value=value}}`);
+  this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
   const $input = this.$('input');
 
@@ -178,7 +181,7 @@ test('shift + arrow up increases date by one month', function(assert) {
 
 test('arrow down decreases date by one day', function(assert) {
   this.set('value', new Date(2015, 0, 2));
-  this.render(hbs`{{date-picker value=value}}`);
+  this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
   const $input = this.$('input');
 
@@ -197,7 +200,7 @@ test('arrow down decreases date by one day', function(assert) {
 
 test('shift + arrow month decreases date by one month', function(assert) {
   this.set('value', new Date(2015, 1));
-  this.render(hbs`{{date-picker value=value}}`);
+  this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
   const $input = this.$('input');
 

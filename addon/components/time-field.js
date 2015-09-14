@@ -1,38 +1,54 @@
-import Ember from 'ember';
-import LazyInput from '../components/lazy-input';
-
-const { computed } = Ember;
-
-const set = Ember.set;
+import LazyTextField from '../components/lazy-text-field';
 
 const A_MINUTE = 1000 * 60;
 const AN_HOUR  = A_MINUTE * 60;
 
-export default LazyInput.extend({
+export default LazyTextField.extend({
   classNames:        ['time-field'],
-  classNameBindings: ['isValid::invalid'],
 
-  attributeBindings: [
-    'formattedValue:value',
-    'formattedValue:title'
-  ],
+  didReceiveAttrs: function() {
+    this.set('datetime', this.getAttr('value'));
+    this._super(...arguments);
+  },
 
-  formattedValue: computed('value', {
-    get() {
-      const value = this.get('value');
+  formatValue(value) {
+    if (!(value && value.getHours && value.getMinutes)) {
+      return null;
+    }
 
-      if (!(value && value.getHours && value.getMinutes)) {
-        return null;
+    const hours   = value.getHours();
+    const minutes = `0${value.getMinutes()}`.slice(-2);
+
+    return `${hours}:${minutes}`;
+  },
+
+  keyDown(e) {
+    const value = this.get('datetime');
+
+    const shift = e.shiftKey ? A_MINUTE : AN_HOUR;
+
+    if ([38, 40].indexOf(e.keyCode) !== -1) {
+      this.withLazyDisabled(() => {
+        if (e.keyCode === 38) {
+          this.send('changed', new Date(+value + shift));
+        }
+
+        if (e.keyCode === 40) {
+          this.send('changed', new Date(+value - shift));
+        }
+      });
+    }
+
+    this._super(...arguments);
+  },
+
+  actions: {
+    changed(value) {
+      if (value instanceof Date) {
+        return this._super(value);
       }
 
-      const hours   = value.getHours();
-      const minutes = `0${value.getMinutes()}`.slice(-2);
-
-      return `${hours}:${minutes}`;
-    },
-
-    set(key, value) {
-      let date = this.get('value');
+      let date = this.get('datetime');
 
       if (date == null && (value == null || value === '')) {
         return '';
@@ -68,33 +84,7 @@ export default LazyInput.extend({
         date.setHours(hours);
         date.setMinutes(minutes);
       }
-
-      this.set('value', date);
-
-      return value;
+      this._super(date);
     }
-  }),
-
-  keyDown(e) {
-    const value = this.get('value');
-
-    const shift = e.shiftKey ? A_MINUTE : AN_HOUR;
-
-    if (e.keyCode === 38) {
-      this.set('value', new Date(+value + shift));
-    }
-
-    if (e.keyCode === 40) {
-      this.set('value', new Date(+value - shift));
-    }
-
-    if (e.keyCode === 38 || e.keyCode === 40) {
-      this.update();
-    }
-  },
-
-  // Overrides Ember.TextSupport#_elementValueDidChange
-  _elementValueDidChange() {
-    set(this, 'formattedValue', this.readDOMAttr('value'));
   }
 });

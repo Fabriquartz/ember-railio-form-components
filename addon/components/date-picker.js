@@ -1,8 +1,4 @@
-import Ember from 'ember';
-import LazyInput from '../components/lazy-input';
-
-const { computed } = Ember;
-const set = Ember.set;
+import LazyTextField from '../components/lazy-text-field';
 
 const A_DAY = 1000 * 60 * 60 * 24;
 
@@ -16,36 +12,62 @@ function today() {
   return date;
 }
 
-export default LazyInput.extend({
+export default LazyTextField.extend({
   classNames:        ['date-picker'],
-  classNameBindings: ['isValid::invalid'],
 
-  attributeBindings: [
-    'formattedValue:value',
-    'formattedValue:title'
-  ],
+  didReceiveAttrs: function() {
+    this.set('date', this.getAttr('value'));
+    this._super(...arguments);
+  },
 
-  formattedValue: computed('value', {
-    get() {
-      const value = this.get('value');
+  keyDown(e) {
+    const value = this.get('date');
 
-      if (!(value && value.getDate && value.getMonth && value.getFullYear)) {
-        return null;
+    if ([38, 40].indexOf(e.keyCode) !== -1) {
+      this.withLazyDisabled(() => {
+        if (e.keyCode === 38) {
+          if (e.shiftKey) {
+            this.send('changed', new Date(value.setMonth(value.getMonth() + 1)));
+          } else {
+            this.send('changed', new Date(+value + A_DAY));
+          }
+        }
+
+        if (e.keyCode === 40) {
+          if (e.shiftKey) {
+            this.send('changed', new Date(value.setMonth(value.getMonth() - 1)));
+          } else {
+            this.send('changed', new Date(+value - A_DAY));
+          }
+        }
+      });
+    }
+
+    this._super(...arguments);
+  },
+
+  formatValue(value) {
+    if (!(value && value.getDate && value.getMonth && value.getFullYear)) {
+      return null;
+    }
+
+    const days   = `0${value.getDate()}`.slice(-2);
+    const months = `0${value.getMonth() + 1}`.slice(-2);
+    const years  = value.getFullYear().toString().slice(-2);
+
+    return `${days}-${months}-${years}`;
+  },
+
+  actions: {
+    changed(value) {
+      if (value instanceof Date) {
+        return this._super(value);
       }
 
-      const days   = `0${value.getDate()}`.slice(-2);
-      const months = `0${value.getMonth() + 1}`.slice(-2);
-      const years  = value.getFullYear().toString().slice(-2);
-
-      return `${days}-${months}-${years}`;
-    },
-
-    set(key, value) {
-      let date = this.get('value');
+      let date = this.get('date');
 
       if (value == null || value === '') {
-        this.set('value', null);
-        return '';
+        return this._super(null);
       }
 
       if (date == null) {
@@ -79,38 +101,7 @@ export default LazyInput.extend({
       date.setMonth(months);
       date.setDate(days);
 
-      this.set('value', date);
-
-      return value;
+      this._super(date);
     }
-  }),
-
-  keyDown(e) {
-    const value = this.get('value');
-
-    if (e.keyCode === 38) {
-      if (e.shiftKey) {
-        this.set('value', new Date(value.setMonth(value.getMonth() + 1)));
-      } else {
-        this.set('value', new Date(+value + A_DAY));
-      }
-    }
-
-    if (e.keyCode === 40) {
-      if (e.shiftKey) {
-        this.set('value', new Date(value.setMonth(value.getMonth() - 1)));
-      } else {
-        this.set('value', new Date(+value - A_DAY));
-      }
-    }
-
-    if (e.keyCode === 38 || e.keyCode === 40) {
-      this.update();
-    }
-  },
-
-  // Overrides Ember.TextSupport#_elementValueDidChange
-  _elementValueDidChange() {
-    set(this, 'formattedValue', this.readDOMAttr('value'));
   }
 });

@@ -1,74 +1,42 @@
 import Ember from 'ember';
 import layout from 'ember-railio-form-components/templates/components/auto-complete';
-import PropertyPathMixin from 'ember-railio-form-components/mixins/property-path-mixin';
 
 import {
   proxyIndexOf as indexOf
 } from 'ember-proxy-util';
 
-const { Binding, computed, observer, run } = Ember;
+const { computed } = Ember;
+
+const { alias } = computed;
 
 const get = Ember.get;
 
-export default Ember.Component.extend(PropertyPathMixin, {
+export default Ember.Component.extend({
   classNames: ['auto-complete'],
-  propertyTarget: 'selection',
   layout: layout,
 
   attributeBindings: ['searchQuery:title'],
-
-  init() {
-    this._setupValue();
-    this._super.apply(this, arguments);
-  },
+  selection: alias('value'),
 
   didInsertElement() {
     this.$('.auto-complete__option-list').on('mousedown', (e) => {
       e.preventDefault();
     });
+
+    const $input = this.$('.auto-complete__input');
+    $input.on('focusIn click', () => this.send('showList'));
   },
 
-  _setupValue: observer('optionLabelPath', function() {
-    let labelPathBinding = this.get('labelPathBinding');
-    const labelPath = this.get('optionLabelPath');
+  didReceiveAttrs: function() {
+    const optionLabelPath = this.getAttr('optionLabelPath');
+    const value = this.getAttr('value');
 
-    if (labelPathBinding != null && typeof labelPathBinding.disconnect === 'function') {
-      labelPathBinding.disconnect(this);
+    if (value == null) {
+      this.set('query', '');
+    } else {
+      this.set('query', value.get(optionLabelPath));
     }
-
-    if (typeof labelPath === 'string') {
-      labelPathBinding = Binding.from(`selection.${labelPath}`).to('selectionLabel');
-      labelPathBinding.connect(this);
-    }
-
-    this.set('labelPathBinding', labelPathBinding);
-  }),
-
-  value: computed('selectionLabel', '_searchTerm', {
-    get() {
-      return this.get('_searchTerm') || this.get('selectionLabel');
-    },
-
-    set(key, value) {
-      this.sendAction('onQueryChange', value);
-      this.set('_searchTerm', value);
-
-      if (value != null && value !== '') {
-        run.next(() => {
-          let content = this.get('content');
-          if (Ember.isArray(content)) {
-            content = Ember.A(content); // need to be an Ember array to use objectAt
-            this.send('highlightItem', content.objectAt(0));
-            this.send('showList');
-          }
-        });
-      } else if (!this.get('arrowKeyDown')) {
-        this.send('selectItem', null);
-      }
-
-      return this.get('value');
-    }
-  }),
+  },
 
   groupedContent: computed('content.[]', function() {
     const groups = Ember.A();
@@ -107,12 +75,14 @@ export default Ember.Component.extend(PropertyPathMixin, {
   keyUp(e) {
     if ([38, 40].indexOf(e.keyCode) !== -1) {
       this.set('arrowKeyDown', false);
+    } else if (e.keyCode === 27) {
+      this.send('queryChanged', null);
+      this.send('hideList');
     }
   },
 
   click(e) {
     e.preventDefault();
-    console.log('clicked');
   },
 
   actions: {
@@ -121,7 +91,6 @@ export default Ember.Component.extend(PropertyPathMixin, {
     },
 
     hideList() {
-      this.set('_searchTerm', null);
       this.send('highlightItem', null);
       this.sendAction('onQueryChange', null);
       this.$('.auto-complete__option-list').slideUp();
@@ -130,8 +99,45 @@ export default Ember.Component.extend(PropertyPathMixin, {
     selectItem(item) {
       this.send('hideList');
       this.send('highlightItem', null);
-      this.set('selection', item);
-      this.sendAction('onSelect', item);
+      // this.set('selection', item);
+      // this.sendAction('onSelect', item);
+      this.send('changed', item);
+    },
+
+    changed(value) {
+      const optionLabelPath = this.get('optionLabelPath');
+
+      if (value == null) {
+        this.set('query', null);
+      } else {
+        const label = value.get(optionLabelPath);
+        this.set('query', label);
+      }
+
+      if (typeof this.attrs.updated === 'function') {
+        this.attrs.updated(value);
+      }
+    },
+
+    queryChanged(value) {
+      this.set('query', value);
+
+      if (value != null && value !== '') {
+        let content = this.get('content');
+        if (Ember.isArray(content)) {
+          content = Ember.A(content); // need to be an Ember array to use objectAt
+          this.send('highlightItem', content.objectAt(0));
+          this.send('showList');
+        }
+      } else if (!this.get('arrowKeyDown')) {
+        value = null;
+      }
+
+      this.set('query', value);
+
+      if (typeof this.attrs.onQueryChange === 'function') {
+        this.attrs.onQueryChange(value);
+      }
     },
 
     highlightItem(item) {
