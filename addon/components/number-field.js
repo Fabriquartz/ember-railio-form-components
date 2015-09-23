@@ -33,6 +33,10 @@ export default LazyTextField.extend({
     this._super(...arguments);
   },
 
+  sanitizeValue(value) {
+    return value.replace(/[^0-9,\.\-\ ]+/g, '');
+  },
+
   formatValue(value) {
     return formatNumber(value, { decimals: this.get('maxDecimals') });
   },
@@ -41,6 +45,7 @@ export default LazyTextField.extend({
     const value = this.get('numberValue');
 
     if ([38, 40].indexOf(e.keyCode) !== -1) {
+      this.$().trigger('input');
       this.withLazyDisabled(() => {
         if (e.keyCode === 38) {
           this.send('changed', increaseNumber(value, 1));

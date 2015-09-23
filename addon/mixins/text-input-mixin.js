@@ -1,7 +1,22 @@
 import Ember from 'ember';
 
 function handleChanged() {
-  this.send('changed', this.readDOMAttr('value'));
+  let value = this.readDOMAttr('value');
+
+  if (typeof this.sanitizeValue === 'function') {
+    const originalValue = value;
+    const input         = this.$()[0];
+    const caretPos      = input.selectionStart;
+
+    value = this.sanitizeValue(value);
+
+    if (originalValue !== value) {
+      this.$().val(value);
+      input.setSelectionRange(caretPos - 1, caretPos - 1);
+    }
+  }
+
+  this.send('changed', value);
 }
 
 export default Ember.Mixin.create({
