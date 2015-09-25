@@ -6,7 +6,8 @@ function sliceDecimals(value, decimals) {
 }
 
 function increaseNumber(value, add) {
-  if (value == null || typeof value !== 'number') {
+  value = toNumber(value);
+  if (value == null || isNaN(value)) {
     value = 0;
   }
 
@@ -42,7 +43,7 @@ export default LazyTextField.extend({
   },
 
   keyDown(e) {
-    const value = this.get('numberValue');
+    const value = this.$().val();
 
     if ([38, 40].indexOf(e.keyCode) !== -1) {
       this.$().trigger('input');
