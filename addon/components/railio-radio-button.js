@@ -5,11 +5,19 @@ const { computed } = Ember;
 
 export default Ember.Component.extend({
   layout: layout,
+
   classNames: ['radio-select__option'],
   classNameBindings: [
     'checked:radio-select__option--selected',
-    'showIcon::select-color'
+    'icon::no-icon'
   ],
+
+  icon: computed('showIcon', 'inline', function() {
+    if (this.get('inline')) {
+      return false;
+    }
+    return this.get('showIcon');
+  }),
 
   checked: computed('option', 'selection', function() {
     const optionValuePath = this.get('optionValuePath');
