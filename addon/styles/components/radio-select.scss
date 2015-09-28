@@ -1,0 +1,19 @@
+.radio-select {
+  &__option {
+    cursor: pointer;
+
+    label { cursor: inherit; }
+
+                .fa { color: #777; }
+    &--selected .fa { color: #444; }
+
+    &.select-color:hover {
+      background-color: #D5D5D5;
+    }
+
+    &--selected.select-color {
+      background-color: #E8E8E8;
+    }
+
+  }
+}

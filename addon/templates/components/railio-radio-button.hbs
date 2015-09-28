@@ -1,10 +1,8 @@
-<div class="{{unless showIcon 'select-color'}}">
-  {{#if showIcon}}
-    {{#if checked}}
-      {{fa-icon "circle"}}
-    {{else}}
-      {{fa-icon "circle-thin"}}
-    {{/if}}
+{{#if showIcon}}
+  {{#if checked}}
+    {{fa-icon "circle"}}
+  {{else}}
+    {{fa-icon "circle-thin"}}
   {{/if}}
-  <label>{{label}}</label>
-</div>
+{{/if}}
+<label>{{label}}</label>

@@ -111,3 +111,20 @@ test('works with form-field wrapper', function(assert) {
 
   assert.equal(this.get('object.selection'), 'Option 2', 'selected option set');
 });
+
+test('shows icon', function(assert) {
+  this.set('showIcon', true);
+  this.set('options', ['Option 1', 'Option 2']);
+
+  this.render(hbs`{{radio-select value=selection
+                                 options=options
+                                 showIcon=showIcon}}`);
+
+  let $icons = this.$('.radio-select__option .fa');
+  assert.equal($icons.length, 2);
+
+  this.set('showIcon', false);
+
+  $icons = this.$('.radio-select__option .fa');
+  assert.equal($icons.length, 0);
+});
