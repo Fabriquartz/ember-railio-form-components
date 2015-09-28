@@ -1,0 +1,32 @@
+.radio-select {
+  &__option {
+    cursor: pointer;
+
+    label { cursor: inherit; }
+
+                .fa { color: #777; }
+    &--selected .fa { color: #444; }
+
+    &.no-icon:hover {
+      background-color: #D5D5D5;
+    }
+
+    &--selected.no-icon {
+      background-color: #E8E8E8;
+    }
+  }
+
+  &--inline {
+    .radio-select__option {
+      display: inline-block;
+      float:   left;
+
+      padding:      0 0.5em;
+      border-right: 1px solid black;
+
+      &:last-child {
+        border: none;
+      }
+    }
+  }
+}
