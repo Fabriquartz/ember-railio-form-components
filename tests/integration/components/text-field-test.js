@@ -8,6 +8,12 @@ moduleForComponent('text-field', 'Integration | Component | {{text-field}}', {
   integration: true
 });
 
+test('renders input with placeholder', function(assert) {
+  this.render(hbs`{{text-field placeholder='Type your value here'}}`);
+
+  assert.equal(this.$('input')[0].getAttribute('placeholder'), 'Type your value here');
+});
+
 test('input value is set to value', function(assert) {
   this.set('value', 'testing');
   this.render(hbs`{{text-field value=value}}`);

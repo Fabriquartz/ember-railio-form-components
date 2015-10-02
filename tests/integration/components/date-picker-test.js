@@ -77,7 +77,7 @@ test('typing in date shorthands', function(assert) {
   const $input = this.$('input');
   const year  = (new Date()).getFullYear();
   const yearStr = year.toString().slice(-2);
-  const month = (new Date()).getMonth() + 1;
+  const month = `0${(new Date()).getMonth() + 1}`.substr(-2);
 
   fillIn($input, '050515');
 
@@ -106,7 +106,7 @@ test('typing in date shorthands', function(assert) {
 
   fillIn($input, '5');
 
-  assert.equal($input.val(), `05-0${month}-${yearStr}`);
+  assert.equal($input.val(), `05-${month}-${yearStr}`);
   assert.equal(+this.get('value'), +(new Date(year, month - 1, 5)));
 });
 
