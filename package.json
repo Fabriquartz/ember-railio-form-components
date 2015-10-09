@@ -37,8 +37,8 @@
     "ember-disable-prototype-extensions": "^1.0.0",
     "ember-disable-proxy-controllers": "^1.0.0",
     "ember-export-application-global": "1.0.4",
-    "ember-proxy-util": "0.0.4",
-    "ember-railio-formatting": "0.0.8",
+    "ember-proxy-util": "0.0.5",
+    "ember-railio-formatting": "0.0.9",
     "ember-try": "0.0.8"
   },
   "keywords": [
