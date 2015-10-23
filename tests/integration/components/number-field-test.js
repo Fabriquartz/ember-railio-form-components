@@ -121,3 +121,63 @@ test('arrow down when empty sets value to -1', function(assert) {
   assert.equal($input.val(), '-1');
   assert.inDelta(this.get('number'), -1, 0.01);
 });
+
+test('arrow down to negative', function(assert) {
+  this.set('number', 0.4);
+  this.render(hbs`
+    {{number-field value=number updated=(action "update")}}
+  `);
+
+  const $input = this.$('input');
+
+  run(() => {
+    $input.trigger('focusin');
+    $input.trigger($.Event('keydown', { keyCode: 40 }));
+  });
+
+  assert.equal(this.get('number'), -0.6, 'pressed arrow down once');
+
+  run(() => {
+    $input.trigger('focusin');
+    $input.trigger($.Event('keydown', { keyCode: 40 }));
+  });
+
+  assert.equal(this.get('number'), -1.6, 'pressed arrow down twice');
+
+  run(() => {
+    $input.trigger('focusin');
+    $input.trigger($.Event('keydown', { keyCode: 40 }));
+  });
+
+  assert.equal(this.get('number'), -2.6, 'pressed arrow down three times');
+});
+
+test('arrow up from negative to positive', function(assert) {
+  this.set('number', -2.7);
+  this.render(hbs`
+    {{number-field value=number updated=(action "update")}}
+  `);
+
+  const $input = this.$('input');
+
+  run(() => {
+    $input.trigger('focusin');
+    $input.trigger($.Event('keydown', { keyCode: 38 }));
+  });
+
+  assert.equal(this.get('number'), -1.7, 'pressed arrow up once');
+
+  run(() => {
+    $input.trigger('focusin');
+    $input.trigger($.Event('keydown', { keyCode: 38 }));
+  });
+
+  assert.equal(this.get('number'), -0.7, 'pressed arrow up twice');
+
+  run(() => {
+    $input.trigger('focusin');
+    $input.trigger($.Event('keydown', { keyCode: 38 }));
+  });
+
+  assert.equal(this.get('number'), 0.3, 'pressed arrow up three times');
+});
