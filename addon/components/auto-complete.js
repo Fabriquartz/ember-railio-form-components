@@ -31,11 +31,13 @@ export default Ember.Component.extend({
     const optionLabelPath = this.getAttr('optionLabelPath');
     const value = this.getAttr('value');
 
-    if (value == null) {
-      this.set('query', '');
-    } else {
-      this.set('query', value.get(optionLabelPath));
-    }
+    Ember.RSVP.Promise.resolve(value).then((value) => {
+      if (value == null) {
+        this.set('query', '');
+      } else {
+        this.set('query', value.get(optionLabelPath));
+      }
+    });
   },
 
   groupedContent: computed('content.[]', function() {
