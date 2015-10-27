@@ -28,8 +28,18 @@ export default Ember.Component.extend({
   },
 
   didReceiveAttrs: function() {
+    const optionLabelPath = this.getAttr('optionLabelPath');
     const value = this.getAttr('value');
-    this._updateQueryOnValue(value);
+
+    if (value == null) {
+      this.set('query', '');
+    } else {
+      Ember.RSVP.Promise.resolve(value).then((value) => {
+        if (value != null) {
+          this.set('query', get(value, optionLabelPath));
+        }
+      });
+    }
   },
 
   groupedContent: computed('content.[]', function() {
@@ -79,18 +89,6 @@ export default Ember.Component.extend({
     e.preventDefault();
   },
 
-  _updateQueryOnValue(value) {
-    const optionLabelPath = this.get('optionLabelPath');
-
-    Ember.RSVP.Promise.resolve(value).then((value) => {
-      if (value == null) {
-        this.set('query', null);
-      } else {
-        this.set('query', get(value, optionLabelPath));
-      }
-    });
-  },
-
   actions: {
     showList() {
       this.$('.auto-complete__option-list').slideDown();
@@ -111,7 +109,13 @@ export default Ember.Component.extend({
     },
 
     changed(value) {
-      this._updateQueryOnValue(value);
+      const optionLabelPath = this.get('optionLabelPath');
+
+      if (value == null) {
+        this.set('query', null);
+      } else {
+        this.set('query', get(value, optionLabelPath));
+      }
 
       if (typeof this.attrs.updated === 'function') {
         this.attrs.updated(value);
