@@ -189,18 +189,20 @@ test('escape deletes the searchquery and closes the list', function(assert) {
   this.render(hbs`{{auto-complete}}`);
 
   const $input = this.$('input');
+  jQuery.fx.off = true;
   run(() => {
-    jQuery.fx.off = true;
     $input.trigger('focusin');
     $input.val('foo');
     $input.trigger('input');
+  });
 
+  run(() => {
     const event = $.Event('keyup');
     event.keyCode = event.which = 27;
-
     $input.trigger(event);
-    jQuery.fx.off = false;
   });
+
+  jQuery.fx.off = false;
 
   assert.equal($input.val(), '');
 });
