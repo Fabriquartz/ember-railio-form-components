@@ -196,3 +196,10 @@ test('shift + arrow down decreases time by one minute', function(assert) {
   assert.equal($input.val(), '23:59');
   assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 23, 59)));
 });
+
+test('has correct input[type="time"] type', function(assert) {
+  assert.expect(1);
+
+  this.render(hbs`{{time-field}}`);
+  assert.equal(this.$('input').prop('type'), 'time');
+});
