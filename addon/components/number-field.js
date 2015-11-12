@@ -26,6 +26,7 @@ function increaseNumber(value, add) {
 
 export default LazyTextField.extend({
   classNames: ['number-field'],
+  type: 'number',
 
   maxDecimals: null,
 

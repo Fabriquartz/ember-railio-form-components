@@ -14,6 +14,7 @@ function today() {
 
 export default LazyTextField.extend({
   classNames:        ['date-picker'],
+  type: 'date',
 
   didReceiveAttrs: function() {
     this.set('date', this.getAttr('value'));

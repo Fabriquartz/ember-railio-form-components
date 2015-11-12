@@ -5,6 +5,7 @@ const AN_HOUR  = A_MINUTE * 60;
 
 export default LazyTextField.extend({
   classNames:        ['time-field'],
+  type: 'time',
 
   didReceiveAttrs: function() {
     this.set('datetime', this.getAttr('value'));

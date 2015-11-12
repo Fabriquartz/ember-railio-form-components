@@ -20,7 +20,7 @@ function handleChanged() {
 }
 
 export default Ember.Mixin.create({
-  attributeBindings: ['_value:value', 'disabled', 'placeholder'],
+  attributeBindings: ['_value:value', 'disabled', 'placeholder', 'type', 'required', 'results', 'autofocus', 'pattern', 'title'],
 
   input:    handleChanged,
   change:   handleChanged,

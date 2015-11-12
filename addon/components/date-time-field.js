@@ -2,6 +2,7 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   classNames: ['date-time-row'],
+  type: 'datetime',
 
   actions: {
     setDatetimeToCurrent: function() {
