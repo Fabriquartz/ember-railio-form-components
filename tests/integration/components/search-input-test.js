@@ -19,3 +19,17 @@ test('typing sends out onQueryChange event', function(assert) {
     this.$('input').trigger('input'); // syncs the value;
   });
 });
+
+test('assigns `results` attribute', function(assert) {
+  assert.expect(1);
+
+  this.render(hbs`{{search-input results=10}}`);
+  assert.equal(this.$('input').attr('results'), 10);
+});
+
+test('has correct input[type="search"] type', function(assert) {
+  assert.expect(1);
+
+  this.render(hbs`{{search-input}}`);
+  assert.equal(this.$('input').prop('type'), 'search');
+});
