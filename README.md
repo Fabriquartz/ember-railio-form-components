@@ -37,7 +37,11 @@ Is a lazy-text-field, but only accepts numeric values. You'll be able to use the
 
 Indicates a boolean value, so can only be false or true.
 
+#### date-time-field
 
+Needs a datetime as a value, and uses a datepicker for selecting the date. Also you are able to set the current datetime and empty the value.
+
+#### Components for use with block-form
 
 Other form-components that are need to be used with the block-form:
 
@@ -73,7 +77,20 @@ On each change of the value, the updated action is called with the new value.
 
 ## Block-form usage
 
+You could use the block-form usage of the form-field component with components that are not directly usable of if you need to add more information to the used component.
 
+```handlebars
+{{#form-field object=movie
+              propertyPath="description"
+              updated=(action "update")
+              disabled=locked
+              as |value updated disabled|}}
+  {{text-area value=value
+              updated=updated
+              disabled=disabled}}
+{{/form-field}}
+```
 
 ## Using your own components
 
+You could use your own components by implementing it in the form-field component like above in the block-form usage. 
