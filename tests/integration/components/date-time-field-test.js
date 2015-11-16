@@ -46,3 +46,10 @@ test('unset time', function(assert) {
   this.$('.date-time-field-reset').click();
   assert.equal(this.get('value'), null);
 });
+
+test('has correct input[type="datetime"] type', function(assert) {
+  assert.expect(1);
+
+  this.render(hbs`{{date-time-field}}`);
+  assert.equal(this.$('input').prop('type'), 'datetime');
+});

@@ -216,3 +216,10 @@ test('shift + arrow month decreases date by one month', function(assert) {
   assert.equal($input.val(), '01-12-14');
   assert.equal(+this.get('value'), +(new Date(2014, 11)));
 });
+
+test('has correct input[type="date"] type', function(assert) {
+  assert.expect(1);
+
+  this.render(hbs`{{date-picker}}`);
+  assert.equal(this.$('input').prop('type'), 'date');
+});

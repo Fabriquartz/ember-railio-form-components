@@ -181,3 +181,10 @@ test('arrow up from negative to positive', function(assert) {
 
   assert.equal(this.get('number'), 0.3, 'pressed arrow up three times');
 });
+
+test('has correct input[type="number"] type', function(assert) {
+  assert.expect(1);
+
+  this.render(hbs`{{number-field}}`);
+  assert.equal(this.$('input').prop('type'), 'number');
+});
