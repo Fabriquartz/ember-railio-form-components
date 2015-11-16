@@ -6,6 +6,7 @@
   {{yield (get object propertyPath) (action "update") disabled}}
 {{else}}
   {{component type value=(get object propertyPath)
+                   name=name
                    updated=(action "update")
                    disabled=disabled}}
 {{/if}}
