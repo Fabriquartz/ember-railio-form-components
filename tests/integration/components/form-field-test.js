@@ -191,6 +191,22 @@ test(`Shows a component depending on the given type`, function(assert) {
   assert.equal(inputText, 'John White', 'shown component has correct value');
 });
 
+test(`passes the name to the form field`, function(assert) {
+  this.set('object', Ember.Object.create({
+    name: 'John White'
+  }));
+
+  this.render(hbs`
+    {{form-field type="text-field"
+                 object=object
+                 propertyPath="name"
+                 name="person-name"
+                 updated=(action 'update')}}`);
+
+  const $input = this.$('input.text-field');
+  assert.equal($input.attr('name'), 'person-name', 'passes name to component');
+});
+
 test(`The component doesn't update the value, but calls an action`, function(assert) {
   assert.expect(5);
 
