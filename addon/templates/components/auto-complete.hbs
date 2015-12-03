@@ -1,52 +1,16 @@
-<div class="auto-complete__input-wrapper">
-  {{text-field value=query
-               classNames="auto-complete__input"
-               placeholder=prompt
-               name=name
-               disabled=disabled
-               updated=(action "queryChanged")
-               enter=(action "acceptSelection")
-               focusIn=(action "showList")
-               focusOut=(action "hideList")
-               escape=(action "hideList") }}
+{{#power-select options=groupedContent
+                selected=value
+                search=onQueryChange
+                searchField=optionLabelPath
+                searchPlaceholder=prompt
+                onchange=updated
+                classNames="auto-complete"
+                as |item|}}
+  {{get item optionLabelPath}}
+{{/power-select}}
 
-  <ul class="auto-complete__option-list">
-    {{#if content}}
-      {{#if groupLabelPath}}
-        {{#each groupedContent key="@index" as |group|}}
-          <li>
-            <ul class="auto-complete__group-list">
-              <li class="auto-complete__group-list__label">{{group.label}}</li>
-              {{#each group.content key="@index" as |item|}}
-                <li {{ action 'selectItem' item }}
-                    class="auto-complete__option
-                           {{if (is-equal selection item) 'auto-complete__option--selected'}}
-                           {{if (is-equal highlighted item) 'auto-complete__option--highlighted'}}">
-                  {{label-for item optionLabelPath}}
-                </li>
-              {{/each}}
-            </ul>
-          </li>
-        {{/each}}
-      {{else}}
-        {{#each content key="@index" as |item|}}
-          <li {{action 'selectItem' item }}
-              class="auto-complete__option
-                     {{if (is-equal selection item) 'auto-complete__option--selected'}}
-                     {{if (is-equal highlighted item) 'auto-complete__option--highlighted'}}">
-            {{label-for item optionLabelPath}}
-          </li>
-        {{/each}}
-      {{/if}}
-    {{else}}
-      <li class="auto-complete-no-options">
-        No options available...
-      </li>
-    {{/if}}
-  </ul>
-</div>
-
-<div class="auto-complete__empty-button" title="Empty selection"
-  {{action 'emptySelection'}}>
+<div class="auto-complete__empty-button"
+     title="Empty selection"
+     {{action 'emptySelection'}}>
   {{fa-icon "times"}}
 </div>
