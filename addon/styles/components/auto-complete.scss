@@ -1,100 +1,26 @@
 .auto-complete {
   position: relative;
-  width: 100%;
+  width:    100%;
 
-  &__input-wrapper {
+  .ember-power-select {
     position: relative;
     float:    left;
     width:    calc(100% - 25px);
 
-    &::after {
-      position:    absolute;
-      top:         0px;
-      right:       5px;
-      line-height: 2em;
-      color:       #999;
-      content:     "\25BC";
-    }
-  }
+    &-trigger {
+      padding-right: 16px;
 
-  &__input {
-    width:         100%;
-    height:        2em;
-    text-overflow: ellipsis;
-    padding-right: 20px;
-  }
-
-  &__option-list {
-    display: none;
-    list-style: none;
-
-    max-height: 350px;
-    width: 100%;
-
-    position: absolute;
-    left: 0;
-    top:  100%;
-
-    z-index: 10000;
-
-    overflow-y: auto;
-
-    background-color: #fff;
-
-    text-align: left;
-
-    padding: 6px 0;
-    border: 1px solid #ccc;
-    border-top: 0;
-    border-bottom-left-radius:  5px;
-    border-bottom-right-radius: 5px;
-  }
-
-  &__option {
-    padding: 3px 12px;
-    cursor:  pointer;
-
-    &:hover {
-      background-color: #d9edf7;
-    }
-
-    &--highlighted {
-      background-color: #D9D9DD;
-    }
-
-    &--selected {
-      color: #fff;
-      background-color: #337ab7;
-    }
-  }
-
-  &__group-list {
-    padding: 0;
-    list-style: none;
-
-    .auto-complete__option {
-      padding-left: 24px;
-    }
-
-    &__label {
-      color: #666;
-      padding: 3px 12px;
-      margin-top: 3px;
-      border-bottom: 1px solid #eee;
+      overflow:      hidden;
+      text-overflow: ellipsis;
     }
   }
 
   &__empty-button {
     float: left;
     width: 25px;
-    line-height: 2em;
+    line-height: 22px;
     text-align: center;
     color: #333;
     cursor: pointer;
   }
-}
-
-.auto-complete-no-options {
-  padding: 3px 12px;
-  color: #666;
 }

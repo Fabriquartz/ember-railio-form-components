@@ -5,7 +5,11 @@ import hbs from 'htmlbars-inline-precompile';
 const { run } = Ember;
 
 moduleForComponent('select-auto-complete', 'Integration | Component | {{select-auto-complete}}', {
-  integration: true
+  integration: true,
+
+  beforeEach() {
+    this.on('updated', function() { });
+  }
 });
 
 test('filters content depending on search query', function(assert) {
@@ -15,20 +19,23 @@ test('filters content depending on search query', function(assert) {
     Ember.Object.create({ foo: 'lion' })
   ]);
 
-  this.render(hbs`{{select-auto-complete content=content optionLabelPath="foo"}}`);
+  this.render(hbs`{{select-auto-complete content=content
+                                         optionLabelPath="foo"
+                                         updated=(action 'updated')}}`);
 
-  let $items = this.$('.auto-complete__option');
+  this.$('.ember-power-select-trigger').click();
+
+  let $items = $('.ember-power-select-dropdown li');
 
   assert.equal($items.length, 3);
 
-  const $input = this.$('input');
-
   run(() => {
+    const $input = $('.ember-power-select-dropdown input');
     $input.val('o');
     $input.trigger('input');
   });
 
-  $items = this.$('.auto-complete__option');
+  $items = $('.ember-power-select-dropdown li');
   assert.equal($items.length, 2);
 
   assert.equal($items[0].innerText.trim(), 'dog');
@@ -45,11 +52,13 @@ test('calls onQueryChange', function(assert) {
   this.render(hbs`
     {{select-auto-complete content=content
                            optionLabelPath="foo"
-                           onQueryChange=(action "queryChanged")}}`);
+                           onQueryChange=(action "queryChanged")
+                           updated=(action 'updated')}}`);
 
-  const $input = this.$('input');
+  this.$('.ember-power-select-trigger').click();
 
   run(() => {
+    const $input = $('.ember-power-select-dropdown input');
     $input.val('o');
     $input.trigger('input');
   });

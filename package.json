@@ -37,6 +37,7 @@
     "ember-disable-prototype-extensions": "^1.0.0",
     "ember-disable-proxy-controllers": "^1.0.0",
     "ember-export-application-global": "1.0.4",
+    "ember-invoke-action": "1.2.0",
     "ember-proxy-util": "0.0.5",
     "ember-railio-formatting": "0.0.10",
     "ember-try": "0.0.8"
@@ -47,7 +48,8 @@
   "dependencies": {
     "ember-cli-babel": "5.1.5",
     "ember-cli-htmlbars": "1.0.1",
-    "ember-cli-sass": "4.0.0-beta.5"
+    "ember-cli-sass": "5.2.0",
+    "ember-power-select": "0.6.4"
   },
   "ember-addon": {
     "configPath": "tests/dummy/config"
