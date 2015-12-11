@@ -4,13 +4,10 @@
                 searchField=optionLabelPath
                 searchPlaceholder=prompt
                 onchange=updated
+                allowClear=true
+                renderInPlace=true
                 classNames="auto-complete"
+                placeholder=prompt
                 as |item|}}
   {{get item optionLabelPath}}
 {{/power-select}}
-
-<div class="auto-complete__empty-button"
-     title="Empty selection"
-     {{action 'emptySelection'}}>
-  {{fa-icon "times"}}
-</div>
