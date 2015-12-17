@@ -1,9 +1,28 @@
-{{#each options as |option|}}
-  {{railio-radio-button optionLabelPath=optionLabelPath
-                        optionValuePath=optionValuePath
-                        option=option
-                        selection=value
-                        updated=updated
-                        showIcon=showIcon
-                        inline=inline}}
-{{/each}}
+{{#if cycle}}
+  {{#if value}}
+    {{railio-radio-button optionLabelPath=optionLabelPath
+                          optionValuePath=optionValuePath
+                          option=value
+                          selection=value
+                          updated=(action "selectItem")
+                          inline=inline}}
+  {{else}}
+    {{railio-radio-button optionLabelPath=optionLabelPath
+                          optionValuePath=optionValuePath
+                          option=defaultEmpty
+                          selection=defaultEmpty
+                          updated=(action "selectItem")
+                          classNames="radio-select__option--empty"
+                          inline=inline}}
+  {{/if}}
+{{else}}
+  {{#each options as |option|}}
+    {{railio-radio-button optionLabelPath=optionLabelPath
+                          optionValuePath=optionValuePath
+                          option=option
+                          selection=value
+                          updated=(action "selectItem")
+                          showIcon=showIcon
+                          inline=inline}}
+  {{/each}}
+{{/if}}

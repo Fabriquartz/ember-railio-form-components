@@ -19,7 +19,7 @@ export default Ember.Component.extend({
     return this.get('showIcon');
   }),
 
-  checked: computed('option', 'selection', function() {
+  checked: computed('option', 'selection', 'optionValuePath', function() {
     const optionValuePath = this.get('optionValuePath');
 
     if (optionValuePath) {
