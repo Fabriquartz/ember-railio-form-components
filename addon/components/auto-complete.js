@@ -1,6 +1,5 @@
 import Ember from 'ember';
 import layout from 'ember-railio-form-components/templates/components/auto-complete';
-import invokeAction from 'ember-invoke-action';
 
 const { computed, get } = Ember;
 
@@ -8,7 +7,7 @@ export default Ember.Component.extend({
   classNames: ['auto-complete'],
   layout: layout,
 
-  groupedContent: computed('content.[]', function() {
+  groupedContent: computed('content.[]', 'groupLabelPath', function() {
     const groupPath = get(this, 'groupLabelPath');
     const content   = get(this, 'content');
     const groups    = Ember.A();
@@ -39,11 +38,5 @@ export default Ember.Component.extend({
     });
 
     return groups;
-  }),
-
-  actions: {
-    emptySelection() {
-      invokeAction(this, 'updated', null);
-    }
-  }
+  })
 });

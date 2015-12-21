@@ -5,22 +5,13 @@
   .ember-power-select {
     position: relative;
     float:    left;
-    width:    calc(100% - 25px);
+    width:    100%;
 
     &-trigger {
-      padding-right: 16px;
+      padding-right: 35px;
 
       overflow:      hidden;
       text-overflow: ellipsis;
     }
-  }
-
-  &__empty-button {
-    float: left;
-    width: 25px;
-    line-height: 22px;
-    text-align: center;
-    color: #333;
-    cursor: pointer;
   }
 }

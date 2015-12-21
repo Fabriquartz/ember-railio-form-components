@@ -106,7 +106,7 @@ test('value selected', function(assert) {
                                   updated=(action 'updated')}}`);
 
   const $powerSelect = this.$('.ember-power-select');
-  assert.equal($powerSelect[0].innerText.trim(), 'b', 'show selected item');
+  assert.equal($powerSelect[0].innerText.indexOf('b'), 0, 'show selected item');
 
   this.$('.ember-power-select-trigger').click();
 
@@ -117,9 +117,12 @@ test('value selected', function(assert) {
 });
 
 test('typing sends out onQueryChange event', function(assert) {
-  assert.expect(1);
+  assert.expect(2);
 
-  this.on('onQueryChange', (query) => assert.equal(query, 'foo'));
+  this.on('onQueryChange', () => {
+    assert.ok(true);
+    return [];
+  });
 
   this.render(hbs`{{auto-complete content=content
                                   optionLabelPath="foo"
@@ -131,6 +134,12 @@ test('typing sends out onQueryChange event', function(assert) {
   run(() => {
     const $input = $('.ember-power-select-dropdown input');
     $input.val('foo');
+    $input.trigger('input');
+  });
+
+  run(() => {
+    const $input = $('.ember-power-select-dropdown input');
+    $input.val('bar');
     $input.trigger('input');
   });
 });
@@ -178,7 +187,7 @@ test('remove button clears the selection', function(assert) {
                                   optionLabelPath="foo"}}`);
 
   run(() => {
-    this.$('.auto-complete__empty-button').trigger('click');
+    this.$('.ember-power-select-clear-btn').trigger('click');
   });
 
   assert.equal(this.get('selection'), null);
@@ -223,19 +232,29 @@ test('when selection changes from elsewhere, it changes here', function(assert) 
                                   updated=(action "updated")
                                   optionLabelPath="foo"}}`);
 
-  this.$('.ember-power-select-trigger').click();
-
   const $powerSelect = this.$('.ember-power-select');
 
   run(() => {
     this.set('selection', option);
   });
 
-  assert.equal($powerSelect[0].innerText.trim(), 'b', 'change selected item');
+  assert.equal($powerSelect[0].innerText.indexOf('b'), 0, 'change selected item');
 
   run(() => {
     this.set('selection', null);
   });
 
   assert.equal($powerSelect[0].innerText.trim(), '', 'empty selected item');
+});
+
+test('pass prompt as placeholder', function(assert) {
+  this.render(hbs`{{auto-complete content=content
+                                  value=selection
+                                  updated=(action "updated")
+                                  prompt="Select your item"
+                                  optionLabelPath="foo"}}`);
+
+  const powerSelectText = this.$('.ember-power-select')[0].innerText.trim();
+
+  assert.equal(powerSelectText, 'Select your item');
 });
