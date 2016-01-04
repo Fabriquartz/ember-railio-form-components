@@ -14,6 +14,10 @@
     &--selected.no-icon {
       background-color: #E8E8E8;
     }
+
+    &--empty {
+      color: lightgrey;
+    }
   }
 
   &--inline {

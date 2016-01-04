@@ -2,6 +2,8 @@ import Ember from 'ember';
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 
+const { set } = Ember;
+
 moduleForComponent('radio-select', 'Integration | Component | {{radio-select}}', {
   integration: true
 });
@@ -127,4 +129,39 @@ test('shows icon', function(assert) {
 
   $icons = this.$('.radio-select__option .fa');
   assert.equal($icons.length, 0);
+});
+
+test('cycle true: shows only selection and changes on click', function(assert) {
+  set(this, 'cycle', true);
+
+  set(this, 'options', ['Option 1', 'Option 2', 'Option 3']);
+
+  this.on('updated', function(value) {
+    set(this, 'selection', value);
+  });
+
+  this.render(hbs`{{radio-select value=selection
+                                 cycle=cycle
+                                 options=options
+                                 updated=(action 'updated')}}`);
+
+  let $options = this.$('.radio-select__option');
+  assert.equal($options.length, 1);
+
+  assert.equal($options.eq(0).hasClass('radio-select__option--empty'), true);
+  assert.equal($options[0].innerText.trim(), 'No option selected');
+
+  $options.eq(0).click();
+
+  $options = this.$('.radio-select__option');
+  assert.equal($options[0].innerText.trim(), 'Option 1');
+
+  $options.eq(0).click();
+  assert.equal($options[0].innerText.trim(), 'Option 2');
+
+  $options.eq(0).click();
+  assert.equal($options[0].innerText.trim(), 'Option 3');
+
+  $options.eq(0).click();
+  assert.equal($options[0].innerText.trim(), 'Option 1');
 });
