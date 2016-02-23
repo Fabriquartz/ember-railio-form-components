@@ -1,47 +1,90 @@
-import Ember from 'ember';
+import LazyTextField from '../components/lazy-text-field';
 
-const { computed, get } = Ember;
+const A_MINUTE = 1000 * 60;
+const AN_HOUR  = A_MINUTE * 60;
 
-const pad = (number) => number < 10 ? `0${number}` : number;
+export default LazyTextField.extend({
+  classNames:        ['time-field'],
 
-const toDateString = (date) =>
-  `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+  didReceiveAttrs: function() {
+    this.set('datetime', this.getAttr('value'));
+    this._super(...arguments);
+  },
 
-const toTimeString = (date) =>
-  `${('0' + date.getHours()).slice(-2)}:${('0' + date.getMinutes()).slice(-2)}`;
+  formatValue(value) {
+    if (!(value && value.getHours && value.getMinutes)) {
+      return null;
+    }
 
-const isDate = (date) => date instanceof Date;
+    const hours   = value.getHours();
+    const minutes = `0${value.getMinutes()}`.slice(-2);
 
-function handleChanged() {
-  let value = this.readDOMAttr('value');
+    return `${hours}:${minutes}`;
+  },
 
-  this.send('changed', value);
-}
+  keyDown(e) {
+    const value = this.get('datetime');
 
-export default Ember.Component.extend({
-  tagName: 'input',
-  classNames: ['time-field'],
-  attributeBindings: ['_type:type', '_time:value', 'disabled', 'name'],
+    const shift = e.shiftKey ? A_MINUTE : AN_HOUR;
 
-  _type: 'time',
+    if ([38, 40].indexOf(e.keyCode) !== -1) {
+      this.withLazyDisabled(() => {
+        if (e.keyCode === 38) {
+          this.send('changed', new Date(+value + shift));
+        }
 
-  input: handleChanged,
-  change: handleChanged,
+        if (e.keyCode === 40) {
+          this.send('changed', new Date(+value - shift));
+        }
+      });
+    }
 
-  _time: computed('value', function() {
-    const value = get(this, 'value');
-    return isDate(value) && toTimeString(value);
-  }),
+    this._super(...arguments);
+  },
 
   actions: {
-    changed(time) {
-      const datetime = get(this, 'value');
-      const date = isDate(datetime) && toDateString(datetime);
-      const newDate = new Date(`${date} ${time}`);
-
-      if (typeof this.attrs.updated === 'function') {
-        this.attrs.updated(newDate);
+    changed(value) {
+      if (value instanceof Date) {
+        return this._super(value);
       }
+
+      let date = this.get('datetime');
+
+      if (date == null && (value == null || value === '')) {
+        return '';
+      }
+
+      if (date == null) {
+        date = new Date();
+      } else {
+        date = new Date(date);
+      }
+
+      if (value === '' || value == null) {
+        date.setHours(0);
+        date.setMinutes(0);
+        value = '';
+      } else {
+        let parsed = value.replace(/[;,.]/g, ':');
+
+        if (parsed.indexOf(':') === -1) {
+          if (parsed.length >= 3) {
+            // 900 -> 9:00, 1200 -> 12:00
+            parsed = `${value.slice(0, -2)}:${value.slice(-2)}`;
+          } else {
+            // 5 -> 5:00, 12 -> 12:00
+            parsed = `${value}:00`;
+          }
+        }
+
+        let [hours, minutes] = parsed.split(/:/, 2);
+        hours   = (+hours % 24) || 0;
+        minutes = (+minutes % 60) || 0;
+
+        date.setHours(hours);
+        date.setMinutes(minutes);
+      }
+      this._super(date);
     }
   }
 });
