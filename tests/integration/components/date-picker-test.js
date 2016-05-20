@@ -104,10 +104,10 @@ test('typing in date shorthands', function(assert) {
   assert.equal($input.val(), `05-05-${yearStr}`);
   assert.equal(+this.get('value'), +(new Date(year, 4, 5)));
 
-  fillIn($input, '5');
+  fillIn($input, '4');
 
-  assert.equal($input.val(), `05-${month}-${yearStr}`);
-  assert.equal(+this.get('value'), +(new Date(year, month - 1, 5)));
+  assert.equal($input.val(), `04-${month}-${yearStr}`);
+  assert.equal(+this.get('value'), +(new Date(year, month - 1, 4)));
 });
 
 test('typing in with different separators', function(assert) {
