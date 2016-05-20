@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
+import { clickTrigger, currentOptions } from '../../helpers/ember-power-select';
 
 const { run } = Ember;
 
@@ -23,7 +24,7 @@ test('renders the content', function(assert) {
                                   optionLabelPath="foo"
                                   updated=(action 'updated')}}`);
 
-  this.$('.ember-power-select-trigger').click();
+  clickTrigger();
 
   const $items = $('.ember-power-select-dropdown li');
 
@@ -45,7 +46,7 @@ test('auto-complete items have label set to items optionLabelPath', function(ass
                                   optionLabelPath="foo"
                                   updated=(action 'updated')}}`);
 
-  this.$('.ember-power-select-trigger').click();
+  clickTrigger();
 
   const $items = $('.ember-power-select-dropdown li');
 
@@ -57,7 +58,7 @@ test('auto-complete items have label set to items optionLabelPath', function(ass
 test('renders the search input on open', function(assert) {
   this.render(hbs`{{auto-complete updated=(action 'updated')}}`);
 
-  this.$('.ember-power-select-trigger').click();
+  clickTrigger();
 
   assert.equal($('.ember-power-select-dropdown input').length, 1);
 });
@@ -75,7 +76,7 @@ test('content grouped by groupLabelPath', function(assert) {
                                   groupLabelPath="bar"
                                   updated=(action 'updated')}}`);
 
-  this.$('.ember-power-select-trigger').click();
+  clickTrigger();
 
   const $items = $('.ember-power-select-dropdown li');
 
@@ -108,9 +109,9 @@ test('value selected', function(assert) {
   const $powerSelect = this.$('.ember-power-select');
   assert.equal($powerSelect[0].innerText.indexOf('b'), 0, 'show selected item');
 
-  this.$('.ember-power-select-trigger').click();
+  clickTrigger();
 
-  const $selection = $('.ember-power-select-option--selected');
+  const $selection = $('.ember-power-select-selected-item');
 
   assert.equal($selection.length, 1);
   assert.equal($selection[0].innerText.trim(), 'b', 'value selected');
@@ -129,7 +130,7 @@ test('typing sends out onQueryChange event', function(assert) {
                                   onQueryChange=(action "onQueryChange")
                                   updated=(action 'updated')}}`);
 
-  this.$('.ember-power-select-trigger').click();
+  clickTrigger();
 
   run(() => {
     const $input = $('.ember-power-select-dropdown input');
@@ -155,7 +156,7 @@ test('typing filters content', function(assert) {
                                   optionLabelPath="foo"
                                   updated=(action 'updated')}}`);
 
-  this.$('.ember-power-select-trigger').click();
+  clickTrigger();
 
   const $input = $('.ember-power-select-dropdown input');
 
@@ -165,7 +166,7 @@ test('typing filters content', function(assert) {
   });
 
   const $items = $('.ember-power-select-dropdown li');
-  const $highlighted = $('.ember-power-select-option--highlighted');
+  const $highlighted = currentOptions();
 
   assert.equal($items.length, 2);
   assert.equal($highlighted.length, 1);
@@ -187,7 +188,7 @@ test('remove button clears the selection', function(assert) {
                                   optionLabelPath="foo"}}`);
 
   run(() => {
-    this.$('.ember-power-select-clear-btn').trigger('click');
+    this.$('.ember-power-select-clear-btn').trigger('mousedown');
   });
 
   assert.equal(this.get('selection'), null);
@@ -203,7 +204,7 @@ test('auto-complete changes content', function(assert) {
   this.render(hbs`{{auto-complete content=content
                                   updated=(action "updated")}}`);
 
-  this.$('.ember-power-select-trigger').click();
+  clickTrigger();
 
   let $items = $('.ember-power-select-dropdown li');
   assert.equal($items.length, 3);

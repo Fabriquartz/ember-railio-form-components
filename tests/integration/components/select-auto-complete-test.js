@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import { moduleForComponent, test } from 'ember-qunit';
+import { clickTrigger } from '../../helpers/ember-power-select';
 import hbs from 'htmlbars-inline-precompile';
 
 const { run } = Ember;
@@ -23,7 +24,7 @@ test('filters content depending on search query', function(assert) {
                                          optionLabelPath="foo"
                                          updated=(action 'updated')}}`);
 
-  this.$('.ember-power-select-trigger').click();
+  clickTrigger();
 
   let $items = $('.ember-power-select-dropdown li');
 
@@ -55,7 +56,7 @@ test('calls onQueryChange', function(assert) {
                            onQueryChange=(action "queryChanged")
                            updated=(action 'updated')}}`);
 
-  this.$('.ember-power-select-trigger').click();
+  clickTrigger();
 
   run(() => {
     const $input = $('.ember-power-select-dropdown input');

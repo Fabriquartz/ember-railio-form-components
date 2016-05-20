@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import { moduleForComponent, test } from 'ember-qunit';
+import { clickTrigger, currentOptions } from '../../helpers/ember-power-select';
 import hbs from 'htmlbars-inline-precompile';
 import Pretender from 'pretender';
 
@@ -43,7 +44,7 @@ test('Searches for given model by attribute', function(assert) {
                                  optionLabelPath="name"
                                  searchProperty="name"}}`);
 
-  this.$('.ember-power-select-trigger').click();
+  clickTrigger();
 
   const $input = $('.ember-power-select-dropdown input');
   let $items = $('.ember-power-select-dropdown li');
@@ -81,7 +82,7 @@ test('Sorts list using given sorting function', function(assert) {
                                  optionLabelPath="name"
                                  searchProperty="name"}}`);
 
-  this.$('.ember-power-select-trigger').click();
+  clickTrigger();
 
   const $input = $('.ember-power-select-dropdown input');
   let $items = $('.ember-power-select-dropdown li');
