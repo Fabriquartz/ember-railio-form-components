@@ -8,34 +8,36 @@ export default Ember.Component.extend({
   layout: layout,
 
   groupedContent: computed('content.[]', 'groupLabelPath', function() {
-    const groupPath = get(this, 'groupLabelPath');
-    const content   = get(this, 'content');
-    const groups    = Ember.A();
+    let groupPath = get(this, 'groupLabelPath');
+    let content   = get(this, 'content');
+    let groups    = Ember.A();
 
     if (!groupPath) {
       return content;
     }
 
-    content.forEach((item) => {
-      const label = get(item, groupPath);
+    if (content && content.length) {
+      content.forEach((item) => {
+        const label = get(item, groupPath);
 
-      if (label) {
-        let group = groups.findBy('groupName', label);
+        if (label) {
+          let group = groups.findBy('groupName', label);
 
-        if (group == null) {
-          group = Ember.Object.create({
-            groupName: label,
-            options:   Ember.A()
-          });
+          if (group == null) {
+            group = Ember.Object.create({
+              groupName: label,
+              options:   Ember.A()
+            });
 
-          groups.pushObject(group);
+            groups.pushObject(group);
+          }
+
+          get(group, 'options').pushObject(item);
+        } else {
+          groups.pushObject(item);
         }
-
-        get(group, 'options').pushObject(item);
-      } else {
-        groups.pushObject(item);
-      }
-    });
+      });
+    }
 
     return groups;
   })
