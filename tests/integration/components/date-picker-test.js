@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
+import { percySnapshot } from 'ember-percy';
 
 const { run } = Ember;
 
@@ -39,6 +40,8 @@ test('date gets formatted to date string', function(assert) {
 
   const $input = this.$('input');
   assert.equal($input.val(), '01-01-15');
+
+  percySnapshot('{{date-picker}}');
 });
 
 test('null is an option', function(assert) {

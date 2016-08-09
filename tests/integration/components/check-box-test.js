@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
+import { percySnapshot } from 'ember-percy';
 
 const { run } = Ember;
 
@@ -37,6 +38,8 @@ test(`changing changes value and calls update function`, function(assert) {
   });
 
   this.render(hbs`{{check-box value=selected updated=(action "update")}}`);
+
+  percySnapshot('{{check-box}} checked');
 
   const $checkbox = this.$('.check-box');
 

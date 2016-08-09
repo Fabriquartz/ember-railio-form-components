@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
+import { percySnapshot } from 'ember-percy';
 
 const { run } = Ember;
 
@@ -19,6 +20,8 @@ test('input value is set to value', function(assert) {
   this.render(hbs`{{text-field value=value}}`);
 
   assert.equal(this.$('input').val(), 'testing');
+
+  percySnapshot('{{text-field}}');
 });
 
 test('changing value changes input text', function(assert) {

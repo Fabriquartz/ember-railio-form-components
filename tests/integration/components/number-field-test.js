@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
+import { percySnapshot } from 'ember-percy';
 
 moduleForComponent('number-field', 'Integration | Component | {{number-field}}', {
   integration: true,
@@ -33,6 +34,8 @@ test('value gets formatted with two decimals', function(assert) {
 
   const $input = this.$('input');
   assert.equal($input.val(), '42,00');
+
+  percySnapshot('{{number-field}}');
 });
 
 test('typing in value gets formatted', function(assert) {

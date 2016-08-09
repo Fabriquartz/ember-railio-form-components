@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
+import { percySnapshot } from 'ember-percy';
 
 const { set } = Ember;
 
@@ -31,6 +32,8 @@ test('value selected', function(assert) {
   const $selectedOption = this.$('.radio-select__option--selected');
   assert.equal($selectedOption.length, 1);
   assert.equal($selectedOption[0].innerText.trim(), 'Option 2');
+
+  percySnapshot('{{radio-select}}');
 });
 
 test('select value calls updated action', function(assert) {
