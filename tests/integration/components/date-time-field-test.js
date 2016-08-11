@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
+import { percySnapshot } from 'ember-percy';
 
 const { run } = Ember;
 
@@ -23,6 +24,8 @@ test('shows date and time', function(assert) {
 
   assert.equal($dateInput.val(), '01-01-15', 'shows date');
   assert.equal($timeInput.val(), '12:30', 'shows time');
+
+  percySnapshot('{{date-time-field}}');
 
   run(() => {
     $dateInput.val('02-01-15');

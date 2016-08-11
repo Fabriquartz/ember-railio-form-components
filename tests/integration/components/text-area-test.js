@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
+import { percySnapshot } from 'ember-percy';
 
 const { run } = Ember;
 
@@ -16,6 +17,8 @@ test('renders a text-area with value', function(assert) {
   assert.equal($area.length, 1, 'renders a textarea with class text-area');
 
   assert.equal($area.val(), 'testing');
+
+  percySnapshot('{{text-area}}');
 });
 
 test(`typing doesn't change value but sends updated`, function(assert) {

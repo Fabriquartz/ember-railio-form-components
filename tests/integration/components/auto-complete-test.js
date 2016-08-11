@@ -2,6 +2,7 @@ import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import { clickTrigger, currentOptions } from '../../helpers/ember-power-select';
+import { percySnapshot } from 'ember-percy';
 
 const { run } = Ember;
 
@@ -105,6 +106,8 @@ test('value selected', function(assert) {
                                   optionLabelPath="foo"
                                   value=selection
                                   updated=(action 'updated')}}`);
+
+  percySnapshot('{{auto-complete}}');
 
   const $powerSelect = this.$('.ember-power-select');
   assert.equal($powerSelect[0].innerText.indexOf('b'), 0, 'show selected item');
