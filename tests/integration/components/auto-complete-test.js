@@ -1,7 +1,9 @@
 import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
-import { clickTrigger, currentOptions } from '../../helpers/ember-power-select';
+import {
+  getPowerSelect, clickTrigger, currentOptions
+} from '../../helpers/ember-power-select';
 
 const { run } = Ember;
 
@@ -106,7 +108,8 @@ test('value selected', function(assert) {
                                   value=selection
                                   updated=(action 'updated')}}`);
 
-  const $powerSelect = this.$('.ember-power-select');
+  const $powerSelect = getPowerSelect();
+
   assert.equal($powerSelect[0].innerText.indexOf('b'), 0, 'show selected item');
 
   clickTrigger();
@@ -233,7 +236,7 @@ test('when selection changes from elsewhere, it changes here', function(assert) 
                                   updated=(action "updated")
                                   optionLabelPath="foo"}}`);
 
-  const $powerSelect = this.$('.ember-power-select');
+  const $powerSelect = getPowerSelect();
 
   run(() => {
     this.set('selection', option);
@@ -255,7 +258,7 @@ test('pass prompt as placeholder', function(assert) {
                                   prompt="Select your item"
                                   optionLabelPath="foo"}}`);
 
-  const powerSelectText = this.$('.ember-power-select')[0].innerText.trim();
+  const powerSelectText = getPowerSelect()[0].innerText.trim();
 
   assert.equal(powerSelectText, 'Select your item');
 });

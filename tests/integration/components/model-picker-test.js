@@ -1,6 +1,8 @@
 import Ember from 'ember';
 import { moduleForComponent, test } from 'ember-qunit';
-import { clickTrigger, currentOptions } from '../../helpers/ember-power-select';
+import {
+  getPowerSelect, clickTrigger, currentOptions
+} from '../../helpers/ember-power-select';
 import hbs from 'htmlbars-inline-precompile';
 import Pretender from 'pretender';
 
@@ -116,6 +118,6 @@ test('Shows selected item', function(assert) {
                                  optionLabelPath="name"
                                  searchProperty="name"}}`);
 
-  const $powerSelect = this.$('.ember-power-select');
+  const $powerSelect = getPowerSelect();
   assert.equal($powerSelect[0].innerText.indexOf('bar test'), 0);
 });
