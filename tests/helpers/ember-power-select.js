@@ -10,6 +10,15 @@ function fireNativeMouseEvent(eventType, selectorOrDomElement, options = {}) {
   Ember.run(() => target.dispatchEvent(event));
 }
 
+export function getPowerSelect(scope, options = {}) {
+  let selector = '.ember-basic-dropdown';
+  if (scope) {
+    selector = `${scope} ${selector}`;
+  }
+
+  return $(selector);
+}
+
 export function clickTrigger(scope, options = {}) {
   let selector = '.ember-power-select-trigger';
   if (scope) {
