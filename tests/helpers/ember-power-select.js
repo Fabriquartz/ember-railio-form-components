@@ -19,6 +19,15 @@ export function getPowerSelect(scope, options = {}) {
   return $(selector);
 }
 
+export function getMultipleTrigger(scope, options = {}) {
+  let selector = '.ember-power-select-multiple-trigger';
+  if (scope) {
+    selector = `${scope} ${selector}`;
+  }
+
+  return $(selector);
+}
+
 export function clickTrigger(scope, options = {}) {
   let selector = '.ember-power-select-trigger';
   if (scope) {
