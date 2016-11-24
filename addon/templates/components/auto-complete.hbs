@@ -1,13 +1,27 @@
-{{#power-select options=groupedContent
-                selected=value
-                search=onQueryChange
-                searchField=optionLabelPath
-                searchPlaceholder=prompt
-                onchange=updated
-                allowClear=true
-                renderInPlace=true
-                classNames="auto-complete"
-                placeholder=prompt
-                as |item|}}
-  {{get item optionLabelPath}}
-{{/power-select}}
+{{#if multiSelect}}
+  {{#power-select-multiple options=groupedContent
+                           selected=value
+                           placeholder=prompt
+                           search=onQueryChange
+                           searchField=optionLabelPath
+                           onchange=updated
+                           renderInPlace=true
+                           classNames="auto-complete auto-complete--multiple"
+                           as |item|}}
+    {{get item optionLabelPath}}
+  {{/power-select-multiple}}
+{{else}}
+  {{#power-select options=groupedContent
+                  selected=value
+                  search=onQueryChange
+                  searchField=optionLabelPath
+                  searchPlaceholder=prompt
+                  onchange=updated
+                  allowClear=true
+                  renderInPlace=true
+                  classNames="auto-complete"
+                  placeholder=prompt
+                  as |item|}}
+    {{get item optionLabelPath}}
+  {{/power-select}}
+{{/if}}

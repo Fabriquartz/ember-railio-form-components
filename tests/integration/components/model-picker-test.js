@@ -71,7 +71,7 @@ test('Searches for given model by attribute', function(assert) {
 });
 
 test('Sorts list using given sorting function', function(assert) {
-  const done = assert.async();
+  let done = assert.async();
 
   set(this, 'customSorting', function(a, b) {
     return Ember.compare(get(a, 'name'), get(b, 'name'));

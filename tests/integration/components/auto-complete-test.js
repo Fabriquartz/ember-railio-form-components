@@ -2,7 +2,7 @@ import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import {
-  getPowerSelect, clickTrigger, currentOptions
+  getPowerSelect, getMultipleTrigger, clickTrigger, currentOptions
 } from '../../helpers/ember-power-select';
 
 const { run } = Ember;
@@ -261,4 +261,24 @@ test('pass prompt as placeholder', function(assert) {
   const powerSelectText = getPowerSelect()[0].innerText.trim();
 
   assert.equal(powerSelectText, 'Select your item');
+});
+
+test('Renders as multi-select when multiSelect=true', function(assert) {
+  this.set('selection', [
+    Ember.Object.create({ name: 'foo' }),
+    Ember.Object.create({ name: 'bar' })
+  ]);
+  this.render(hbs`{{auto-complete content=content
+                                  multiSelect=true
+                                  value=selection
+                                  updated=(action "updated")
+                                  optionLabelPath="name"}}`);
+
+  let $powerSelectMultiple = getMultipleTrigger();
+  let $selectedOptions = $('.ember-power-select-multiple-option');
+
+  assert.equal($powerSelectMultiple.length, 1, 'renders multiple select');
+  assert.equal($selectedOptions.length, 2, 'shows selected options');
+  assert.ok($selectedOptions.eq(0).text().includes('foo'));
+  assert.ok($selectedOptions.eq(1).text().includes('bar'));
 });
