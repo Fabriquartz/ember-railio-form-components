@@ -1,64 +1,69 @@
-import Ember from 'ember';
-import layout from '../templates/components/model-picker';
+import Ember     from 'ember';
+import Component from 'ember-component';
+import layout    from '../templates/components/model-picker';
+
+import { isBlank }       from 'ember-utils';
+import { task, timeout } from 'ember-concurrency';
+
+import get     from 'ember-metal/get';
+import service from 'ember-service/inject';
+import { A }   from 'ember-array/utils';
 
 const {
-  get,
-  inject: { service },
   RSVP: { resolve }
 } = Ember;
 
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   store: service(),
 
-  actions: {
-    lookupModel(query) {
-      const model          = get(this, 'model');
-      const searchProperty = get(this, 'searchProperty');
-      const groupLabelPath = get(this, 'groupLabelPath');
-      const sortFunction   = get(this, 'sortFunction');
-      const filter         = {};
-      filter[searchProperty] = query;
+  lookupModel: task(function *(term) {
+    if (isBlank(term)) { return []; }
 
-      let list = get(this, 'store').query(model, filter);
+    yield timeout(1000);
 
-      return resolve(list).then((list) => {
-        const groups = Ember.A();
+    let model              = get(this, 'model');
+    let searchProperty     = get(this, 'searchProperty');
+    let groupLabelPath     = get(this, 'groupLabelPath');
+    let sortFunction       = get(this, 'sortFunction');
+    let filter             = {};
+    filter[searchProperty] = term;
 
-        if (typeof list.sort !== 'function' &&
-            typeof list.toArray === 'function') {
-          list = list.toArray();
-        }
+    return get(this, 'store').query(model, filter).then((list) => {
+      let groups = A();
 
-        list = list.sort(sortFunction);
+      if (typeof list.sort !== 'function' && typeof list.toArray === 'function') {
+        list = list.toArray();
+      }
 
-        if (!groupLabelPath) {
-          return list;
-        }
+      list = list.sort(sortFunction);
 
-        list.forEach((item) => {
-          const label = get(item, groupLabelPath);
+      if (!groupLabelPath) {
+        return list;
+      }
 
-          if (label) {
-            let group = groups.findBy('groupName', label);
+      list.forEach((item) => {
+        const label = get(item, groupLabelPath);
 
-            if (group == null) {
-              group = Ember.Object.create({
-                groupName: label,
-                options:   Ember.A()
-              });
+        if (label) {
+          let group = groups.findBy('groupName', label);
 
-              groups.pushObject(group);
-            }
+          if (group == null) {
+            group = Ember.Object.create({
+              groupName: label,
+              options:   A()
+            });
 
-            get(group, 'options').pushObject(item);
-          } else {
-            groups.pushObject(item);
+            groups.pushObject(group);
           }
-        });
 
-        return groups;
+          get(group, 'options').pushObject(item);
+        } else {
+          groups.pushObject(item);
+        }
       });
-    }
-  }
+
+      return groups;
+    });
+  }).restartable()
 });
