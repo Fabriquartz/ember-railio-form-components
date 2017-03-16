@@ -80,17 +80,24 @@ test('content grouped by groupLabelPath', function(assert) {
 
   clickTrigger();
 
-  const $items = $('.ember-power-select-dropdown li');
+  const $groups = $('li.ember-power-select-group');
+  const $items1 = $groups.eq(0).find('li.ember-power-select-option');
+  const $items2 = $groups.eq(1).find('li.ember-power-select-option');
+  const $items  = $('li.ember-power-select-option');
 
-  assert.notEqual($items[0].innerText.trim().indexOf('group 1'), -1);
-  assert.notEqual($items[0].innerText.trim().indexOf('a'), -1);
-  assert.notEqual($items[0].innerText.trim().indexOf('c'), -1);
-  assert.equal($items[1].innerText.trim(), 'a');
-  assert.equal($items[2].innerText.trim(), 'c');
-  assert.notEqual($items[3].innerText.trim().indexOf('group 2'), -1);
-  assert.notEqual($items[3].innerText.trim().indexOf('b'), -1);
-  assert.equal($items[4].innerText.trim(), 'b');
-  assert.equal($items[5].innerText.trim(), 'd');
+  assert.equal($groups.length, 2, 'renders 2 groups');
+  assert.equal($items1.length, 2, 'renders 2 items for group 1');
+  assert.equal($items2.length, 1, 'renders 1 item for group 2');
+  assert.equal($items.length,  4, 'renders 4');
+
+  assert.notEqual($groups.eq(0).text().indexOf('group 1'), -1, 'show group 1 label');
+  assert.equal($items1.eq(0).text().trim(), 'a', 'show group 1 first item');
+  assert.equal($items1.eq(1).text().trim(), 'c', 'show group 1 second item');
+
+  assert.notEqual($groups.eq(1).text().indexOf('group 2'), -1, 'show group 2 label');
+  assert.equal($items2.eq(0).text().trim(), 'b', 'show group 2 item');
+
+  assert.equal($items.eq(3).text().trim(), 'd', 'show item outside groups');
 });
 
 test('value selected', function(assert) {
