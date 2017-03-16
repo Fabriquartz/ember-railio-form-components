@@ -4,6 +4,7 @@ import layout    from '../templates/components/model-picker';
 
 import { isBlank }       from 'ember-utils';
 import { task, timeout } from 'ember-concurrency';
+import groupBy from '../utils/group-by';
 
 import get     from 'ember-metal/get';
 import service from 'ember-service/inject';
@@ -37,33 +38,7 @@ export default Component.extend({
       }
 
       list = list.sort(sortFunction);
-
-      if (!groupLabelPath) {
-        return list;
-      }
-
-      list.forEach((item) => {
-        const label = get(item, groupLabelPath);
-
-        if (label) {
-          let group = groups.findBy('groupName', label);
-
-          if (group == null) {
-            group = Ember.Object.create({
-              groupName: label,
-              options:   A()
-            });
-
-            groups.pushObject(group);
-          }
-
-          get(group, 'options').pushObject(item);
-        } else {
-          groups.pushObject(item);
-        }
-      });
-
-      return groups;
+      return groupBy(list, groupLabelPath);
     });
   }).restartable()
 });
