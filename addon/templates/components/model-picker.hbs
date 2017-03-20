@@ -1,7 +1,7 @@
 {{auto-complete content=content
                 multiSelect=multiSelect
                 value=value
-                onQueryChange=(perform lookupModel)
+                onQueryChange=(unless preload (perform lookupModel))
                 optionLabelPath=optionLabelPath
                 groupLabelPath=groupLabelPath
                 prompt=prompt

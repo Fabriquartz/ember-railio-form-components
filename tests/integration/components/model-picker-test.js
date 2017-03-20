@@ -11,13 +11,14 @@ import wait from 'ember-test-helpers/wait';
 const { run, set, get } = Ember;
 
 const FOOS = [
-  { id: 1, type: 'foos', attributes: { name: 'bar' } },
-  { id: 2, type: 'foos', attributes: { name: 'chad' } },
-  { id: 3, type: 'foos', attributes: { name: 'dave' } },
-  { id: 4, type: 'foos', attributes: { name: 'bar second' } }
+  { id: 1, type: 'foo', attributes: { name: 'bar' } },
+  { id: 2, type: 'foo', attributes: { name: 'chad' } },
+  { id: 3, type: 'foo', attributes: { name: 'dave' } },
+  { id: 4, type: 'foo', attributes: { name: 'bar second' } }
 ];
 
 let server;
+
 moduleForComponent('model-picker', 'Integration | Component | {{model-picker}}', {
   integration: true,
   setup() {
@@ -25,9 +26,13 @@ moduleForComponent('model-picker', 'Integration | Component | {{model-picker}}',
       this.get('/foos', function(request) {
         const filter = request.queryParams.name;
 
-        const filteredContent = FOOS.filter((foo) => {
-          return foo.attributes.name.indexOf(filter) !== -1;
-        });
+        let filteredContent = FOOS;
+
+        if (filter) {
+          filteredContent = FOOS.filter((foo) => {
+            return foo.attributes.name.indexOf(filter) !== -1;
+          });
+        }
 
         const content = JSON.stringify({ data: filteredContent });
 
@@ -68,6 +73,44 @@ test('Searches for given model by attribute', function(assert) {
 
     done();
   });
+});
+
+test('Pre-loads content on preload=true', function(assert) {
+  this.on('update', () => { });
+  this.render(hbs`{{model-picker updated=(action 'update')
+                                 model="foo"
+                                 preload=true
+                                 optionLabelPath="name"
+                                 searchProperty="name"}}`);
+
+  clickTrigger();
+
+  return wait()
+    .then(() => {
+      let $items = $('.ember-power-select-dropdown li');
+
+      assert.equal($items.length, 4, 'gets all objects of type on preload');
+      assert.equal($items[0].innerText, 'bar');
+      assert.equal($items[1].innerText, 'chad');
+      assert.equal($items[2].innerText, 'dave');
+      assert.equal($items[3].innerText, 'bar second');
+
+      return wait();
+    })
+    .then(() => {
+      let $input = $('.ember-power-select-dropdown input');
+      $input.val('bar');
+      $input.trigger('input');
+
+      return wait();
+    })
+    .then(() => {
+      let $items = $('.ember-power-select-dropdown li');
+
+      assert.equal($items.length, 2, 'finds searched model by label');
+      assert.equal($items[0].innerText, 'bar', 'first item');
+      assert.equal($items[1].innerText, 'bar second', 'second item');
+    });
 });
 
 test('Sorts list using given sorting function', function(assert) {
