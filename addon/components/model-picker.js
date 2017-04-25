@@ -19,28 +19,31 @@ export default Component.extend({
   layout,
   store: service(),
 
-  content: computed('preload', function() {
-    let preload = get(this, 'preload');
-
-    if (!preload) {
+  content: computed('preload', 'model', function() {
+    if (!get(this, 'preload')) {
       return [];
     }
 
-    let store          = get(this, 'store');
-    let model          = get(this, 'model');
+    let store = get(this, 'store');
+    let model = get(this, 'model');
+
+    return store.query(model, {});
+  }),
+
+  groupedContent: computed('content.[]', 'sortFunction', 'groupLabelPath',
+  function() {
     let sortFunction   = get(this, 'sortFunction');
     let groupLabelPath = get(this, 'groupLabelPath');
+    let content        = get(this, 'content');
 
-    return store.query(model, {}).then((list) => {
-      let groups = A();
+    let groups = A();
 
-      if (typeof list.sort !== 'function' && typeof list.toArray === 'function') {
-        list = list.toArray();
-      }
+    if (typeof content.sort !== 'function' && typeof content.toArray === 'function') {
+      content = content.toArray();
+    }
 
-      list = list.sort(sortFunction);
-      return groupBy(list, groupLabelPath);
-    });
+    content = content.sort(sortFunction);
+    return groupBy(content, groupLabelPath);
   }),
 
   lookupModel: task(function *(term) {
