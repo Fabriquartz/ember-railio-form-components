@@ -34,7 +34,7 @@ export default Component.extend({
   function() {
     let sortFunction   = get(this, 'sortFunction');
     let groupLabelPath = get(this, 'groupLabelPath');
-    let content        = get(this, 'content');
+    let content        = get(this, 'content') || [];
 
     let groups = A();
 
