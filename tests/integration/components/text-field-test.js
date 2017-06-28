@@ -91,3 +91,24 @@ test('"change" changes value', function(assert) {
 
   assert.equal(this.get('value'), '');
 });
+
+test('On update calls format function', function(assert) {
+  assert.expect(3);
+  this.set('value', '');
+
+  this.set('format', (value) => {
+    assert.equal(value, '2', 'calls the format function with value');
+    return `${value}0`;
+  });
+
+  this.render(hbs`{{text-field value=value format=format}}`);
+
+  const $input = this.$('input');
+
+  run(() => {
+    $input.val('2');
+    $input.trigger('blur');
+  });
+
+  assert.equal(this.format($input.val()), '20');
+});

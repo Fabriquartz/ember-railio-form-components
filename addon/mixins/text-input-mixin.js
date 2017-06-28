@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import get   from 'ember-metal/get'
 
 function handleChanged() {
   let value = this.readDOMAttr('value');
@@ -14,6 +15,10 @@ function handleChanged() {
       this.$().val(value);
       input.setSelectionRange(caretPos - 1, caretPos - 1);
     }
+  }
+
+  if (typeof get(this, 'format') === 'function') {
+    value = this.format(value);
   }
 
   this.send('changed', value);
