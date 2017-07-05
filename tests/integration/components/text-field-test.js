@@ -92,8 +92,7 @@ test('"change" changes value', function(assert) {
   assert.equal(this.get('value'), '');
 });
 
-test('On update calls format function', function(assert) {
-  assert.expect(3);
+test('Format function only triggers when focusOut', function(assert) {
   this.set('value', '');
 
   this.set('format', (value) => {
@@ -107,8 +106,12 @@ test('On update calls format function', function(assert) {
 
   run(() => {
     $input.val('2');
-    $input.trigger('blur');
   });
 
-  assert.equal(this.format($input.val()), '20');
+  assert.equal($input.val(), '2', 'Input does not format on changing');
+
+  run(() => {
+    $input.trigger('blur');
+  });
+  assert.equal($input.val(), '20', 'FocusOut triggers format function');
 });
