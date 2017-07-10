@@ -1,5 +1,6 @@
 import Ember from 'ember';
-import get   from 'ember-metal/get'
+import get   from 'ember-metal/get';
+import set   from 'ember-metal/set';
 
 function handleChanged() {
   let value = this.readDOMAttr('value');
@@ -15,10 +16,6 @@ function handleChanged() {
       this.$().val(value);
       input.setSelectionRange(caretPos - 1, caretPos - 1);
     }
-  }
-
-  if (typeof get(this, 'format') === 'function') {
-    value = this.format(value);
   }
 
   this.send('changed', value);
@@ -37,10 +34,17 @@ export default Ember.Mixin.create({
   },
 
   focusOut: function() {
+    let value = this.readDOMAttr('value');
     if (typeof this.attrs.focusOut === 'function') {
       this.attrs.focusOut();
     }
-    handleChanged.call(this);
+
+    if (typeof get(this, 'format') === 'function') {
+      value = this.format(value);
+      set(this, '_value', value);
+    }
+
+    this.send('changed', value);
   },
 
   keyUp: function(e) {
