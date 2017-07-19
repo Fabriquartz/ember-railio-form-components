@@ -1,5 +1,6 @@
 import Ember from 'ember';
-import hbs from 'htmlbars-inline-precompile';
+import hbs   from 'htmlbars-inline-precompile';
+import $     from 'jquery';
 import { moduleForComponent, test } from 'ember-qunit';
 
 moduleForComponent('number-field', 'Integration | Component | {{number-field}}', {
