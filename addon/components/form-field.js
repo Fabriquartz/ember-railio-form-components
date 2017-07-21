@@ -1,7 +1,8 @@
-import Ember from 'ember';
+import Ember               from 'ember';
+import Component           from 'ember-component';
+import computed, { reads } from 'ember-computed';
 
-const { computed, defineProperty } = Ember;
-const { reads } = computed;
+const { defineProperty } = Ember;
 
 function spliceCapitalizedString(string) {
   string = string.replace(/([A-Z])/g, ' $1');
@@ -10,20 +11,20 @@ function spliceCapitalizedString(string) {
 }
 
 function isValidComputedProperty() {
-  const errorsPath     = this.get('errorsPath');
-  const propertyErrors = this.get(errorsPath);
+  let errorsPath     = this.get('errorsPath');
+  let propertyErrors = this.get(errorsPath);
   return propertyErrors == null || propertyErrors.length === 0;
 }
 
-export default Ember.Component.extend({
-  classNames: 'form-field',
+export default Component.extend({
+  classNames:        'form-field',
   classNameBindings: [
     'isValid::form-field--invalid',
     'isChanged:form-field--changed',
     'isDifferent:form-field--different'],
 
   labelText: computed('label', 'propertyPath', function() {
-    const propertyPath = this.get('propertyPath');
+    let propertyPath = this.get('propertyPath');
     let label          = this.get('label');
 
     if (typeof label === 'string') {
@@ -41,16 +42,16 @@ export default Ember.Component.extend({
     return `object.errors.${this.get('propertyPath')}`;
   }),
 
-  didReceiveAttrs: function() {
+  didReceiveAttrs() {
     if (!this.attrs.updated) {
       throw new Error(`You must provide an 'update' action to '{{form-field}}.`);
     } else if (typeof this.attrs.updated !== 'function') {
       throw new Error(`The 'update' action on '{{form-field}} must be a function.`);
     }
-    const originPath   = this.get('originPath');
-    const propertyPath = this.get('propertyPath');
-    const errorsPath   = this.get('errorsPath');
-    const changedPath  = originPath || propertyPath;
+    let originPath   = this.get('originPath');
+    let propertyPath = this.get('propertyPath');
+    let errorsPath   = this.get('errorsPath');
+    let changedPath  = originPath || propertyPath;
 
     defineProperty(this, 'isValid', computed(errorsPath, isValidComputedProperty));
     defineProperty(this, 'isChanged', reads(`object.${changedPath}IsChanged`));
@@ -58,9 +59,9 @@ export default Ember.Component.extend({
   },
 
   actions: {
-    update: function(value) {
-      const object       = this.get('object');
-      const propertyPath = this. get('propertyPath');
+    update(value) {
+      let object       = this.get('object');
+      let propertyPath = this. get('propertyPath');
 
       if (!this.get('disabled') && typeof this.attrs.updated === 'function') {
         this.attrs.updated(object, propertyPath, value);

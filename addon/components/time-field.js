@@ -4,9 +4,9 @@ const A_MINUTE = 1000 * 60;
 const AN_HOUR  = A_MINUTE * 60;
 
 export default LazyTextField.extend({
-  classNames:        ['time-field'],
+  classNames: ['time-field'],
 
-  didReceiveAttrs: function() {
+  didReceiveAttrs() {
     this.set('datetime', this.getAttr('value'));
     this._super(...arguments);
   },
@@ -16,16 +16,16 @@ export default LazyTextField.extend({
       return null;
     }
 
-    const hours   = value.getHours();
-    const minutes = `0${value.getMinutes()}`.slice(-2);
+    let hours   = value.getHours();
+    let minutes = `0${value.getMinutes()}`.slice(-2);
 
     return `${hours}:${minutes}`;
   },
 
   keyDown(e) {
-    const value = this.get('datetime');
+    let value = this.get('datetime');
 
-    const shift = e.shiftKey ? A_MINUTE : AN_HOUR;
+    let shift = e.shiftKey ? A_MINUTE : AN_HOUR;
 
     if ([38, 40].indexOf(e.keyCode) !== -1) {
       this.withLazyDisabled(() => {

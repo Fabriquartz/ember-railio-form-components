@@ -1,11 +1,15 @@
-import Ember from 'ember';
 import { moduleForComponent, test } from 'ember-qunit';
+
+import EmberObject      from 'ember-object';
 import { clickTrigger } from '../../helpers/ember-power-select';
+
 import hbs from 'htmlbars-inline-precompile';
+import run from 'ember-runloop';
+import $   from 'jquery';
 
-const { run } = Ember;
-
-moduleForComponent('select-auto-complete', 'Integration | Component | {{select-auto-complete}}', {
+moduleForComponent(
+  'select-auto-complete', 'Integration | Component | {{select-auto-complete}}',
+{
   integration: true,
 
   beforeEach() {
@@ -15,9 +19,9 @@ moduleForComponent('select-auto-complete', 'Integration | Component | {{select-a
 
 test('filters content depending on search query', function(assert) {
   this.set('content', [
-    Ember.Object.create({ foo: 'dog' }),
-    Ember.Object.create({ foo: 'cat' }),
-    Ember.Object.create({ foo: 'lion' })
+    EmberObject.create({ foo: 'dog' }),
+    EmberObject.create({ foo: 'cat' }),
+    EmberObject.create({ foo: 'lion' })
   ]);
 
   this.render(hbs`{{select-auto-complete content=content
@@ -31,7 +35,7 @@ test('filters content depending on search query', function(assert) {
   assert.equal($items.length, 3);
 
   run(() => {
-    const $input = $('.ember-power-select-dropdown input');
+    let $input = $('.ember-power-select-dropdown input');
     $input.val('o');
     $input.trigger('input');
   });
@@ -59,7 +63,7 @@ test('calls onQueryChange', function(assert) {
   clickTrigger();
 
   run(() => {
-    const $input = $('.ember-power-select-dropdown input');
+    let $input = $('.ember-power-select-dropdown input');
     $input.val('o');
     $input.trigger('input');
   });

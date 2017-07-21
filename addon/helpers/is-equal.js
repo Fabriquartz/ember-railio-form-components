@@ -1,9 +1,6 @@
-import Ember from 'ember';
+import Helper                      from 'ember-helper';
+import { proxyIsEqual as isEqual } from 'ember-proxy-util';
 
-import {
-  proxyIsEqual as isEqual
-} from 'ember-proxy-util';
-
-export default Ember.Helper.helper(function([a, b]) {
+export default Helper.helper(function([a, b]) {
   return isEqual(a, b);
 });

@@ -1,12 +1,11 @@
-import Ember from 'ember';
+import Component from 'ember-component';
+import run       from 'ember-runloop';
+import service   from 'ember-service/inject';
 
-const { run } = Ember;
-const { service } = Ember.inject;
-
-export default Ember.Component.extend({
+export default Component.extend({
   store: service('store'),
 
-  lookupModel: function(query) {
+  lookupModel(query) {
     let rQuery    = new RegExp(query, 'i');
     let modelName = this.get('modelName');
     let labelPath = this.get('optionLabelPath');
@@ -17,7 +16,7 @@ export default Ember.Component.extend({
     if (query == null || query === '') { return; }
 
     if (typeof queryKey === 'string') {
-      params['by_' + queryKey.underscore()] = query;
+      params[`by_${queryKey.underscore()}`] = query;
     }
 
     let dataSet = this.get('store').filter(modelName, params, function(model) {
@@ -28,7 +27,7 @@ export default Ember.Component.extend({
   },
 
   actions: {
-    onQueryChange: function(query) {
+    onQueryChange(query) {
       run.debounce(this, this.lookupModel, query, 500);
     }
   }

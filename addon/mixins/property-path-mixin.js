@@ -1,27 +1,31 @@
 import Ember from 'ember';
+import Mixin from 'ember-metal/mixin';
 
-const { Binding, defineProperty, observer, on } = Ember;
-const { alias } = Ember.computed;
+import { alias } from 'ember-computed';
+import observer  from 'ember-metal/observer';
+
+const { Binding, defineProperty } = Ember;
 
 // TODO: Use Ember.Binding
-export default Ember.Mixin.create({
+export default Mixin.create({
   classNameBindings: ['valuesDiffer:different-value', 'valuesUnsaved:unsaved'],
 
-  propertyPathDidChange: on('init', observer('propertyPath', 'propertyTarget', 'originPath', function() {
+  propertyPathDidChange: observer('propertyPath', 'propertyTarget', 'originPath',
+  function() {
     let propertyPath = this.get('propertyPath');
     let targetPath   = this.get('propertyTarget');
     let originPath   = this.get('originPath');
 
     if (typeof propertyPath === 'string') {
-      propertyPath = 'object.' + propertyPath;
+      propertyPath = `object.${propertyPath}`;
 
-      const differKey = propertyPath + 'IsDifferent';
+      let differKey = `${propertyPath}IsDifferent`;
       let unsavedKey;
 
       if (originPath) {
-        unsavedKey = 'object.' + originPath + 'IsChanged';
+        unsavedKey = `object.${originPath}IsChanged`;
       } else {
-        unsavedKey = propertyPath + 'IsChanged';
+        unsavedKey = `${propertyPath}IsChanged`;
       }
 
       defineProperty(this, 'valuesDiffer', alias(differKey));
@@ -39,5 +43,5 @@ export default Ember.Mixin.create({
         propertyBinding.connect(this);
       }
     }
-  }))
+  }).on('init')
 });

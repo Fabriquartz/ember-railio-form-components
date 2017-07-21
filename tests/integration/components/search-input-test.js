@@ -1,8 +1,7 @@
-import Ember from 'ember';
-import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 
-const { run } = Ember;
+import hbs from 'htmlbars-inline-precompile';
+import run from 'ember-runloop';
 
 moduleForComponent('search-input', 'Integration | Component | {{search-input}}', {
   integration: true

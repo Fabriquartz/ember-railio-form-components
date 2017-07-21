@@ -1,8 +1,8 @@
-import Ember from 'ember';
 import { moduleForComponent, test } from 'ember-qunit';
-import hbs from 'htmlbars-inline-precompile';
+import EmberObject from 'ember-object';
 
-const { set } = Ember;
+import hbs from 'htmlbars-inline-precompile';
+import set from 'ember-metal/set';
 
 moduleForComponent('radio-select', 'Integration | Component | {{radio-select}}', {
   integration: true
@@ -14,7 +14,7 @@ test('shows options', function(assert) {
 
   this.render(hbs`{{radio-select value=selection options=options}}`);
 
-  const $options = this.$('.radio-select__option');
+  let $options = this.$('.radio-select__option');
 
   assert.equal($options.length, 2, 'shows all options');
   assert.equal($options[0].innerText.trim(), 'Option 1', 'shows option 1 value');
@@ -22,13 +22,13 @@ test('shows options', function(assert) {
 });
 
 test('value selected', function(assert) {
-  const selectValue =  'Option 2';
+  let selectValue =  'Option 2';
   this.set('options', ['Option 1', selectValue]);
   this.set('selection', selectValue);
 
   this.render(hbs`{{radio-select value=selection options=options}}`);
 
-  const $selectedOption = this.$('.radio-select__option--selected');
+  let $selectedOption = this.$('.radio-select__option--selected');
   assert.equal($selectedOption.length, 1);
   assert.equal($selectedOption[0].innerText.trim(), 'Option 2');
 });
@@ -36,7 +36,7 @@ test('value selected', function(assert) {
 test('select value calls updated action', function(assert) {
   assert.expect(1);
 
-  const selectValue =  'Option 2';
+  let selectValue =  'Option 2';
   this.set('options', ['Option 1', selectValue, 'Option 3']);
   this.set('selection', null);
 
@@ -48,14 +48,14 @@ test('select value calls updated action', function(assert) {
                                  options=options
                                  updated=(action 'updated')}}`);
 
-  const $option = this.$('.radio-select__option:eq(1)');
+  let $option = this.$('.radio-select__option:eq(1)');
   $option.trigger('click');
 });
 
 test('shows optionLabel and selects optionValue', function(assert) {
   assert.expect(2);
-  const firstValue = { label: 'Option 1', value: 'Value 1' };
-  const secondValue = { label: 'Option 2', value: 'Value 2' };
+  let firstValue = { label: 'Option 1', value: 'Value 1' };
+  let secondValue = { label: 'Option 2', value: 'Value 2' };
 
   this.set('options', [firstValue, secondValue]);
   this.set('selection', null);
@@ -70,7 +70,7 @@ test('shows optionLabel and selects optionValue', function(assert) {
                                  optionValuePath="value"
                                  updated=(action "updated")}}`);
 
-  const $option = this.$('.radio-select__option:eq(1)');
+  let $option = this.$('.radio-select__option:eq(1)');
   assert.equal($option[0].innerText.trim(), 'Option 2', 'shows option 2 label');
   $option.trigger('click');
 });
@@ -78,10 +78,10 @@ test('shows optionLabel and selects optionValue', function(assert) {
 test('works with form-field wrapper', function(assert) {
   assert.expect(6);
 
-  const firstValue = 'Option 1';
-  const secondValue =  'Option 2';
+  let firstValue = 'Option 1';
+  let secondValue =  'Option 2';
   this.set('options', [firstValue, secondValue, 'Option 3']);
-  this.set('object', Ember.Object.create({ selection: firstValue }));
+  this.set('object', EmberObject.create({ selection: firstValue }));
 
   this.on('update', function(object, propertyPath, value) {
     assert.equal(value, secondValue, 'calls update action with clicekd value');
@@ -99,16 +99,16 @@ test('works with form-field wrapper', function(assert) {
                      updated=updated}}
     {{/form-field}}`);
 
-  const $options = this.$('.radio-select__option');
+  let $options = this.$('.radio-select__option');
 
   assert.equal($options.length, 3);
   assert.equal($options[0].innerText.trim(), 'Option 1', 'shows option 1 value');
 
-  const $selectedOptions = this.$('.radio-select__option--selected');
+  let $selectedOptions = this.$('.radio-select__option--selected');
   assert.equal($selectedOptions.length, 1);
   assert.equal($selectedOptions[0].innerText.trim(), 'Option 1');
 
-  const $option = this.$('.radio-select__option:eq(1)');
+  let $option = this.$('.radio-select__option:eq(1)');
   $option.trigger('click');
 
   assert.equal(this.get('object.selection'), 'Option 2', 'selected option set');

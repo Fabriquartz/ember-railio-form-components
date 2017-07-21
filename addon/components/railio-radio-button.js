@@ -1,12 +1,15 @@
-import Ember from 'ember';
-import layout from 'ember-railio-form-components/templates/components/railio-radio-button';
+import Ember     from 'ember';
+import Component from 'ember-component';
+import computed  from 'ember-computed';
+import layout    from
+  'ember-railio-form-components/templates/components/railio-radio-button';
 
-const { computed } = Ember;
+const { isEqual } = Ember;
 
-export default Ember.Component.extend({
-  layout: layout,
+export default Component.extend({
+  layout,
 
-  classNames: ['radio-select__option'],
+  classNames:        ['radio-select__option'],
   classNameBindings: [
     'checked:radio-select__option--selected',
     'icon::no-icon'
@@ -20,33 +23,33 @@ export default Ember.Component.extend({
   }),
 
   checked: computed('option', 'selection', 'optionValuePath', function() {
-    const optionValuePath = this.get('optionValuePath');
+    let optionValuePath = this.get('optionValuePath');
 
     if (optionValuePath) {
-      return this.get('option.' + optionValuePath) === this.get('selection');
+      return this.get(`option.${optionValuePath}`) === this.get('selection');
     }
 
-    return Ember.isEqual(
+    return isEqual(
       this.get('option'),
       this.get('selection')
     );
   }),
 
   label: computed('option', 'optionLabelPath', function() {
-    const optionLabelPath = this.get('optionLabelPath');
+    let optionLabelPath = this.get('optionLabelPath');
 
     if (optionLabelPath) {
-      return this.get('option.' + optionLabelPath);
+      return this.get(`option.${optionLabelPath}`);
     }
     return this.get('option');
   }),
 
-  click: function() {
-    const optionValuePath = this.get('optionValuePath');
-    let value = this.get('option');
+  click() {
+    let optionValuePath = this.get('optionValuePath');
+    let value           = this.get('option');
 
     if (optionValuePath) {
-      value = this.get('option.' + optionValuePath);
+      value = this.get(`option.${optionValuePath}`);
     }
 
     if (typeof this.attrs.updated === 'function') {

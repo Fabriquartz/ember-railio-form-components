@@ -22,7 +22,7 @@ export default TextField.extend({
   },
 
   withLazyDisabled(callback) {
-    const originalFocus = this.get('isFocused');
+    let originalFocus = this.get('isFocused');
     this.set('isFocused', false);
 
     callback.call(this);

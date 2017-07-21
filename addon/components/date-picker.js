@@ -3,7 +3,7 @@ import LazyTextField from '../components/lazy-text-field';
 const A_DAY = 1000 * 60 * 60 * 24;
 
 function today() {
-  const date = new Date();
+  let date = new Date();
   date.setHours(0);
   date.setMinutes(0);
   date.setSeconds(0);
@@ -13,15 +13,15 @@ function today() {
 }
 
 export default LazyTextField.extend({
-  classNames:        ['date-picker'],
+  classNames: ['date-picker'],
 
-  didReceiveAttrs: function() {
+  didReceiveAttrs() {
     this.set('date', this.getAttr('value'));
     this._super(...arguments);
   },
 
   keyDown(e) {
-    const value = this.get('date');
+    let value = this.get('date');
 
     if ([38, 40].indexOf(e.keyCode) !== -1) {
       this.withLazyDisabled(() => {
@@ -51,9 +51,9 @@ export default LazyTextField.extend({
       return null;
     }
 
-    const days   = `0${value.getDate()}`.slice(-2);
-    const months = `0${value.getMonth() + 1}`.slice(-2);
-    const years  = value.getFullYear().toString().slice(-2);
+    let days   = `0${value.getDate()}`.slice(-2);
+    let months = `0${value.getMonth() + 1}`.slice(-2);
+    let years  = value.getFullYear().toString().slice(-2);
 
     return `${days}-${months}-${years}`;
   },
@@ -76,19 +76,19 @@ export default LazyTextField.extend({
         date = new Date(date);
       }
 
-      let parsed = value.replace(/[;\/\\,.]/g, '-');
+      let parsed = value.replace(/[;/\\,.]/g, '-');
 
       if (parsed.indexOf('-') === -1) {
-        const year  = (new Date()).getFullYear().toString().slice(-2);
-        const month = ('0' + ((new Date()).getMonth() + 1)).toString().slice(-2);
+        let year  = (new Date()).getFullYear().toString().slice(-2);
+        let month = (`0${((new Date()).getMonth() + 1)}`).toString().slice(-2);
 
         if (parsed.length >= 5) {
           parsed =
             `${parsed.slice(0, -4)}-${parsed.slice(-4, -2)}-${parsed.slice(-2)}`;
         } else if (parsed.length >= 3) {
-          parsed = parsed.slice(0, -2) + '-' + parsed.slice(-2) + '-' + year;
+          parsed = `${parsed.slice(0, -2)}-${parsed.slice(-2)}-${year}`;
         } else {
-          parsed = parsed.slice(-2) + '-' + month + '-' + year;
+          parsed = `${parsed.slice(-2)}-${month}-${year}`;
         }
       }
 

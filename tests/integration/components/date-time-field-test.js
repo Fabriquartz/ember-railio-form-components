@@ -1,13 +1,13 @@
-import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
+import run from 'ember-runloop';
+
 import { moduleForComponent, test } from 'ember-qunit';
 
-const { run } = Ember;
-
-moduleForComponent('date-time-field', 'Integration | Component | {{date-time-field}}', {
-
+moduleForComponent(
+  'date-time-field', 'Integration | Component | {{date-time-field}}',
+{
   integration: true,
-  beforeEach: function() {
+  beforeEach() {
     this.on('update', function(value) {
       this.set('value', value);
     });
@@ -18,8 +18,8 @@ test('shows date and time', function(assert) {
   this.set('value', new Date(2015, 0, 1, 12, 30));
   this.render(hbs`{{date-time-field value=value updated=(action "update")}}`);
 
-  const $dateInput = this.$('.date-picker');
-  const $timeInput = this.$('.time-field');
+  let $dateInput = this.$('.date-picker');
+  let $timeInput = this.$('.time-field');
 
   assert.equal($dateInput.val(), '01-01-15', 'shows date');
   assert.equal($timeInput.val(), '12:30', 'shows time');
@@ -31,7 +31,8 @@ test('shows date and time', function(assert) {
     $timeInput.trigger('input');
   });
 
-  assert.equal(+this.get('value'), +(new Date(2015, 0, 2, 13, 30)), 'updates date and time');
+  assert.equal(+this.get('value'), +(new Date(2015, 0, 2, 13, 30)),
+               'updates date and time');
 });
 
 test('set to now', function(assert) {

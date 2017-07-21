@@ -1,11 +1,16 @@
-import Ember from 'ember';
-import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
-import {
-  getPowerSelect, getMultipleTrigger, clickTrigger, currentOptions
-} from '../../helpers/ember-power-select';
+import EmberObject from 'ember-object';
 
-const { run } = Ember;
+import run   from 'ember-runloop';
+import hbs   from 'htmlbars-inline-precompile';
+import { A } from 'ember-array/utils';
+import $     from 'jquery';
+
+import {
+  getPowerSelect,
+  getMultipleTrigger,
+  clickTrigger,
+  currentOptions } from '../../helpers/ember-power-select';
 
 moduleForComponent('auto-complete', 'Integration | Component | {{auto-complete}}', {
   integration: true,
@@ -17,9 +22,9 @@ moduleForComponent('auto-complete', 'Integration | Component | {{auto-complete}}
 
 test('renders the content', function(assert) {
   this.set('content', [
-    Ember.Object.create({ foo: 'a' }),
-    Ember.Object.create({ foo: 'b' }),
-    Ember.Object.create({ foo: 'c' })
+    EmberObject.create({ foo: 'a' }),
+    EmberObject.create({ foo: 'b' }),
+    EmberObject.create({ foo: 'c' })
   ]);
 
   this.render(hbs`{{auto-complete content=content
@@ -28,7 +33,7 @@ test('renders the content', function(assert) {
 
   clickTrigger();
 
-  const $items = $('.ember-power-select-dropdown li');
+  let $items = $('.ember-power-select-dropdown li');
 
   assert.equal($items.length, 3, 'content length');
 
@@ -37,11 +42,12 @@ test('renders the content', function(assert) {
   assert.equal($items[2].innerText.trim(), 'c', 'shows third item');
 });
 
-test('auto-complete items have label set to items optionLabelPath', function(assert) {
+test('auto-complete items have label set to items optionLabelPath',
+function(assert) {
   this.set('content', [
-    Ember.Object.create({ foo: 'a' }),
-    Ember.Object.create({ foo: 'b' }),
-    Ember.Object.create({ foo: 'c' })
+    EmberObject.create({ foo: 'a' }),
+    EmberObject.create({ foo: 'b' }),
+    EmberObject.create({ foo: 'c' })
   ]);
 
   this.render(hbs`{{auto-complete content=content
@@ -50,7 +56,7 @@ test('auto-complete items have label set to items optionLabelPath', function(ass
 
   clickTrigger();
 
-  const $items = $('.ember-power-select-dropdown li');
+  let $items = $('.ember-power-select-dropdown li');
 
   assert.equal($items[0].innerText.trim(), 'a');
   assert.equal($items[1].innerText.trim(), 'b');
@@ -67,10 +73,10 @@ test('renders the search input on open', function(assert) {
 
 test('content grouped by groupLabelPath', function(assert) {
   this.set('content', [
-    Ember.Object.create({ foo: 'a', bar: 'group 1' }),
-    Ember.Object.create({ foo: 'b', bar: 'group 2' }),
-    Ember.Object.create({ foo: 'c', bar: 'group 1' }),
-    Ember.Object.create({ foo: 'd' })
+    EmberObject.create({ foo: 'a', bar: 'group 1' }),
+    EmberObject.create({ foo: 'b', bar: 'group 2' }),
+    EmberObject.create({ foo: 'c', bar: 'group 1' }),
+    EmberObject.create({ foo: 'd' })
   ]);
 
   this.render(hbs`{{auto-complete content=content
@@ -80,10 +86,10 @@ test('content grouped by groupLabelPath', function(assert) {
 
   clickTrigger();
 
-  const $groups = $('li.ember-power-select-group');
-  const $items1 = $groups.eq(0).find('li.ember-power-select-option');
-  const $items2 = $groups.eq(1).find('li.ember-power-select-option');
-  const $items  = $('li.ember-power-select-option');
+  let $groups = $('li.ember-power-select-group');
+  let $items1 = $groups.eq(0).find('li.ember-power-select-option');
+  let $items2 = $groups.eq(1).find('li.ember-power-select-option');
+  let $items  = $('li.ember-power-select-option');
 
   assert.equal($groups.length, 2, 'renders 2 groups');
   assert.equal($items1.length, 2, 'renders 2 items for group 1');
@@ -101,12 +107,12 @@ test('content grouped by groupLabelPath', function(assert) {
 });
 
 test('value selected', function(assert) {
-  const selected = Ember.Object.create({ foo: 'b' });
+  let selected = EmberObject.create({ foo: 'b' });
 
   this.set('content', [
-    Ember.Object.create({ foo: 'a' }),
+    EmberObject.create({ foo: 'a' }),
     selected,
-    Ember.Object.create({ foo: 'c' })
+    EmberObject.create({ foo: 'c' })
   ]);
   this.set('selection', selected);
 
@@ -115,13 +121,13 @@ test('value selected', function(assert) {
                                   value=selection
                                   updated=(action 'updated')}}`);
 
-  const $powerSelect = getPowerSelect();
+  let $powerSelect = getPowerSelect();
 
   assert.equal($powerSelect[0].innerText.indexOf('b'), 0, 'show selected item');
 
   clickTrigger();
 
-  const $selection = $('.ember-power-select-selected-item');
+  let $selection = $('.ember-power-select-selected-item');
 
   assert.equal($selection.length, 1);
   assert.equal($selection[0].innerText.trim(), 'b', 'value selected');
@@ -143,13 +149,13 @@ test('typing sends out onQueryChange event', function(assert) {
   clickTrigger();
 
   run(() => {
-    const $input = $('.ember-power-select-dropdown input');
+    let $input = $('.ember-power-select-dropdown input');
     $input.val('foo');
     $input.trigger('input');
   });
 
   run(() => {
-    const $input = $('.ember-power-select-dropdown input');
+    let $input = $('.ember-power-select-dropdown input');
     $input.val('bar');
     $input.trigger('input');
   });
@@ -157,9 +163,9 @@ test('typing sends out onQueryChange event', function(assert) {
 
 test('typing filters content', function(assert) {
   this.set('content', [
-    Ember.Object.create({ foo: 'Chris' }),
-    Ember.Object.create({ foo: 'Alex' }),
-    Ember.Object.create({ foo: 'Bart' })
+    EmberObject.create({ foo: 'Chris' }),
+    EmberObject.create({ foo: 'Alex' }),
+    EmberObject.create({ foo: 'Bart' })
   ]);
 
   this.render(hbs`{{auto-complete content=content
@@ -168,15 +174,15 @@ test('typing filters content', function(assert) {
 
   clickTrigger();
 
-  const $input = $('.ember-power-select-dropdown input');
+  let $input = $('.ember-power-select-dropdown input');
 
   run(() => {
     $input.val('a');
     $input.trigger('input');
   });
 
-  const $items = $('.ember-power-select-dropdown li');
-  const $highlighted = currentOptions();
+  let $items = $('.ember-power-select-dropdown li');
+  let $highlighted = currentOptions();
 
   assert.equal($items.length, 2);
   assert.equal($highlighted.length, 1);
@@ -184,7 +190,7 @@ test('typing filters content', function(assert) {
 });
 
 test('remove button clears the selection', function(assert) {
-  const selected = Ember.Object.create({ foo: 'a' });
+  let selected = EmberObject.create({ foo: 'a' });
 
   this.set('content', [selected]);
   this.set('selection', selected);
@@ -205,11 +211,11 @@ test('remove button clears the selection', function(assert) {
 });
 
 test('auto-complete changes content', function(assert) {
-  const object1 = Ember.Object.create();
-  const object2 = Ember.Object.create();
-  const object3 = Ember.Object.create();
+  let object1 = EmberObject.create();
+  let object2 = EmberObject.create();
+  let object3 = EmberObject.create();
 
-  this.set('content', Ember.A([object1, object2, object3]));
+  this.set('content', A([object1, object2, object3]));
 
   this.render(hbs`{{auto-complete content=content
                                   updated=(action "updated")}}`);
@@ -220,7 +226,7 @@ test('auto-complete changes content', function(assert) {
   assert.equal($items.length, 3);
 
   run(() => {
-    const newArray = Ember.A([object1, object3]);
+    let newArray = A([object1, object3]);
     this.set('content', newArray);
   });
 
@@ -229,8 +235,8 @@ test('auto-complete changes content', function(assert) {
 });
 
 test('when selection changes from elsewhere, it changes here', function(assert) {
-  const selected = Ember.Object.create({ foo: 'a' });
-  const option   = Ember.Object.create({ foo: 'b' });
+  let selected = EmberObject.create({ foo: 'a' });
+  let option   = EmberObject.create({ foo: 'b' });
 
   this.set('content', [selected, option]);
   this.set('selection', selected);
@@ -243,7 +249,7 @@ test('when selection changes from elsewhere, it changes here', function(assert) 
                                   updated=(action "updated")
                                   optionLabelPath="foo"}}`);
 
-  const $powerSelect = getPowerSelect();
+  let $powerSelect = getPowerSelect();
 
   run(() => {
     this.set('selection', option);
@@ -265,15 +271,15 @@ test('pass prompt as placeholder', function(assert) {
                                   prompt="Select your item"
                                   optionLabelPath="foo"}}`);
 
-  const powerSelectText = getPowerSelect()[0].innerText.trim();
+  let powerSelectText = getPowerSelect()[0].innerText.trim();
 
   assert.equal(powerSelectText, 'Select your item');
 });
 
 test('Renders as multi-select when multiSelect=true', function(assert) {
   this.set('selection', [
-    Ember.Object.create({ name: 'foo' }),
-    Ember.Object.create({ name: 'bar' })
+    EmberObject.create({ name: 'foo' }),
+    EmberObject.create({ name: 'bar' })
   ]);
   this.render(hbs`{{auto-complete content=content
                                   multiSelect=true

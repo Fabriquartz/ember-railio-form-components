@@ -1,8 +1,6 @@
-import Ember from 'ember';
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
-
-const { run } = Ember;
+import run from 'ember-runloop';
 
 moduleForComponent('text-field', 'Integration | Component | {{text-field}}', {
   integration: true
@@ -11,7 +9,8 @@ moduleForComponent('text-field', 'Integration | Component | {{text-field}}', {
 test('renders input with placeholder', function(assert) {
   this.render(hbs`{{text-field placeholder='Type your value here'}}`);
 
-  assert.equal(this.$('input')[0].getAttribute('placeholder'), 'Type your value here');
+  assert.equal(this.$('input')[0].getAttribute('placeholder'),
+               'Type your value here');
 });
 
 test('input value is set to value', function(assert) {
@@ -42,7 +41,7 @@ test(`typing doesn't change value but sends updated`, function(assert) {
 
   this.render(hbs`{{text-field value=value updated=(action "update")}}`);
 
-  const $input = this.$('input');
+  let $input = this.$('input');
 
   run(() => {
     $input.val('x');
@@ -62,7 +61,7 @@ test('leaving the input triggers change', function(assert) {
 
   this.render(hbs`{{text-field value=value updated=(action "update")}}`);
 
-  const $input = this.$('input');
+  let $input = this.$('input');
 
   run(() => {
     $input.val('x');
@@ -82,7 +81,7 @@ test('"change" changes value', function(assert) {
 
   this.render(hbs`{{text-field value=value updated=(action "update")}}`);
 
-  const $input = this.$('input');
+  let $input = this.$('input');
 
   run(() => {
     $input.val('x');
@@ -102,7 +101,7 @@ test('Format function only triggers when focusOut', function(assert) {
 
   this.render(hbs`{{text-field value=value format=format}}`);
 
-  const $input = this.$('input');
+  let $input = this.$('input');
 
   run(() => {
     $input.val('2');

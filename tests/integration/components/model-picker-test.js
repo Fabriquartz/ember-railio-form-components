@@ -1,14 +1,18 @@
-import Ember from 'ember';
-import { moduleForComponent, test } from 'ember-qunit';
-import {
-  getPowerSelect, clickTrigger, currentOptions
-} from '../../helpers/ember-power-select';
-import hbs from 'htmlbars-inline-precompile';
-import Pretender from 'pretender';
+import Ember       from 'ember';
+import EmberObject from 'ember-object';
+import Pretender   from 'pretender';
+
+import { moduleForComponent, test }     from 'ember-qunit';
+import { getPowerSelect, clickTrigger } from '../../helpers/ember-power-select';
 
 import wait from 'ember-test-helpers/wait';
+import run  from 'ember-runloop';
+import hbs  from 'htmlbars-inline-precompile';
+import get  from 'ember-metal/get';
+import set  from 'ember-metal/set';
+import $    from 'jquery';
 
-const { run, set, get } = Ember;
+const { compare } = Ember;
 
 const FOOS = [
   { id: 1, type: 'foo', attributes: { name: 'bar' } },
@@ -17,14 +21,12 @@ const FOOS = [
   { id: 4, type: 'foo', attributes: { name: 'bar second' } }
 ];
 
-let server;
-
 moduleForComponent('model-picker', 'Integration | Component | {{model-picker}}', {
   integration: true,
   setup() {
-    server = new Pretender(function() {
+    new Pretender(function() {
       this.get('/foos', function(request) {
-        const filter = request.queryParams.name;
+        let filter = request.queryParams.name;
 
         let filteredContent = FOOS;
 
@@ -34,7 +36,7 @@ moduleForComponent('model-picker', 'Integration | Component | {{model-picker}}',
           });
         }
 
-        const content = JSON.stringify({ data: filteredContent });
+        let content = JSON.stringify({ data: filteredContent });
 
         return [200, { 'Content-Type': 'application/json' }, content];
       });
@@ -43,7 +45,7 @@ moduleForComponent('model-picker', 'Integration | Component | {{model-picker}}',
 });
 
 test('Searches for given model by attribute', function(assert) {
-  const done = assert.async();
+  let done = assert.async();
 
   this.on('update', () => { });
   this.render(hbs`{{model-picker updated=(action 'update')
@@ -53,7 +55,7 @@ test('Searches for given model by attribute', function(assert) {
 
   clickTrigger();
 
-  const $input = $('.ember-power-select-dropdown input');
+  let $input = $('.ember-power-select-dropdown input');
   let $items = $('.ember-power-select-dropdown li');
 
   assert.equal($items.length, 1, 'by default no content');
@@ -117,7 +119,7 @@ test('Sorts list using given sorting function', function(assert) {
   let done = assert.async();
 
   set(this, 'customSorting', function(a, b) {
-    return Ember.compare(get(a, 'name'), get(b, 'name'));
+    return compare(get(a, 'name'), get(b, 'name'));
   });
 
   this.on('update', () => { });
@@ -129,7 +131,7 @@ test('Sorts list using given sorting function', function(assert) {
 
   clickTrigger();
 
-  const $input = $('.ember-power-select-dropdown input');
+  let $input = $('.ember-power-select-dropdown input');
   let $items = $('.ember-power-select-dropdown li');
 
   assert.equal($items.length, 1, 'by default no content');
@@ -153,7 +155,7 @@ test('Sorts list using given sorting function', function(assert) {
 });
 
 test('Shows selected item', function(assert) {
-  set(this, 'currentFoo', Ember.Object.create({ id: 6, name: 'bar test' }));
+  set(this, 'currentFoo', EmberObject.create({ id: 6, name: 'bar test' }));
   this.on('update', () => { });
   this.render(hbs`{{model-picker value=currentFoo
                                  updated=(action 'update')
@@ -161,6 +163,6 @@ test('Shows selected item', function(assert) {
                                  optionLabelPath="name"
                                  searchProperty="name"}}`);
 
-  const $powerSelect = getPowerSelect();
+  let $powerSelect = getPowerSelect();
   assert.equal($powerSelect[0].innerText.indexOf('bar test'), 0);
 });

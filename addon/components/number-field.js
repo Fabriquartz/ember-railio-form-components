@@ -11,15 +11,15 @@ function increaseNumber(value, add) {
     value = 0;
   }
 
-  const stringValue = value.toString();
-  const decimalIndex = stringValue.indexOf('.');
+  let stringValue = value.toString();
+  let decimalIndex = stringValue.indexOf('.');
   let decimalsAmount = 0;
 
   if (decimalIndex !== -1) {
     decimalsAmount = stringValue.slice(decimalIndex + 1).length;
   }
 
-  const increasedValue = value + add;
+  let increasedValue = value + add;
 
   return parseFloat(increasedValue.toFixed(decimalsAmount));
 }
@@ -29,13 +29,13 @@ export default LazyTextField.extend({
 
   maxDecimals: null,
 
-  didReceiveAttrs: function() {
+  didReceiveAttrs() {
     this.set('numberValue', this.getAttr('value'));
     this._super(...arguments);
   },
 
   sanitizeValue(value) {
-    return value.replace(/[^0-9,\.\-\ ]+/g, '');
+    return value.replace(/[^0-9,.\- ]+/g, '');
   },
 
   formatValue(value) {
@@ -43,7 +43,7 @@ export default LazyTextField.extend({
   },
 
   keyDown(e) {
-    const value = this.$().val();
+    let value = this.$().val();
 
     if ([38, 40].indexOf(e.keyCode) !== -1) {
       this.$().trigger('input');
@@ -68,11 +68,13 @@ export default LazyTextField.extend({
       try {
         numberValue = toNumber(value);
 
-        const maxDecimals = this.get('maxDecimals');
+        let maxDecimals = this.get('maxDecimals');
         if (maxDecimals != null) {
           numberValue = sliceDecimals(numberValue, this.get('maxDecimals'));
         }
-      } catch (_) {}
+      } catch(_) {
+        // continue regardless of error
+      }
 
       if (isNaN(numberValue)) {
         numberValue = null;

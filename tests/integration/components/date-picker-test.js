@@ -1,12 +1,11 @@
-import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
+import run from 'ember-runloop';
+import $   from 'jquery';
 import { moduleForComponent, test } from 'ember-qunit';
-
-const { run } = Ember;
 
 moduleForComponent('date-picker', 'Integration | Component | {{date-picker}}', {
   integration: true,
-  beforeEach: function() {
+  beforeEach() {
     this.on('update', function(value) {
       this.set('value', value);
     });
@@ -23,7 +22,7 @@ function fillIn(input, value) {
 }
 
 function arrowKey(input, upOrDown, shift = false) {
-  const keyCode = upOrDown === 'up' ? 38 : 40;
+  let keyCode = upOrDown === 'up' ? 38 : 40;
 
   run(() => {
     input.trigger('focusin');
@@ -37,21 +36,21 @@ test('date gets formatted to date string', function(assert) {
   this.set('value', new Date(2015, 0, 1));
   this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
-  const $input = this.$('input');
+  let $input = this.$('input');
   assert.equal($input.val(), '01-01-15');
 });
 
 test('null is an option', function(assert) {
   this.render(hbs`{{date-picker value=value}}`);
 
-  const $input = this.$('input');
+  let $input = this.$('input');
   assert.equal($input.val(), '');
 });
 
 test('filling in a date works', function(assert) {
   this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
-  const $input = this.$('input');
+  let $input = this.$('input');
 
   fillIn($input, '05-05-15');
 
@@ -63,7 +62,7 @@ test('typing in an empty value', function(assert) {
   this.set('value', new Date(2015, 0, 1));
   this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
-  const $input = this.$('input');
+  let $input = this.$('input');
 
   fillIn($input, '');
 
@@ -74,10 +73,10 @@ test('typing in an empty value', function(assert) {
 test('typing in date shorthands', function(assert) {
   this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
-  const $input = this.$('input');
-  const year  = (new Date()).getFullYear();
-  const yearStr = year.toString().slice(-2);
-  const month = `0${(new Date()).getMonth() + 1}`.substr(-2);
+  let $input  = this.$('input');
+  let year    = (new Date()).getFullYear();
+  let yearStr = year.toString().slice(-2);
+  let month   = `0${(new Date()).getMonth() + 1}`.substr(-2);
 
   fillIn($input, '050515');
 
@@ -113,7 +112,7 @@ test('typing in date shorthands', function(assert) {
 test('typing in with different separators', function(assert) {
   this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
-  const $input = this.$('input');
+  let $input = this.$('input');
 
   fillIn($input, '05;05;15');
 
@@ -145,7 +144,7 @@ test('arrow up increases date by one day', function(assert) {
   this.set('value', new Date(2015, 0, 1));
   this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
-  const $input = this.$('input');
+  let $input = this.$('input');
 
   arrowUp($input);
 
@@ -164,7 +163,7 @@ test('shift + arrow up increases date by one month', function(assert) {
   this.set('value', new Date(2015, 0));
   this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
-  const $input = this.$('input');
+  let $input = this.$('input');
 
   arrowUp($input, true);
 
@@ -183,7 +182,7 @@ test('arrow down decreases date by one day', function(assert) {
   this.set('value', new Date(2015, 0, 2));
   this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
-  const $input = this.$('input');
+  let $input = this.$('input');
 
   arrowDown($input);
 
@@ -202,7 +201,7 @@ test('shift + arrow month decreases date by one month', function(assert) {
   this.set('value', new Date(2015, 1));
   this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
-  const $input = this.$('input');
+  let $input = this.$('input');
 
   arrowDown($input, true);
 

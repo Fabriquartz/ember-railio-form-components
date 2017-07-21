@@ -1,4 +1,3 @@
-import Ember     from 'ember';
 import Component from 'ember-component';
 import layout    from '../templates/components/model-picker';
 
@@ -9,11 +8,6 @@ import groupBy from '../utils/group-by';
 import computed from 'ember-computed';
 import get      from 'ember-metal/get';
 import service  from 'ember-service/inject';
-import { A }    from 'ember-array/utils';
-
-const {
-  RSVP: { resolve }
-} = Ember;
 
 export default Component.extend({
   layout,
@@ -36,9 +30,8 @@ export default Component.extend({
     let groupLabelPath = get(this, 'groupLabelPath');
     let content        = get(this, 'content') || [];
 
-    let groups = A();
-
-    if (typeof content.sort !== 'function' && typeof content.toArray === 'function') {
+    if (typeof content.sort !== 'function' &&
+        typeof content.toArray === 'function') {
       content = content.toArray();
     }
 
@@ -46,7 +39,7 @@ export default Component.extend({
     return groupBy(content, groupLabelPath);
   }),
 
-  lookupModel: task(function *(term) {
+  lookupModel: task(function* (term) {
     if (isBlank(term)) { return []; }
 
     yield timeout(1000);
@@ -59,8 +52,6 @@ export default Component.extend({
     filter[searchProperty] = term;
 
     return get(this, 'store').query(model, filter).then((list) => {
-      let groups = A();
-
       if (typeof list.sort !== 'function' && typeof list.toArray === 'function') {
         list = list.toArray();
       }
