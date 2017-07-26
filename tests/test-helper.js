@@ -1,10 +1,11 @@
-import QUnit from 'qunit';
+import QUnit    from 'qunit';
 import resolver from './helpers/resolver';
-import {
-  setResolver
-} from 'ember-qunit';
+
+import { setResolver } from 'ember-qunit';
+import { start }       from 'ember-cli-qunit';
 
 setResolver(resolver);
+start();
 
 function inDelta(actual, expected, delta) {
   return actual >= (expected - delta) && actual <= (expected + delta);

@@ -1,12 +1,12 @@
-import Ember from 'ember';
-import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 
-const { run } = Ember;
+import hbs from 'htmlbars-inline-precompile';
+import run from 'ember-runloop';
+import $   from 'jquery';
 
 moduleForComponent('time-field', 'Integration | Component | {{time-field}}', {
   integration: true,
-  beforeEach: function() {
+  beforeEach() {
     this.on('update', function(value) {
       this.set('value', value);
     });
@@ -23,7 +23,7 @@ function fillIn(input, value) {
 }
 
 function arrowKey(input, upOrDown, shift = false) {
-  const keyCode = upOrDown === 'up' ? 38 : 40;
+  let keyCode = upOrDown === 'up' ? 38 : 40;
 
   run(() => {
     input.trigger('focusin');
@@ -37,14 +37,14 @@ test('date gets formatted to a time string', function(assert) {
   this.set('value', new Date(2015, 0, 1, 12, 15));
   this.render(hbs`{{time-field value=value updated=(action "update")}}`);
 
-  const $input = this.$('input');
+  let $input = this.$('input');
   assert.equal($input.val(), '12:15');
 });
 
 test('null is a possibility', function(assert) {
   this.render(hbs`{{time-field}}`);
 
-  const $input = this.$('input');
+  let $input = this.$('input');
   assert.equal($input.val(), '');
 });
 
@@ -52,7 +52,7 @@ test('typing in a time updates the time part of a date', function(assert) {
   this.set('value', new Date(2015, 0, 1, 12, 15));
   this.render(hbs`{{time-field value=value updated=(action "update")}}`);
 
-  const $input = this.$('input');
+  let $input = this.$('input');
 
   fillIn($input, '12:30');
 
@@ -64,7 +64,7 @@ test('typing in an empty value', function(assert) {
   this.set('value', new Date(2015, 0, 1, 12, 15));
   this.render(hbs`{{time-field value=value updated=(action "update")}}`);
 
-  const $input = this.$('input');
+  let $input = this.$('input');
 
   fillIn($input, '');
 
@@ -76,7 +76,7 @@ test('typing in time shorthands', function(assert) {
   this.set('value', new Date(2015, 0, 1, 12, 15));
   this.render(hbs`{{time-field value=value updated=(action "update")}}`);
 
-  const $input = this.$('input');
+  let $input = this.$('input');
 
   fillIn($input, '1230');
 
@@ -103,7 +103,7 @@ test('typing in with different seperators', function(assert) {
   this.set('value', new Date(2015, 0, 1, 12, 15));
   this.render(hbs`{{time-field value=value updated=(action "update")}}`);
 
-  const $input = this.$('input');
+  let $input = this.$('input');
 
   fillIn($input, '12;30');
 
@@ -125,7 +125,7 @@ test('arrow up increases time by one hour', function(assert) {
   this.set('value', new Date(2015, 0, 1, 12, 15));
   this.render(hbs`{{time-field value=value updated=(action "update")}}`);
 
-  const $input = this.$('input');
+  let $input = this.$('input');
 
   arrowUp($input);
 
@@ -144,7 +144,7 @@ test('arrow down decreases time by one hour', function(assert) {
   this.set('value', new Date(2015, 0, 1, 12, 15));
   this.render(hbs`{{time-field value=value updated=(action "update")}}`);
 
-  const $input = this.$('input');
+  let $input = this.$('input');
 
   arrowDown($input);
 
@@ -163,7 +163,7 @@ test('shift + arrow up increases time by one minute', function(assert) {
   this.set('value', new Date(2015, 0, 1, 12, 15));
   this.render(hbs`{{time-field value=value updated=(action "update")}}`);
 
-  const $input = this.$('input');
+  let $input = this.$('input');
 
   arrowUp($input, true);
 
@@ -182,7 +182,7 @@ test('shift + arrow down decreases time by one minute', function(assert) {
   this.set('value', new Date(2015, 0, 1, 12, 15));
   this.render(hbs`{{time-field value=value updated=(action "update")}}`);
 
-  const $input = this.$('input');
+  let $input = this.$('input');
 
   arrowDown($input, true);
 

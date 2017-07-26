@@ -1,10 +1,10 @@
-import Ember from 'ember';
+import Component from 'ember-component';
 
 function handleChanged() {
   this.send('changed', this.readDOMAttr('checked'));
 }
 
-export default Ember.Component.extend({
+export default Component.extend({
   tagName:           'input',
   type:              'checkbox',
   attributeBindings: ['type', 'value:checked', 'disabled'],

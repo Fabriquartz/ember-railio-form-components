@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import Mixin from 'ember-metal/mixin';
 import get   from 'ember-metal/get';
 import set   from 'ember-metal/set';
 
@@ -6,9 +6,9 @@ function handleChanged() {
   let value = this.readDOMAttr('value');
 
   if (typeof this.sanitizeValue === 'function') {
-    const originalValue = value;
-    const input         = this.$()[0];
-    const caretPos      = input.selectionStart;
+    let originalValue = value;
+    let [input]         = this.$();
+    let caretPos      = input.selectionStart;
 
     value = this.sanitizeValue(value);
 
@@ -21,19 +21,19 @@ function handleChanged() {
   this.send('changed', value);
 }
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   attributeBindings: ['_value:value', 'disabled', 'placeholder', 'name'],
 
-  input:    handleChanged,
-  change:   handleChanged,
+  input:  handleChanged,
+  change: handleChanged,
 
-  focusIn: function() {
+  focusIn() {
     if (typeof this.attrs.focusIn === 'function') {
       this.attrs.focusIn();
     }
   },
 
-  focusOut: function() {
+  focusOut() {
     let value = this.readDOMAttr('value');
     if (typeof this.attrs.focusOut === 'function') {
       this.attrs.focusOut();
@@ -47,7 +47,7 @@ export default Ember.Mixin.create({
     this.send('changed', value);
   },
 
-  keyUp: function(e) {
+  keyUp(e) {
     if (typeof this.attrs.keyUp === 'function') {
       this.attrs.keyUp();
     }
@@ -64,7 +64,7 @@ export default Ember.Mixin.create({
     }
   },
 
-  didReceiveAttrs: function() {
+  didReceiveAttrs() {
     let value = this.getAttr('value');
     if (typeof this.formatValue === 'function') {
       value = this.formatValue(value);

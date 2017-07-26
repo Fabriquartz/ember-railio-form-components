@@ -9,7 +9,7 @@ const { defineProperty } = Ember;
 
 export default Component.extend({
   classNames: ['auto-complete'],
-  layout: layout,
+  layout,
 
   didReceiveAttrs() {
     let groupLabelPath = get(this, 'groupLabelPath');

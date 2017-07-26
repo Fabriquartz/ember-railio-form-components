@@ -1,8 +1,8 @@
-import Ember from 'ember';
 import { moduleForComponent, test } from 'ember-qunit';
-import hbs from 'htmlbars-inline-precompile';
+import EmberObject from 'ember-object';
 
-const { run } = Ember;
+import hbs from 'htmlbars-inline-precompile';
+import run from 'ember-runloop';
 
 moduleForComponent('text-area', 'Integration | Component | {{text-area}}', {
   integration: true
@@ -12,7 +12,7 @@ test('renders a text-area with value', function(assert) {
   this.set('value', 'testing');
   this.render(hbs`{{text-area value=value}}`);
 
-  const $area = this.$('textarea.text-area');
+  let $area = this.$('textarea.text-area');
   assert.equal($area.length, 1, 'renders a textarea with class text-area');
 
   assert.equal($area.val(), 'testing');
@@ -28,7 +28,7 @@ test(`typing doesn't change value but sends updated`, function(assert) {
 
   this.render(hbs`{{text-area value=value updated=(action "update")}}`);
 
-  const $input = this.$('.text-area');
+  let $input = this.$('.text-area');
 
   run(() => {
     $input.val('x');
@@ -41,16 +41,16 @@ test(`typing doesn't change value but sends updated`, function(assert) {
 test('works with form-field', function(assert) {
   assert.expect(5);
 
-  const person = Ember.Object.create({
+  let person = EmberObject.create({
     name: 'John White'
   });
 
   this.set('object', person);
 
   this.on('update', function(object, propertyPath, value) {
-    assert.equal(object, person, 'update function gets the right object');
-    assert.equal(propertyPath, 'name', 'update function gets the right propertyPath');
-    assert.equal(value, 'John Black', 'update function gets the new value');
+    assert.equal(object, person, 'update function gets right object');
+    assert.equal(propertyPath, 'name', 'update function gets right propertyPath');
+    assert.equal(value, 'John Black', 'update function gets new value');
   });
 
   this.render(hbs`
@@ -59,7 +59,7 @@ test('works with form-field', function(assert) {
                  propertyPath="name"
                  updated=(action "update")}}`);
 
-  const $textarea = this.$('.form-field').find('textarea.text-area');
+  let $textarea = this.$('.form-field').find('textarea.text-area');
 
   run(() => {
     $textarea.val('John Black');

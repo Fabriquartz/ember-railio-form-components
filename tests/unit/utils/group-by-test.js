@@ -4,7 +4,7 @@ import { module, test } from 'qunit';
 module('Unit | Utility | groupBy()');
 
 test('when no group passed, return content', function(assert) {
-  let list = [1, 2, 3];
+  let list   = [1, 2, 3];
   let result = groupBy(list);
 
   assert.equal(result, list);
@@ -41,7 +41,7 @@ test('include objects without a groupPath value', function(assert) {
     { id: 3 },
     { id: 4, parent: 'B' }
   ];
-  let [ item1, item2, item3, item4 ] = list;
+  let [,, item3] = list;
   let result = groupBy(list, 'parent');
 
   assert.equal(result.length, 3, 'creates 2 groups and a single object');

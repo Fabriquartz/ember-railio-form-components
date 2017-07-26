@@ -1,12 +1,11 @@
-import Ember from 'ember';
 import { moduleForComponent, test } from 'ember-qunit';
-import hbs from 'htmlbars-inline-precompile';
 
-const { run } = Ember;
+import hbs from 'htmlbars-inline-precompile';
+import run from 'ember-runloop';
 
 moduleForComponent('check-box', 'Integration | Component | {{check-box}}', {
   integration: true,
-  beforeEach: function() {
+  beforeEach() {
     this.on('update', function(object, propertyPath, value) {
       object.set(propertyPath, value);
     });
@@ -16,7 +15,7 @@ moduleForComponent('check-box', 'Integration | Component | {{check-box}}', {
 test(`renders a checkbox with class check-box`, function(assert) {
   this.render(hbs`{{check-box}}`);
 
-  const $checkbox = this.$('input.check-box[type="checkbox"]');
+  let $checkbox = this.$('input.check-box[type="checkbox"]');
   assert.equal($checkbox.length, 1);
 });
 
@@ -24,7 +23,7 @@ test(`has given value`, function(assert) {
   this.set('selected', true);
   this.render(hbs`{{check-box value=selected}}`);
 
-  const $checkbox = this.$('.check-box')[0];
+  let [$checkbox] = this.$('.check-box');
   assert.equal($checkbox.checked, true, 'is checked');
 });
 
@@ -38,7 +37,7 @@ test(`changing changes value and calls update function`, function(assert) {
 
   this.render(hbs`{{check-box value=selected updated=(action "update")}}`);
 
-  const $checkbox = this.$('.check-box');
+  let $checkbox = this.$('.check-box');
 
   run(() => {
     $checkbox.trigger('click');

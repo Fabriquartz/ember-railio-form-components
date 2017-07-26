@@ -1,9 +1,10 @@
-import Ember from 'ember';
+import Component   from 'ember-component';
+import EmberObject from 'ember-object';
 
-export default Ember.Component.extend({
-  object: Ember.Object.create({
-    number: -3.4,
-    text: 'test text',
+export default Component.extend({
+  object: EmberObject.create({
+    number:     -3.4,
+    text:       'test text',
     radioValue: ''
   }),
 

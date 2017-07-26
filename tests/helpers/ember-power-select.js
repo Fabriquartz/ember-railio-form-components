@@ -1,16 +1,21 @@
+import run from 'ember-runloop';
+import $   from 'jquery';
+
 function fireNativeMouseEvent(eventType, selectorOrDomElement, options = {}) {
-  let event = new window.Event(eventType, { bubbles: true, cancelable: true, view: window });
+  let eventOptions = { bubbles: true, cancelable: true, view: window };
+  let event        = new window.Event(eventType, eventOptions);
+
   Object.keys(options).forEach((key) => event[key] = options[key]);
   let target;
   if (typeof selectorOrDomElement === 'string') {
-    target = Ember.$(selectorOrDomElement)[0];
+    target = $(selectorOrDomElement)[0];
   } else {
     target = selectorOrDomElement;
   }
-  Ember.run(() => target.dispatchEvent(event));
+  run(() => target.dispatchEvent(event));
 }
 
-export function getPowerSelect(scope, options = {}) {
+export function getPowerSelect(scope) {
   let selector = '.ember-basic-dropdown';
   if (scope) {
     selector = `${scope} ${selector}`;
@@ -19,7 +24,7 @@ export function getPowerSelect(scope, options = {}) {
   return $(selector);
 }
 
-export function getMultipleTrigger(scope, options = {}) {
+export function getMultipleTrigger(scope) {
   let selector = '.ember-power-select-multiple-trigger';
   if (scope) {
     selector = `${scope} ${selector}`;
@@ -36,7 +41,7 @@ export function clickTrigger(scope, options = {}) {
   fireNativeMouseEvent('mousedown', selector, options);
 }
 
-export function currentOptions(scope, options = {}) {
+export function currentOptions(scope) {
   let selector = '.ember-power-select-option[aria-current="true"]';
   if (scope) {
     selector = `${scope} ${selector}`;

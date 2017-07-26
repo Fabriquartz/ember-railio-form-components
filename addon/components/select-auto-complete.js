@@ -1,12 +1,12 @@
-import Ember from 'ember';
-import layout from 'ember-railio-form-components/templates/components/select-auto-complete';
+import Component from 'ember-component';
+import layout from
+  'ember-railio-form-components/templates/components/select-auto-complete';
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ['select-auto-complete'],
+  layout,
 
-  layout: layout,
-
-  _fuzzyMatch: function(haystack, needle) {
+  _fuzzyMatch(haystack, needle) {
     if (haystack == null || needle == null) {
       return false;
     }
@@ -17,8 +17,8 @@ export default Ember.Component.extend({
     let n = -1;
 
     for (let i = 0; i < needle.length; i++) {
-      const l = needle[i];
-      const m = n;
+      let l = needle[i];
+      let m = n;
       n = haystack.indexOf(l, n + 1);
 
       if (n <= m) {
@@ -30,12 +30,12 @@ export default Ember.Component.extend({
   },
 
   actions: {
-    onQueryChange: function(query) {
+    onQueryChange(query) {
       this.sendAction('onQueryChange', query);
 
-      const content    = this.get('content');
-      const labelPath  = this.get('optionLabelPath');
-      const fuzzyMatch = this._fuzzyMatch;
+      let content    = this.get('content');
+      let labelPath  = this.get('optionLabelPath');
+      let fuzzyMatch = this._fuzzyMatch;
 
       if (query == null || content == null) { return content; }
 
