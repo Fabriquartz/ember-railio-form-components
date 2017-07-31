@@ -9,6 +9,7 @@ import $     from 'jquery';
 import {
   getSelected,
   getMultipleTrigger,
+  getClearButton,
   clickTrigger,
   currentOptions } from '../../helpers/ember-power-select';
 
@@ -197,11 +198,34 @@ test('remove button clears the selection', function(assert) {
                                   updated=(action "updated")
                                   optionLabelPath="foo"}}`);
 
-  run(() => {
-    this.$('.ember-power-select-clear-btn').trigger('mousedown');
-  });
+  let $clearButton = getClearButton();
+
+  assert.equal($clearButton.length, 1, 'Show clear button when something selected');
+
+  run(() => $clearButton.trigger('mousedown'));
 
   assert.equal(this.get('selection'), null);
+});
+
+test('No clear button when disableClear', function(assert) {
+  let selected = EmberObject.create({ foo: 'a' });
+
+  this.set('content', [selected]);
+  this.set('selection', selected);
+
+  this.render(hbs`{{auto-complete content=content
+                                  value=selection
+                                  disableClear=disableClear
+                                  updated=(action "updated")
+                                  optionLabelPath="foo"}}`);
+
+  assert.equal(getClearButton().length, 1,
+               'By default show clear button when something selected');
+
+  this.set('disableClear', true);
+
+  assert.equal(getClearButton().length, 0,
+               'No clear button when disableClear is true');
 });
 
 test('auto-complete changes content', function(assert) {
