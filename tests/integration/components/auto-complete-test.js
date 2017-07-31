@@ -7,7 +7,7 @@ import { A } from 'ember-array/utils';
 import $     from 'jquery';
 
 import {
-  getPowerSelect,
+  getSelected,
   getMultipleTrigger,
   clickTrigger,
   currentOptions } from '../../helpers/ember-power-select';
@@ -121,13 +121,7 @@ test('value selected', function(assert) {
                                   value=selection
                                   updated=(action 'updated')}}`);
 
-  let $powerSelect = getPowerSelect();
-
-  assert.equal($powerSelect[0].innerText.indexOf('b'), 0, 'show selected item');
-
-  clickTrigger();
-
-  let $selection = $('.ember-power-select-selected-item');
+  let $selection = getSelected();
 
   assert.equal($selection.length, 1);
   assert.equal($selection[0].innerText.trim(), 'b', 'value selected');
@@ -249,19 +243,17 @@ test('when selection changes from elsewhere, it changes here', function(assert) 
                                   updated=(action "updated")
                                   optionLabelPath="foo"}}`);
 
-  let $powerSelect = getPowerSelect();
-
   run(() => {
     this.set('selection', option);
   });
 
-  assert.equal($powerSelect[0].innerText.indexOf('b'), 0, 'change selected item');
+  assert.equal(getSelected()[0].innerText.indexOf('b'), 0, 'change selected item');
 
   run(() => {
     this.set('selection', null);
   });
 
-  assert.equal($powerSelect[0].innerText.trim(), '', 'empty selected item');
+  assert.equal(getSelected().length, 0, 'empty selected item');
 });
 
 test('pass prompt as placeholder', function(assert) {
@@ -271,9 +263,9 @@ test('pass prompt as placeholder', function(assert) {
                                   prompt="Select your item"
                                   optionLabelPath="foo"}}`);
 
-  let powerSelectText = getPowerSelect()[0].innerText.trim();
+  let autoCompleteText = $('.auto-complete')[0].innerText.trim();
 
-  assert.equal(powerSelectText, 'Select your item');
+  assert.equal(autoCompleteText, 'Select your item');
 });
 
 test('Renders as multi-select when multiSelect=true', function(assert) {
