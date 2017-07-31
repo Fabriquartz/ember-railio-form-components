@@ -7,8 +7,9 @@ import { A } from 'ember-array/utils';
 import $     from 'jquery';
 
 import {
-  getPowerSelect,
+  getSelected,
   getMultipleTrigger,
+  getClearButton,
   clickTrigger,
   currentOptions } from '../../helpers/ember-power-select';
 
@@ -121,13 +122,7 @@ test('value selected', function(assert) {
                                   value=selection
                                   updated=(action 'updated')}}`);
 
-  let $powerSelect = getPowerSelect();
-
-  assert.equal($powerSelect[0].innerText.indexOf('b'), 0, 'show selected item');
-
-  clickTrigger();
-
-  let $selection = $('.ember-power-select-selected-item');
+  let $selection = getSelected();
 
   assert.equal($selection.length, 1);
   assert.equal($selection[0].innerText.trim(), 'b', 'value selected');
@@ -203,11 +198,34 @@ test('remove button clears the selection', function(assert) {
                                   updated=(action "updated")
                                   optionLabelPath="foo"}}`);
 
-  run(() => {
-    this.$('.ember-power-select-clear-btn').trigger('mousedown');
-  });
+  let $clearButton = getClearButton();
+
+  assert.equal($clearButton.length, 1, 'Show clear button when something selected');
+
+  run(() => $clearButton.trigger('mousedown'));
 
   assert.equal(this.get('selection'), null);
+});
+
+test('No clear button when disableClear', function(assert) {
+  let selected = EmberObject.create({ foo: 'a' });
+
+  this.set('content', [selected]);
+  this.set('selection', selected);
+
+  this.render(hbs`{{auto-complete content=content
+                                  value=selection
+                                  disableClear=disableClear
+                                  updated=(action "updated")
+                                  optionLabelPath="foo"}}`);
+
+  assert.equal(getClearButton().length, 1,
+               'By default show clear button when something selected');
+
+  this.set('disableClear', true);
+
+  assert.equal(getClearButton().length, 0,
+               'No clear button when disableClear is true');
 });
 
 test('auto-complete changes content', function(assert) {
@@ -249,19 +267,17 @@ test('when selection changes from elsewhere, it changes here', function(assert) 
                                   updated=(action "updated")
                                   optionLabelPath="foo"}}`);
 
-  let $powerSelect = getPowerSelect();
-
   run(() => {
     this.set('selection', option);
   });
 
-  assert.equal($powerSelect[0].innerText.indexOf('b'), 0, 'change selected item');
+  assert.equal(getSelected()[0].innerText.indexOf('b'), 0, 'change selected item');
 
   run(() => {
     this.set('selection', null);
   });
 
-  assert.equal($powerSelect[0].innerText.trim(), '', 'empty selected item');
+  assert.equal(getSelected().length, 0, 'empty selected item');
 });
 
 test('pass prompt as placeholder', function(assert) {
@@ -271,9 +287,9 @@ test('pass prompt as placeholder', function(assert) {
                                   prompt="Select your item"
                                   optionLabelPath="foo"}}`);
 
-  let powerSelectText = getPowerSelect()[0].innerText.trim();
+  let autoCompleteText = $('.auto-complete')[0].innerText.trim();
 
-  assert.equal(powerSelectText, 'Select your item');
+  assert.equal(autoCompleteText, 'Select your item');
 });
 
 test('Renders as multi-select when multiSelect=true', function(assert) {

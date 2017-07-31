@@ -3,7 +3,7 @@ import EmberObject from 'ember-object';
 import Pretender   from 'pretender';
 
 import { moduleForComponent, test }     from 'ember-qunit';
-import { getPowerSelect, clickTrigger } from '../../helpers/ember-power-select';
+import { getSelected, clickTrigger } from '../../helpers/ember-power-select';
 
 import wait from 'ember-test-helpers/wait';
 import run  from 'ember-runloop';
@@ -163,6 +163,6 @@ test('Shows selected item', function(assert) {
                                  optionLabelPath="name"
                                  searchProperty="name"}}`);
 
-  let $powerSelect = getPowerSelect();
-  assert.equal($powerSelect[0].innerText.indexOf('bar test'), 0);
+  let $selectedOption = getSelected();
+  assert.equal($selectedOption[0].innerText.indexOf('bar test'), 0);
 });

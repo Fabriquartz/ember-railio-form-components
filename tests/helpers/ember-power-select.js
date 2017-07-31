@@ -24,6 +24,24 @@ export function getPowerSelect(scope) {
   return $(selector);
 }
 
+export function getSelected(scope) {
+  let selector = '.ember-power-select-selected-item';
+  if (scope) {
+    selector = `${scope} ${selector}`;
+  }
+
+  return $(selector);
+}
+
+export function getClearButton(scope) {
+  let selector = '.ember-power-select-clear-btn';
+  if (scope) {
+    selector = `${scope} ${selector}`;
+  }
+
+  return $(selector);
+}
+
 export function getMultipleTrigger(scope) {
   let selector = '.ember-power-select-multiple-trigger';
   if (scope) {
