@@ -2,7 +2,7 @@ import Ember       from 'ember';
 import EmberObject from 'ember-object';
 import Pretender   from 'pretender';
 
-import { moduleForComponent, test }     from 'ember-qunit';
+import { moduleForComponent, test }  from 'ember-qunit';
 import { getSelected, clickTrigger } from '../../helpers/ember-power-select';
 
 import wait from 'ember-test-helpers/wait';
@@ -113,6 +113,41 @@ test('Pre-loads content on preload=true', function(assert) {
       assert.equal($items[0].innerText, 'bar', 'first item');
       assert.equal($items[1].innerText, 'bar second', 'second item');
     });
+});
+
+test('Sorts list using given sortProperty', function(assert) {
+  let done = assert.async();
+
+  this.on('update', () => { });
+  this.render(hbs`{{model-picker updated=(action 'update')
+                                 model="foo"
+                                 sortProperty="name"
+                                 optionLabelPath="name"
+                                 searchProperty="name"}}`);
+
+  clickTrigger();
+
+  let $input = $('.ember-power-select-dropdown input');
+  let $items = $('.ember-power-select-dropdown li');
+
+  assert.equal($items.length, 1, 'by default no content');
+  assert.equal($items[0].innerText, 'Type to search');
+
+  run(() => {
+    $input.val('a');
+    $input.trigger('input');
+  });
+
+  wait().then(() => {
+    $items = $('.ember-power-select-dropdown li');
+
+    assert.equal($items[0].innerText, 'bar', 'first item');
+    assert.equal($items[1].innerText, 'bar second', 'second item');
+    assert.equal($items[2].innerText, 'chad', 'third item');
+    assert.equal($items[3].innerText, 'dave', 'second item');
+
+    done();
+  });
 });
 
 test('Sorts list using given sorting function', function(assert) {
