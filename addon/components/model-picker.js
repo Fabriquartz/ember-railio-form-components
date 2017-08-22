@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import Component from 'ember-component';
 import layout    from '../templates/components/model-picker';
 
@@ -13,15 +14,24 @@ export default Component.extend({
   layout,
   store: service(),
 
+  lookupOnSearch: computed('preload', 'queryOnSearch', function() {
+    let preload       = get(this, 'preload');
+    let queryOnSearch = get(this, 'queryOnSearch');
+
+    return queryOnSearch || !preload;
+  }),
+
   content: computed('preload', 'model', function() {
-    if (!get(this, 'preload')) {
-      return [];
-    }
+    let preload = get(this, 'preload');
+
+    if (!preload) { return []; }
 
     let store = get(this, 'store');
     let model = get(this, 'model');
 
-    return store.query(model, {});
+    let query = typeof preload == 'number' ? { per_page: preload } : {};
+
+    return store.query(model, query);
   }),
 
   groupedContent: computed('content.[]', 'sortFunction', 'groupLabelPath',
