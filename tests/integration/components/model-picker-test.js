@@ -27,6 +27,7 @@ moduleForComponent('model-picker', 'Integration | Component | {{model-picker}}',
     new Pretender(function() {
       this.get('/foos', function(request) {
         let filter = request.queryParams.name;
+        let amount = request.queryParams.per_page || 300;
 
         let filteredContent = FOOS;
 
@@ -35,6 +36,8 @@ moduleForComponent('model-picker', 'Integration | Component | {{model-picker}}',
             return foo.attributes.name.indexOf(filter) !== -1;
           });
         }
+
+        filteredContent = filteredContent.slice(0, amount);
 
         let content = JSON.stringify({ data: filteredContent });
 
@@ -112,6 +115,63 @@ test('Pre-loads content on preload=true', function(assert) {
       assert.equal($items.length, 2, 'finds searched model by label');
       assert.equal($items[0].innerText, 'bar', 'first item');
       assert.equal($items[1].innerText, 'bar second', 'second item');
+    });
+});
+
+test('Pre-loads amount of objects given to preload', function(assert) {
+  this.on('update', () => { });
+  this.render(hbs`{{model-picker updated=(action 'update')
+                                 model="foo"
+                                 preload=2
+                                 optionLabelPath="name"
+                                 searchProperty="name"}}`);
+
+  clickTrigger();
+
+  return wait()
+    .then(() => {
+      let $items = $('.ember-power-select-dropdown li');
+
+      assert.equal($items.length, 2, 'gets given amount of objects');
+      assert.equal($items[0].innerText, 'bar');
+      assert.equal($items[1].innerText, 'chad');
+
+      return wait();
+    });
+});
+
+test('Pre-loads and queries again on search when queryOnSearch=true',
+function(assert) {
+  this.on('update', () => { });
+  this.render(hbs`{{model-picker updated=(action 'update')
+                                 model="foo"
+                                 preload=2
+                                 queryOnSearch=true
+                                 optionLabelPath="name"
+                                 searchProperty="name"}}`);
+
+  clickTrigger();
+
+  return wait()
+    .then(() => {
+      let $items = $('.ember-power-select-dropdown li');
+
+      assert.equal($items.length, 2, 'gets given amount of objects');
+
+      return wait();
+    })
+    .then(() => {
+      let $input = $('.ember-power-select-dropdown input');
+      $input.val('dave');
+      $input.trigger('input');
+
+      return wait();
+    })
+    .then(() => {
+      let $items = $('.ember-power-select-dropdown li');
+
+      assert.equal($items.length, 1, 'finds searched model after preload');
+      assert.equal($items[0].innerText, 'dave');
     });
 });
 
