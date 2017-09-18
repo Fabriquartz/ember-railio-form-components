@@ -43,6 +43,33 @@ test('renders the content', function(assert) {
   assert.equal($items[2].innerText.trim(), 'c', 'shows third item');
 });
 
+test('renders with custom block content', function(assert) {
+  this.set('content', [
+    EmberObject.create({ foo: 'a' }),
+    EmberObject.create({ foo: 'b' }),
+    EmberObject.create({ foo: 'c' })
+  ]);
+
+  this.render(hbs`
+    {{#auto-complete content=content
+                     updated=(action 'updated')
+                     as |item|}}
+      <div class="custom-item">
+        {{item.foo}}
+      </div>
+    {{/auto-complete}}`);
+
+  clickTrigger();
+
+  let $items = $('.custom-item');
+
+  assert.equal($items.length, 3, 'renders all items with custom content');
+
+  assert.equal($items.eq(0).text().trim(), 'a', 'shows first item content');
+  assert.equal($items.eq(1).text().trim(), 'b', 'shows second item content');
+  assert.equal($items.eq(2).text().trim(), 'c', 'shows third item content');
+});
+
 test('auto-complete items have label set to items optionLabelPath',
 function(assert) {
   this.set('content', [
