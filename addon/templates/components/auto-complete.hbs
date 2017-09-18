@@ -8,7 +8,11 @@
                            onchange=updated
                            classNames="auto-complete auto-complete--multiple"
                            as |item|}}
-    {{get item optionLabelPath}}
+    {{#if hasBlock}}
+      {{yield item}}
+    {{else}}
+      {{get item optionLabelPath}}
+    {{/if}}
   {{/power-select-multiple}}
 {{else}}
   {{#power-select options=groupedContent
@@ -22,6 +26,10 @@
                   classNames="auto-complete"
                   placeholder=prompt
                   as |item|}}
-    {{get item optionLabelPath}}
+    {{#if hasBlock}}
+      {{yield item}}
+    {{else}}
+      {{get item optionLabelPath}}
+    {{/if}}
   {{/power-select}}
 {{/if}}

@@ -1,12 +1,19 @@
-{{auto-complete value=value
-                multiSelect=multiSelect
-                content=content
-                updated=updated
-                name=name
-                onQueryChange=(action "onQueryChange")
-                optionLabelPath=optionLabelPath
-                groupLabelPath=groupLabelPath
-                prompt=prompt
-                disableClear=disableClear
-                disableSearch=disableSearch
-                disabled=disabled}}
+{{#auto-complete value=value
+                 multiSelect=multiSelect
+                 content=content
+                 updated=updated
+                 name=name
+                 onQueryChange=(action "onQueryChange")
+                 optionLabelPath=optionLabelPath
+                 groupLabelPath=groupLabelPath
+                 prompt=prompt
+                 disableClear=disableClear
+                 disableSearch=disableSearch
+                 disabled=disabled
+                 as |item|}}
+  {{#if hasBlock}}
+    {{yield item}}
+  {{else}}
+    {{get item optionLabelPath}}
+  {{/if}}
+{{/auto-complete}}
