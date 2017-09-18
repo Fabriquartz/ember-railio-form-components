@@ -12,7 +12,8 @@ export default Component.extend({
   classNames: ['auto-complete'],
   layout,
 
-  allowClear: not('disableClear'),
+  allowClear:    not('disableClear'),
+  searchEnabled: not('disableSearch'),
 
   didReceiveAttrs() {
     let groupLabelPath = get(this, 'groupLabelPath');

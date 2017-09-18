@@ -72,6 +72,15 @@ test('renders the search input on open', function(assert) {
   assert.equal($('.ember-power-select-dropdown input').length, 1);
 });
 
+test('search input disabled', function(assert) {
+  this.render(hbs`{{auto-complete disableSearch=true
+                                  updated=(action 'updated')}}`);
+
+  clickTrigger();
+
+  assert.equal($('.ember-power-select-dropdown input').length, 0);
+});
+
 test('content grouped by groupLabelPath', function(assert) {
   this.set('content', [
     EmberObject.create({ foo: 'a', bar: 'group 1' }),
