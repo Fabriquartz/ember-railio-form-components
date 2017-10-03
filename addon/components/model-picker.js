@@ -21,7 +21,8 @@ export default Component.extend({
     return queryOnSearch || !preload;
   }),
 
-  content: computed('preload', 'model', function() {
+  content: computed('preload', 'model', 'filter', function() {
+    let filter  = get(this, 'filter');
     let preload = get(this, 'preload');
 
     if (!preload) { return []; }
@@ -29,7 +30,9 @@ export default Component.extend({
     let store = get(this, 'store');
     let model = get(this, 'model');
 
-    let query = typeof preload == 'number' ? { per_page: preload } : {};
+    let query = { filter };
+
+    if (typeof preload == 'number') { query.per_page = preload; }
 
     return store.query(model, query);
   }),
@@ -58,10 +61,11 @@ export default Component.extend({
     let searchProperty     = get(this, 'searchProperty');
     let groupLabelPath     = get(this, 'groupLabelPath');
     let sortFunction       = get(this, 'sortFunction');
-    let filter             = {};
-    filter[searchProperty] = term;
+    let filter             = get(this, 'filter') || {};
+    let query              = { filter };
+    query[searchProperty]  = term;
 
-    return get(this, 'store').query(model, filter).then((list) => {
+    return get(this, 'store').query(model, query).then((list) => {
       if (typeof list.sort !== 'function' && typeof list.toArray === 'function') {
         list = list.toArray();
       }

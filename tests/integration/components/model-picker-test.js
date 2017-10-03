@@ -1,5 +1,7 @@
+/* eslint-disable camelcase */
 import Ember       from 'ember';
 import EmberObject from 'ember-object';
+import Service     from 'ember-service';
 import Pretender   from 'pretender';
 
 import { moduleForComponent, test }     from 'ember-qunit';
@@ -173,6 +175,54 @@ function(assert) {
       assert.equal($items.length, 1, 'finds searched model after preload');
       assert.equal($items[0].innerText, 'dave');
     });
+});
+
+test('Uses given filters on query', function(assert) {
+  assert.expect(9);
+
+  set(this, 'filters', {
+    foo_eq:    'bar',
+    code_cont: 'test'
+  });
+
+  let queryExpects = (query) => {
+    assert.equal(query.per_page,  50,    'queries with preload amount');
+    assert.equal(query.filter.foo_eq,    'bar',  'queries with filter');
+    assert.equal(query.filter.code_cont, 'test', 'queries with filter');
+  };
+
+  this.register('service:store', Service.extend({
+    query(modelName, query) {
+      assert.equal(modelName, 'foo', 'queries with given modelName');
+      queryExpects(query);
+      return;
+    }
+  }));
+
+  this.on('update', () => { });
+  this.render(hbs`{{model-picker updated=(action 'update')
+                                 model="foo"
+                                 preload=50
+                                 queryOnSearch=true
+                                 searchProperty="name_cont"
+                                 filter=filters}}`);
+
+  queryExpects = (query) => {
+    assert.notOk(query.per_page, 'No preload amount on searching');
+    assert.equal(query.filter.foo_eq,    'bar',  'queries with filter');
+    assert.equal(query.filter.code_cont, 'test', 'queries with filter');
+    assert.equal(query.name_cont, 'bla', 'queries with search query');
+  };
+
+  clickTrigger();
+
+  return wait().then(() => {
+    let $input = $('.ember-power-select-dropdown input');
+    $input.val('bla');
+    $input.trigger('input');
+
+    return wait();
+  });
 });
 
 test('Sorts list using given sorting function', function(assert) {
