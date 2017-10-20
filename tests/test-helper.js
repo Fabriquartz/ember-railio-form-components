@@ -1,6 +1,5 @@
-import QUnit    from 'qunit';
-import resolver from './helpers/resolver';
-
+import resolver        from './helpers/resolver';
+import QUnit           from 'qunit';
 import { setResolver } from 'ember-qunit';
 import { start }       from 'ember-cli-qunit';
 
