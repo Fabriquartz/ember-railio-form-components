@@ -59,6 +59,14 @@ export function clickTrigger(scope, options = {}) {
   fireNativeMouseEvent('mousedown', selector, options);
 }
 
+export function clickItem(eqValue, options = {}) {
+  let selector = '.ember-power-select-option';
+  if (eqValue) {
+    selector = `${selector}:eq(${eqValue})`;
+  }
+  fireNativeMouseEvent('mouseup', selector, options);
+}
+
 export function currentOptions(scope) {
   let selector = '.ember-power-select-option[aria-current="true"]';
   if (scope) {

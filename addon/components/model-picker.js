@@ -4,15 +4,28 @@ import layout    from '../templates/components/model-picker';
 
 import { isBlank }       from 'ember-utils';
 import { task, timeout } from 'ember-concurrency';
-import groupBy from '../utils/group-by';
+import invokeAction      from 'ember-invoke-action';
+import groupBy           from '../utils/group-by';
 
 import computed from 'ember-computed';
 import get      from 'ember-metal/get';
 import service  from 'ember-service/inject';
 
 export default Component.extend({
+  classNames: ['model-picker'],
   layout,
+
   store: service(),
+
+  _selectAll: computed('content.[]', 'value.[]', function() {
+    let content = get(this, 'content') || [];
+    let value   = get(this, 'value') || [];
+
+    return get(content, 'length') === get(value, 'length') &&
+           value.every((item) => content.includes(item));
+  }),
+
+  emptyValue: [],
 
   lookupOnSearch: computed('preload', 'queryOnSearch', function() {
     let preload       = get(this, 'preload');
@@ -58,5 +71,11 @@ export default Component.extend({
       list = list.sort(sortFunction);
       return groupBy(list, groupLabelPath);
     });
-  }).restartable()
+  }).restartable(),
+
+  actions: {
+    update(value) {
+      invokeAction(this, 'updated', value);
+    }
+  }
 });
