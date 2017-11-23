@@ -19,8 +19,17 @@ export default Component.extend({
     let groupLabelPath = get(this, 'groupLabelPath');
 
     defineProperty(this, 'groupedContent',
-    computed(`content.@each.{${groupLabelPath}}`, function() {
-      return groupBy(get(this, 'content'), groupLabelPath);
+    computed(`content.@each.{${groupLabelPath}}`, 'sortFunction', function() {
+      let sortFunction = get(this, 'sortFunction');
+      let content      = get(this, 'content') || [];
+
+      if (typeof content.sort !== 'function' &&
+          typeof content.toArray === 'function') {
+        content = content.toArray();
+      }
+
+      content = content.sort(sortFunction);
+      return groupBy(content, groupLabelPath);
     }));
   }
 });

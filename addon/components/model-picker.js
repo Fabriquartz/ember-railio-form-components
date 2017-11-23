@@ -37,33 +37,18 @@ export default Component.extend({
     return store.query(model, query);
   }),
 
-  groupedContent: computed('content.[]', 'sortFunction', 'groupLabelPath',
-  function() {
-    let sortFunction   = get(this, 'sortFunction');
-    let groupLabelPath = get(this, 'groupLabelPath');
-    let content        = get(this, 'content') || [];
-
-    if (typeof content.sort !== 'function' &&
-        typeof content.toArray === 'function') {
-      content = content.toArray();
-    }
-
-    content = content.sort(sortFunction);
-    return groupBy(content, groupLabelPath);
-  }),
-
   lookupModel: task(function* (term) {
     if (isBlank(term)) { return []; }
 
     yield timeout(1000);
 
-    let model              = get(this, 'model');
-    let searchProperty     = get(this, 'searchProperty');
-    let groupLabelPath     = get(this, 'groupLabelPath');
-    let sortFunction       = get(this, 'sortFunction');
-    let filter             = get(this, 'filter') || {};
-    let query              = { filter };
-    query[searchProperty]  = term;
+    let model             = get(this, 'model');
+    let searchProperty    = get(this, 'searchProperty');
+    let groupLabelPath    = get(this, 'groupLabelPath');
+    let sortFunction      = get(this, 'sortFunction');
+    let filter            = get(this, 'filter') || {};
+    let query             = { filter };
+    query[searchProperty] = term;
 
     return get(this, 'store').query(model, query).then((list) => {
       if (typeof list.sort !== 'function' && typeof list.toArray === 'function') {
