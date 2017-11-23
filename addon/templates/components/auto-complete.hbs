@@ -1,11 +1,20 @@
 {{#if multiSelect}}
+  {{#if enableSelectAll}}
+    {{check-box value=_selectAll
+                updated=(action 'updateSelectAll')
+                classNames="auto-complete__select-all"}}
+    <span class="auto-complete__select-all-label">
+      Select all ({{content.length}})
+    </span>
+  {{/if}}
   {{#power-select-multiple options=groupedContent
                            selected=value
                            placeholder=prompt
                            search=onQueryChange
                            searchEnabled=searchEnabled
                            searchField=optionLabelPath
-                           onchange=updated
+                           onchange=(action 'update')
+                           allowClear=allowClear
                            classNames="auto-complete auto-complete--multiple"
                            as |item|}}
     {{#if hasBlock}}
@@ -21,7 +30,7 @@
                   searchEnabled=searchEnabled
                   searchField=optionLabelPath
                   searchPlaceholder=prompt
-                  onchange=updated
+                  onchange=(action 'update')
                   allowClear=allowClear
                   classNames="auto-complete"
                   placeholder=prompt

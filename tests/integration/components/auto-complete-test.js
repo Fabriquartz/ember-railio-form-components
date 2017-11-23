@@ -347,3 +347,96 @@ test('Renders as multi-select when multiSelect=true', function(assert) {
   assert.ok($selectedOptions.eq(0).text().includes('foo'));
   assert.ok($selectedOptions.eq(1).text().includes('bar'));
 });
+
+test('enableSelectAll will show a select all button', function(assert) {
+  assert.expect(13);
+  this.set('multiSelect', true);
+
+  this.set('content', [
+    EmberObject.create({ name: 'foo' }),
+    EmberObject.create({ name: 'bar' })
+  ]);
+
+  let updateAssert = (value) => {
+    assert.deepEqual(value, this.get('content'),
+                     'triggers update action with full content as value');
+  };
+
+  this.on('updated', (value) => {
+    updateAssert(value);
+    this.set('selection', value);
+  });
+
+  this.render(hbs`{{auto-complete content=content
+                                  multiSelect=multiSelect
+                                  enableSelectAll=true
+                                  value=selection
+                                  updated=(action "updated")
+                                  optionLabelPath="name"}}`);
+
+  let $selectAll = $('.auto-complete__select-all');
+
+  assert.equal($selectAll.length, 1, 'shows select all checkbox');
+  assert.equal($('.auto-complete__select-all-label').eq(0).text().trim(),
+                 'Select all (2)',
+                 'shows select all label with content amount');
+  assert.equal($selectAll[0].checked, false, 'checkbox not checked');
+
+  let $selectedOptions = $('.ember-power-select-multiple-option');
+
+  assert.equal($selectedOptions.length, 0, 'by default no options selected');
+
+  $selectAll.click();
+
+  assert.equal($selectAll[0].checked, true, 'checkbox checked');
+
+  $selectedOptions = $('.ember-power-select-multiple-option');
+
+  assert.equal($selectedOptions.length, 2, 'all options selected on select all');
+  assert.ok($selectedOptions.eq(0).text().includes('foo'));
+  assert.ok($selectedOptions.eq(1).text().includes('bar'));
+
+  updateAssert = (value) => {
+    assert.deepEqual(value, [],
+                     'triggers update action with empty array on deselect all');
+  };
+
+  $selectAll.click();
+
+  assert.equal($selectAll[0].checked, false, 'checkbox not checked');
+
+  $selectedOptions = $('.ember-power-select-multiple-option');
+
+  assert.equal($selectedOptions.length, 0,
+               'clicking select all again will deselect everything');
+
+  this.set('multiSelect', false);
+
+  assert.equal($('.auto-complete__select-all').length, 0,
+               'no select all button when not in multiSelect mode');
+});
+
+test('selectAll true when already everything selected', function(assert) {
+  let foo = EmberObject.create({ name: 'foo' });
+  let bar = EmberObject.create({ name: 'bar' });
+  let baz = EmberObject.create({ name: 'baz' });
+
+  this.set('content',   [ foo, bar ]);
+  this.set('selection', [ foo, baz ]);
+
+  this.render(hbs`{{auto-complete content=content
+                                  multiSelect=true
+                                  enableSelectAll=true
+                                  value=selection
+                                  updated=(action "updated")
+                                  optionLabelPath="name"}}`);
+
+  let $selectAll = $('.auto-complete__select-all');
+  assert.equal($selectAll[0].checked, false,
+               'not selected all when different value than content');
+
+  this.set('selection', [ foo, bar ]);
+
+  assert.equal($selectAll[0].checked, true,
+               'all selected when current value equals content');
+});
