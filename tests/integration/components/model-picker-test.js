@@ -4,8 +4,12 @@ import EmberObject from 'ember-object';
 import Service     from 'ember-service';
 import Pretender   from 'pretender';
 
-import { moduleForComponent, test }     from 'ember-qunit';
-import { getSelected, clickTrigger } from '../../helpers/ember-power-select';
+import { moduleForComponent, test } from 'ember-qunit';
+
+import {
+  getSelected,
+  clickTrigger,
+  clickItem } from '../../helpers/ember-power-select';
 
 import wait from 'ember-test-helpers/wait';
 import run  from 'ember-runloop';
@@ -26,6 +30,8 @@ const FOOS = [
 moduleForComponent('model-picker', 'Integration | Component | {{model-picker}}', {
   integration: true,
   setup() {
+    this.on('update', () => { });
+
     new Pretender(function() {
       this.get('/foos', function(request) {
         let filter = request.queryParams.name;
@@ -52,7 +58,6 @@ moduleForComponent('model-picker', 'Integration | Component | {{model-picker}}',
 test('Searches for given model by attribute', function(assert) {
   let done = assert.async();
 
-  this.on('update', () => { });
   this.render(hbs`{{model-picker updated=(action 'update')
                                  model="foo"
                                  optionLabelPath="name"
@@ -83,7 +88,6 @@ test('Searches for given model by attribute', function(assert) {
 });
 
 test('Pre-loads content on preload=true', function(assert) {
-  this.on('update', () => { });
   this.render(hbs`{{model-picker updated=(action 'update')
                                  model="foo"
                                  preload=true
@@ -121,7 +125,6 @@ test('Pre-loads content on preload=true', function(assert) {
 });
 
 test('Pre-loads amount of objects given to preload', function(assert) {
-  this.on('update', () => { });
   this.render(hbs`{{model-picker updated=(action 'update')
                                  model="foo"
                                  preload=2
@@ -144,7 +147,6 @@ test('Pre-loads amount of objects given to preload', function(assert) {
 
 test('Pre-loads and queries again on search when queryOnSearch=true',
 function(assert) {
-  this.on('update', () => { });
   this.render(hbs`{{model-picker updated=(action 'update')
                                  model="foo"
                                  preload=2
@@ -199,7 +201,6 @@ test('Uses given filters on query', function(assert) {
     }
   }));
 
-  this.on('update', () => { });
   this.render(hbs`{{model-picker updated=(action 'update')
                                  model="foo"
                                  preload=50
@@ -232,7 +233,6 @@ test('Sorts list using given sorting function', function(assert) {
     return compare(get(a, 'name'), get(b, 'name'));
   });
 
-  this.on('update', () => { });
   this.render(hbs`{{model-picker updated=(action 'update')
                                  model="foo"
                                  sortFunction=customSorting
@@ -266,7 +266,6 @@ test('Sorts list using given sorting function', function(assert) {
 
 test('Shows selected item', function(assert) {
   set(this, 'currentFoo', EmberObject.create({ id: 6, name: 'bar test' }));
-  this.on('update', () => { });
   this.render(hbs`{{model-picker value=currentFoo
                                  updated=(action 'update')
                                  model="foo"
@@ -275,4 +274,79 @@ test('Shows selected item', function(assert) {
 
   let $selectedOption = getSelected();
   assert.equal($selectedOption[0].innerText.indexOf('bar test'), 0);
+});
+
+test('selectAll true when already everything selected', function(assert) {
+  this.set('selection', [{}, {}, {}, {}]);
+
+  this.register('service:store', Service.extend({
+    query() { return FOOS; }
+  }));
+
+  this.render(hbs`{{model-picker value=selection
+                                 model="foo"
+                                 multiSelect=true
+                                 enableSelectAll=true
+                                 preload=true
+                                 updated=(action 'update')
+                                 optionLabelPath="name"
+                                 searchProperty="name"}}`);
+
+  let $selectAll = $('.auto-complete__select-all');
+
+  return wait().then(() => {
+    assert.equal($selectAll[0].checked, false,
+                 'not selected all when different value than content');
+    return wait();
+  }).then(() => {
+    this.set('selection', FOOS);
+    return wait();
+  }).then(() => {
+    assert.equal($selectAll[0].checked, true,
+                 'all selected when current value equals content');
+    return wait();
+  });
+});
+
+test('selectAll does not show all selected values', function(assert) {
+  this.register('service:store', Service.extend({
+    query() { return FOOS; }
+  }));
+
+  this.on('updated', (value) => this.set('selection', value));
+
+  this.render(hbs`{{model-picker value=selection
+                                 model="foo"
+                                 multiSelect=true
+                                 enableSelectAll=true
+                                 preload=true
+                                 updated=(action 'update')
+                                 optionLabelPath="name"
+                                 searchProperty="name"}}`);
+
+  let $selectAll = $('.auto-complete__select-all');
+
+  return wait().then(() => {
+    assert.notOk($selectAll[0].checked,
+                'not selected all when different value than content');
+
+    $selectAll.click();
+    return wait();
+  }).then(() => {
+    let $input   = $('input.ember-power-select-trigger-multiple-input');
+    let $options = $('.ember-power-select-multiple-option');
+
+    assert.ok($selectAll[0].checked, 'all selected when clicked');
+    assert.equal($options.length, 0, 'Does not show all selected items');
+    assert.equal($input.attr('placeholder'), 'Selected all',
+                 'input indicates all options are selected');
+
+    clickTrigger();
+    clickItem(2);
+    return wait();
+  }).then(() => {
+    assert.notOk($selectAll[0].checked, 'no select all on clicking item');
+
+    return wait();
+  });
 });

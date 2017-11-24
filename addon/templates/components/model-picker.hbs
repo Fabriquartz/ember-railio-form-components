@@ -1,10 +1,13 @@
-{{auto-complete content=groupedContent
+{{auto-complete content=content
                 multiSelect=multiSelect
-                value=value
+                enableSelectAll=enableSelectAll
+                _selectAll=_selectAll
+                value=(if _selectAll emptyValue value)
                 onQueryChange=(if lookupOnSearch (perform lookupModel))
                 optionLabelPath=optionLabelPath
                 groupLabelPath=groupLabelPath
-                prompt=prompt
+                prompt=(if _selectAll 'Selected all' prompt)
                 name=name
-                updated=updated
+                updated=(action 'update')
+                allowClear=allowClear
                 disabled=disabled}}
