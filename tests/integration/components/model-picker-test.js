@@ -55,6 +55,19 @@ moduleForComponent('model-picker', 'Integration | Component | {{model-picker}}',
   }
 });
 
+test('Renders with classes and given placeholder', function(assert) {
+  this.render(hbs`{{model-picker model="foo"
+                                 optionLabelPath="name"
+                                 searchProperty="name"
+                                 prompt="Prompt text"
+                                 updated=(action 'update')}}`);
+
+  assert.equal(this.$('.model-picker').length, 1,
+               'renders with model-picker class');
+  assert.equal(this.$('.ember-power-select-placeholder').text().trim(),
+               'Prompt text', 'renders with given prompt as placeholder');
+});
+
 test('Searches for given model by attribute', function(assert) {
   let done = assert.async();
 
@@ -321,19 +334,22 @@ test('selectAll does not show all selected values', function(assert) {
                                  enableSelectAll=true
                                  preload=true
                                  updated=(action 'update')
+                                 prompt="Prompt text"
                                  optionLabelPath="name"
                                  searchProperty="name"}}`);
 
   let $selectAll = $('.auto-complete__select-all');
+  let $input     = $('input.ember-power-select-trigger-multiple-input');
 
   return wait().then(() => {
     assert.notOk($selectAll[0].checked,
                 'not selected all when different value than content');
+    assert.equal($input.attr('placeholder'), 'Prompt text',
+                 'By default given prompt as placeholder');
 
     $selectAll.click();
     return wait();
   }).then(() => {
-    let $input   = $('input.ember-power-select-trigger-multiple-input');
     let $options = $('.ember-power-select-multiple-option');
 
     assert.ok($selectAll[0].checked, 'all selected when clicked');

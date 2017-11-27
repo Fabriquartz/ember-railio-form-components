@@ -17,11 +17,13 @@ export default Component.extend({
 
   store: service(),
 
-  _selectAll: computed('content.[]', 'value.[]', function() {
+  _selectAll: computed('multiSelect', 'content.[]', 'value.[]', function() {
     let content = get(this, 'content') || [];
     let value   = get(this, 'value') || [];
 
-    return get(content, 'length') === get(value, 'length') &&
+    return get(this, 'multiSelect') && content && value &&
+           get(content, 'length') && get(value, 'length') &&
+           get(content, 'length') === get(value, 'length') &&
            value.every((item) => content.includes(item));
   }),
 
