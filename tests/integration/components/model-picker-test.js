@@ -21,8 +21,8 @@ import $    from 'jquery';
 const { compare } = Ember;
 
 const FOOS = [
-  { id: 1, type: 'foo', attributes: { name: 'bar' } },
-  { id: 2, type: 'foo', attributes: { name: 'chad' } },
+  { id: 1, type: 'foo', attributes: { name: 'chad' } },
+  { id: 2, type: 'foo', attributes: { name: 'bar' } },
   { id: 3, type: 'foo', attributes: { name: 'dave' } },
   { id: 4, type: 'foo', attributes: { name: 'bar second' } }
 ];
@@ -114,8 +114,8 @@ test('Pre-loads content on preload=true', function(assert) {
       let $items = $('.ember-power-select-dropdown li');
 
       assert.equal($items.length, 4, 'gets all objects of type on preload');
-      assert.equal($items[0].innerText, 'bar');
-      assert.equal($items[1].innerText, 'chad');
+      assert.equal($items[0].innerText, 'chad');
+      assert.equal($items[1].innerText, 'bar');
       assert.equal($items[2].innerText, 'dave');
       assert.equal($items[3].innerText, 'bar second');
 
@@ -151,8 +151,8 @@ test('Pre-loads amount of objects given to preload', function(assert) {
       let $items = $('.ember-power-select-dropdown li');
 
       assert.equal($items.length, 2, 'gets given amount of objects');
-      assert.equal($items[0].innerText, 'bar');
-      assert.equal($items[1].innerText, 'chad');
+      assert.equal($items[0].innerText, 'chad');
+      assert.equal($items[1].innerText, 'bar');
 
       return wait();
     });
@@ -239,9 +239,29 @@ test('Uses given filters on query', function(assert) {
   });
 });
 
-test('Sorts list using given sorting function', function(assert) {
-  let done = assert.async();
+test('Sorts preloaded list using given sorting function', function(assert) {
+  set(this, 'customSorting', function(a, b) {
+    return compare(get(a, 'name'), get(b, 'name'));
+  });
 
+  this.render(hbs`{{model-picker updated=(action 'update')
+                                 model="foo"
+                                 preload=2
+                                 sortFunction=customSorting
+                                 optionLabelPath="name"
+                                 searchProperty="name"}}`);
+
+  clickTrigger();
+
+  return wait().then(() => {
+    let $items = $('.ember-power-select-dropdown li');
+
+    assert.equal($items[0].innerText, 'bar',  'preloaded item 1 sorted');
+    assert.equal($items[1].innerText, 'chad', 'preloaded item 2 sorted');
+  });
+});
+
+test('Sorts queried list using given sorting function', function(assert) {
   set(this, 'customSorting', function(a, b) {
     return compare(get(a, 'name'), get(b, 'name'));
   });
@@ -254,26 +274,19 @@ test('Sorts list using given sorting function', function(assert) {
 
   clickTrigger();
 
-  let $input = $('.ember-power-select-dropdown input');
-  let $items = $('.ember-power-select-dropdown li');
+  return wait().then(() => {
+    let $input = $('.ember-power-select-dropdown input');
 
-  assert.equal($items.length, 1, 'by default no content');
-  assert.equal($items[0].innerText, 'Type to search');
-
-  run(() => {
     $input.val('a');
     $input.trigger('input');
-  });
+    return wait();
+  }).then(() => {
+    let $items = $('.ember-power-select-dropdown li');
 
-  wait().then(() => {
-    $items = $('.ember-power-select-dropdown li');
-
-    assert.equal($items[0].innerText, 'bar', 'first item');
-    assert.equal($items[1].innerText, 'bar second', 'second item');
-    assert.equal($items[2].innerText, 'chad', 'third item');
-    assert.equal($items[3].innerText, 'dave', 'second item');
-
-    done();
+    assert.equal($items[0].innerText, 'bar',        'reloaded first item sorted');
+    assert.equal($items[1].innerText, 'bar second', 'reloaded second item sorted');
+    assert.equal($items[2].innerText, 'chad',       'reloaded third item sorted');
+    assert.equal($items[3].innerText, 'dave',       'reloaded fourth item sorted');
   });
 });
 
