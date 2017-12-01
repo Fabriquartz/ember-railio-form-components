@@ -40,7 +40,9 @@ export default Component.extend({
           content = content.toArray();
         }
 
-        content = content.sort(sortFunction);
+        if (sortFunction && typeof sortFunction === 'function') {
+          content = content.sort(sortFunction);
+        }
         return groupBy(content, groupLabelPath);
       }));
     }

@@ -43,6 +43,37 @@ test('renders the content', function(assert) {
   assert.equal($items[2].innerText.trim(), 'c', 'shows third item');
 });
 
+test('sorts the content', function(assert) {
+  this.set('content', [
+    { foo: 'b' },
+    { foo: 'c' },
+    { foo: 'a' }
+  ]);
+
+  this.render(hbs`{{auto-complete content=content
+                                  optionLabelPath="foo"
+                                  sortFunction=sortFunction
+                                  updated=(action 'updated')}}`);
+
+  clickTrigger();
+  let $items = $('.ember-power-select-dropdown li');
+
+  assert.equal($items.eq(0).text().trim(), 'b', 'shows first item unsorted');
+  assert.equal($items.eq(1).text().trim(), 'c', 'shows second item unsorted');
+  assert.equal($items.eq(2).text().trim(), 'a', 'shows third item unsorted');
+
+  clickTrigger();
+
+  this.set('sortFunction', (a, b) => a.foo > b.foo);
+
+  clickTrigger();
+  $items = $('.ember-power-select-dropdown li');
+
+  assert.equal($items.eq(0).text().trim(), 'a', 'shows first item sorted');
+  assert.equal($items.eq(1).text().trim(), 'b', 'shows second item sorted');
+  assert.equal($items.eq(2).text().trim(), 'c', 'shows third item sorted');
+});
+
 test('renders with custom block content', function(assert) {
   this.set('content', [
     EmberObject.create({ foo: 'a' }),
