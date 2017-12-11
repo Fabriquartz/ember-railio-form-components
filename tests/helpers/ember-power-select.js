@@ -1,5 +1,6 @@
 import run from 'ember-runloop';
 import $   from 'jquery';
+import { click } from 'ember-native-dom-helpers';
 
 function fireNativeMouseEvent(eventType, selectorOrDomElement, options = {}) {
   let eventOptions = { bubbles: true, cancelable: true, view: window };
@@ -13,15 +14,6 @@ function fireNativeMouseEvent(eventType, selectorOrDomElement, options = {}) {
     target = selectorOrDomElement;
   }
   run(() => target.dispatchEvent(event));
-}
-
-export function getPowerSelect(scope) {
-  let selector = '.ember-basic-dropdown';
-  if (scope) {
-    selector = `${scope} ${selector}`;
-  }
-
-  return $(selector);
 }
 
 export function getSelected(scope) {
@@ -56,7 +48,7 @@ export function clickTrigger(scope, options = {}) {
   if (scope) {
     selector = `${scope} ${selector}`;
   }
-  fireNativeMouseEvent('mousedown', selector, options);
+  return click(selector, options);
 }
 
 export function clickItem(eqValue, options = {}) {
