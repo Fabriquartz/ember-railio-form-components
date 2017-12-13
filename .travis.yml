@@ -39,15 +39,15 @@ matrix:
 before_install:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
-  # - "npm config set spin false"
+  - "npm config set spin false"
   - "npm install -g npm@^4"
-  # - npm config set spin false
+  - npm config set spin false
   - npm install -g bower
-  # - bower --version
+  - bower --version
 
 install:
-  - npm install --no-optional
+  - npm install
   - bower install
 
 script:
-  - ember try:one $EMBER_TRY_SCENARIO test
+  - ember try:one $EMBER_TRY_SCENARIO test --skip-cleanup
