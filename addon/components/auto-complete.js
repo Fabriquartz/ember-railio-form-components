@@ -48,6 +48,13 @@ export default Component.extend({
     }
   },
 
+  onKeyDownDropDown(powerSelect, keydown) {
+    // Open when typing for search (only characters)
+    if (keydown.keyCode >= 48 && keydown.keyCode <= 90) {
+      powerSelect.actions.open();
+    }
+  },
+
   actions: {
     update(value) {
       set(this, '_selectAll', false);
