@@ -379,6 +379,32 @@ test('Renders as multi-select when multiSelect=true', function(assert) {
   assert.ok($selectedOptions.eq(1).text().includes('bar'));
 });
 
+test('Doubleclick action on multi-select item', function(assert) {
+  assert.expect(2);
+
+  let selection = this.set('selection', [
+    EmberObject.create({ name: 'foo' }),
+    EmberObject.create({ name: 'bar' })
+  ]);
+
+  this.on('dblClickItem', (item) => {
+    assert.equal(item, selection[0], 'triggers doubleclick action with item');
+  });
+
+  this.render(hbs`{{auto-complete content=content
+                                  multiSelect=true
+                                  value=selection
+                                  updated=(action "updated")
+                                  doubleClickItem=(action 'dblClickItem')
+                                  optionLabelPath="name"}}`);
+
+  let $items = $('.auto-complete__item');
+
+  assert.equal($items.length, 2, 'renders items with auto-complete__item class');
+
+  $items.eq(0).dblclick();
+});
+
 test('enableSelectAll will show a select all button', function(assert) {
   assert.expect(13);
   this.set('multiSelect', true);
