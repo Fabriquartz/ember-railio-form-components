@@ -7,39 +7,28 @@
       Select all ({{content.length}})
     </span>
   {{/if}}
-  {{#power-select-multiple options=groupedContent
-                           selected=value
-                           placeholder=prompt
-                           search=onQueryChange
-                           searchEnabled=searchEnabled
-                           searchField=optionLabelPath
-                           onchange=(action 'update')
-                           allowClear=allowClear
-                           classNames="auto-complete auto-complete--multiple"
-                           as |item|}}
-    {{#if hasBlock}}
-      {{yield item}}
-    {{else}}
-      {{get item optionLabelPath}}
-    {{/if}}
-  {{/power-select-multiple}}
-{{else}}
-  {{#power-select options=groupedContent
-                  selected=value
-                  search=onQueryChange
-                  searchEnabled=searchEnabled
-                  searchField=optionLabelPath
-                  searchPlaceholder=prompt
-                  onchange=(action 'update')
-                  onkeydown=onKeyDownDropDown
-                  allowClear=allowClear
-                  classNames="auto-complete"
-                  placeholder=prompt
-                  as |item|}}
-    {{#if hasBlock}}
-      {{yield item}}
-    {{else}}
-      {{get item optionLabelPath}}
-    {{/if}}
-  {{/power-select}}
 {{/if}}
+
+{{#component (if multiSelect 'power-select-multiple' 'power-select')
+             options=groupedContent
+             selected=value
+             placeholder=prompt
+             searchPlaceholder=prompt
+             search=onQueryChange
+             searchEnabled=searchEnabled
+             searchField=optionLabelPath
+             onkeydown=onKeyDownDropDown
+             onchange=(action 'update')
+             allowClear=allowClear
+             classNames=(concat "auto-complete"
+                                (if multiSelect 'auto-complete--multiple'))
+             as |item|}}
+  <span class="auto-complete__item"
+        ondblclick={{action 'doubleClickItem' multiSelect item}}>
+    {{#if hasBlock}}
+      {{yield item}}
+    {{else}}
+      {{get item optionLabelPath}}
+    {{/if}}
+  </span>
+{{/component}}

@@ -68,6 +68,9 @@ export default Component.extend({
       if (typeof this.attrs.updated === 'function') {
         this.attrs.updated(get(this, 'content'));
       }
+    },
+    doubleClickItem(multiSelect, item) {
+      if (multiSelect) { invokeAction(this, 'doubleClickItem', item); }
     }
   }
 });
