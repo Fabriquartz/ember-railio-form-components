@@ -1,10 +1,10 @@
-import Ember     from 'ember';
 import Component from 'ember-component';
 import computed  from 'ember-computed';
-import layout    from
-  'ember-railio-form-components/templates/components/railio-radio-button';
 
-const { isEqual } = Ember;
+import { proxyIsEqual as isEqual } from 'ember-proxy-util';
+
+import layout from
+  'ember-railio-form-components/templates/components/railio-radio-button';
 
 export default Component.extend({
   layout,
@@ -29,10 +29,7 @@ export default Component.extend({
       return this.get(`option.${optionValuePath}`) === this.get('selection');
     }
 
-    return isEqual(
-      this.get('option'),
-      this.get('selection')
-    );
+    return isEqual(this.get('option'), this.get('selection'));
   }),
 
   label: computed('option', 'optionLabelPath', function() {
