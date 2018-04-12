@@ -25,7 +25,7 @@ export default Component.extend({
 
   labelText: computed('label', 'propertyPath', function() {
     let propertyPath = this.get('propertyPath');
-    let label          = this.get('label');
+    let label        = this.get('label');
 
     if (typeof label === 'string') {
       return label;
@@ -61,7 +61,7 @@ export default Component.extend({
   actions: {
     update(value) {
       let object       = this.get('object');
-      let propertyPath = this. get('propertyPath');
+      let propertyPath = this.get('propertyPath');
 
       if (!this.get('disabled') && typeof this.attrs.updated === 'function') {
         this.attrs.updated(object, propertyPath, value);

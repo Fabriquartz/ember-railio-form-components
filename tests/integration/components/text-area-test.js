@@ -18,6 +18,33 @@ test('renders a text-area with value', function(assert) {
   assert.equal($area.val(), 'testing');
 });
 
+test('Sizes with input', function(assert) {
+  this.set('value', 'First line of text.');
+  this.render(hbs`{{text-area value=value
+                              sizeOnInput=true}}`);
+
+  let $area  = this.$('textarea.text-area');
+  let $input = this.$('.text-area');
+
+  assert.equal($area.height(), 26, 'First line');
+
+  run(() => {
+    let val = $input.val();
+    $input.val(`${val} This is the second line of text`);
+    $input.trigger('input');
+  });
+
+  assert.equal($area.height(), 30, 'Height for two lines of text');
+
+  run(() => {
+    let val = $input.val();
+    $input.val(`${val} Last but not least, the third line of text`);
+    $input.trigger('input');
+  });
+
+  assert.equal($area.height(), 56, 'Height for three line of text');
+});
+
 test(`typing doesn't change value but sends updated`, function(assert) {
   assert.expect(2);
 
