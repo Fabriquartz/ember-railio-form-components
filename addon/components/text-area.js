@@ -5,8 +5,9 @@ import formFieldOptions from 'ember-railio-form-components/mixins/form-field-opt
 import get from 'ember-metal/get';
 
 function textAreaAjust(element) {
-  element.style.height = '1px';
-  element.style.height = `${element.scrollHeight}px`;
+  if (element && element.scrollHeight) {
+    element.style.height = `${element.scrollHeight}px`;
+  }
 }
 
 export default Component.extend(textInputMixin, formFieldOptions, {

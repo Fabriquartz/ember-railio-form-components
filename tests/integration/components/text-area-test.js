@@ -23,7 +23,7 @@ test('Sizes with input', function(assert) {
   this.render(hbs`{{text-area value=value
                               sizeOnInput=true}}`);
 
-  let $area  = this.$('textarea.text-area');
+  let $area  = this.$('textarea.text-area').attr('style', 'width: 150px');
   let $input = this.$('.text-area');
 
   assert.equal($area.height(), 26, 'First line');
