@@ -23,10 +23,11 @@ test('Sizes with input', function(assert) {
   this.render(hbs`{{text-area value=value
                               sizeOnInput=true}}`);
 
-  let $area  = this.$('textarea.text-area').attr('style', 'width: 150px');
+  let $area  = this.$('textarea.text-area')
+    .attr('style', 'width: 200px; line-height: 25px;');
   let $input = this.$('.text-area');
 
-  assert.equal($area.height(), 26, 'First line');
+  assert.equal($area.height(), 50, 'First line');
 
   run(() => {
     let val = $input.val();
@@ -34,7 +35,7 @@ test('Sizes with input', function(assert) {
     $input.trigger('input');
   });
 
-  assert.equal($area.height(), 30, 'Height for two lines of text');
+  assert.equal($area.height(), 54, 'Height for two lines of text');
 
   run(() => {
     let val = $input.val();
@@ -42,7 +43,7 @@ test('Sizes with input', function(assert) {
     $input.trigger('input');
   });
 
-  assert.equal($area.height(), 56, 'Height for three line of text');
+  assert.equal($area.height(), 79, 'Height for three line of text');
 });
 
 test(`typing doesn't change value but sends updated`, function(assert) {
