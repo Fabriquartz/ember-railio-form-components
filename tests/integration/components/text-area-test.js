@@ -19,31 +19,40 @@ test('renders a text-area with value', function(assert) {
 });
 
 test('Sizes with input', function(assert) {
-  this.set('value', 'First line of text.');
+  let chromeTextAreaMargin = 4;
+  let lineHeight = 25;
+
+  this.set('value', 'First line');
+
   this.render(hbs`{{text-area value=value
                               sizeOnInput=true}}`);
 
-  let $area  = this.$('textarea.text-area')
-    .attr('style', 'width: 200px; line-height: 25px;');
-  let $input = this.$('.text-area');
+  let $area = this.$('textarea.text-area');
 
-  assert.equal($area.height(), 50, 'First line');
+  $area.attr('style', `line-height: ${lineHeight}px; width: 100px;`);
 
-  run(() => {
-    let val = $input.val();
-    $input.val(`${val} This is the second line of text`);
-    $input.trigger('input');
-  });
+  function updateArea(append) {
+    run(() => {
+      let val = $area.val();
+      $area.val(`${val}${append}`);
+      $area.trigger('input');
+    });
+  }
 
-  assert.equal($area.height(), 54, 'Height for two lines of text');
+  updateArea('');
 
-  run(() => {
-    let val = $input.val();
-    $input.val(`${val} Last but not least, the third line of text`);
-    $input.trigger('input');
-  });
+  assert.equal($area.height(), (1 * lineHeight) + chromeTextAreaMargin,
+               'Resizes for first line');
 
-  assert.equal($area.height(), 79, 'Height for three line of text');
+  updateArea('This is the 2nd line');
+
+  assert.equal($area.height(), (2 * lineHeight) + chromeTextAreaMargin,
+               'Resizes for second line');
+
+  updateArea('This is the 3rd line');
+
+  assert.equal($area.height(), (3 * lineHeight) + chromeTextAreaMargin,
+               'Resizes for third line');
 });
 
 test(`typing doesn't change value but sends updated`, function(assert) {

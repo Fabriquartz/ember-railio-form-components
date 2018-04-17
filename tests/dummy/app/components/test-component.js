@@ -11,7 +11,7 @@ export default Component.extend({
 
   optionList: ['OPTION 1', 'OPTION 2', 'OPTION 3'],
 
-  options: {
+  textAreaOptions: {
     sizeOnInput: true
   },
 

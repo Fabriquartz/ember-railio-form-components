@@ -6,6 +6,7 @@ import get from 'ember-metal/get';
 
 function textAreaAjust(element) {
   if (element && element.scrollHeight) {
+    element.style.height = '1px';
     element.style.height = `${element.scrollHeight}px`;
   }
 }
@@ -13,15 +14,25 @@ function textAreaAjust(element) {
 export default Component.extend(textInputMixin, formFieldOptions, {
   tagName:           'textarea',
   classNames:        ['text-area'],
-  attributeBindings: ['disabled'],
+  attributeBindings: ['disabled', 'cols', 'rows'],
 
   sizeOnInput: false,
 
+  didRender() {
+    this.resizeElement();
+  },
+
+  resizeElement() {
+    if (get(this, 'sizeOnInput')) {
+      textAreaAjust(get(this, 'element'));
+    }
+
+    get(this, 'element');
+  },
+
   actions: {
     changed(value) {
-      if (get(this, 'sizeOnInput')) {
-        textAreaAjust(get(this, 'element'));
-      }
+      this.resizeElement();
 
       this._super(value);
     }
