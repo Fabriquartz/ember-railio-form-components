@@ -22,14 +22,15 @@ test('Sizes with input', function(assert) {
   let chromeTextAreaMargin = 4;
   let lineHeight = 25;
 
-  this.set('value', 'First line');
+  this.set('value', 'This is the 1st line');
 
   this.render(hbs`{{text-area value=value
                               sizeOnInput=true}}`);
 
   let $area = this.$('textarea.text-area');
 
-  $area.attr('style', `line-height: ${lineHeight}px; width: 100px;`);
+  $area.attr('style', `line-height: ${lineHeight}px; width: 150px;
+                       font-family: monospace; font-size: 10px;`);
 
   function updateArea(append) {
     run(() => {
