@@ -2,6 +2,9 @@ import Ember               from 'ember';
 import Component           from 'ember-component';
 import computed, { reads } from 'ember-computed';
 
+import formFieldOptions from
+  'ember-railio-form-components/mixins/form-field-options';
+
 const { defineProperty } = Ember;
 
 function spliceCapitalizedString(string) {
@@ -16,7 +19,7 @@ function isValidComputedProperty() {
   return propertyErrors == null || propertyErrors.length === 0;
 }
 
-export default Component.extend({
+export default Component.extend(formFieldOptions, {
   classNames:        'form-field',
   classNameBindings: [
     'isValid::form-field--invalid',

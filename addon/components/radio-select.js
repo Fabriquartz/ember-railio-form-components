@@ -1,9 +1,12 @@
-import Component    from 'ember-component';
-import invokeAction from 'ember-invoke-action';
-import computed     from 'ember-computed';
-import get          from 'ember-metal/get';
+import Component        from 'ember-component';
+import invokeAction     from 'ember-invoke-action';
+import computed         from 'ember-computed';
+import get              from 'ember-metal/get';
 
-export default Component.extend({
+import formFieldOptions from
+  'ember-railio-form-components/mixins/form-field-options';
+
+export default Component.extend(formFieldOptions, {
   classNames:        ['radio-select'],
   classNameBindings: ['inline:radio-select--inline'],
   attributeBindings: ['title'],
@@ -13,7 +16,7 @@ export default Component.extend({
 
   defaultEmpty: 'No option selected',
 
-  title: computed('cycle', 'value', 'options', function() {
+  title: computed('cycle', 'value', 'options.@each.{code,label}', function() {
     if (get(this, 'cycle')) {
       let next            = this._getNextOption();
       let optionLabelPath = get(this, 'optionLabelPath');

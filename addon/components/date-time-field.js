@@ -1,6 +1,8 @@
 import Component from 'ember-component';
+import formFieldOptions from
+  'ember-railio-form-components/mixins/form-field-options';
 
-export default Component.extend({
+export default Component.extend(formFieldOptions, {
   classNames: ['date-time-row'],
 
   actions: {

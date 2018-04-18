@@ -10,7 +10,6 @@ export default Mixin.create({
     this._super(...arguments);
 
     let options = get(this, 'componentProperties') || {};
-
     Object.keys(options).forEach((attributeName) => {
       if (typeof get(options, attributeName) === 'function') {
         defineProperty(this, attributeName, { value: get(options, attributeName) });

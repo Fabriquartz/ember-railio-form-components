@@ -1,6 +1,7 @@
 import Component        from 'ember-component';
 import textInputMixin   from 'ember-railio-form-components/mixins/text-input-mixin';
-import formFieldOptions from 'ember-railio-form-components/mixins/form-field-options'; //eslint-disable-line
+import formFieldOptions from
+  'ember-railio-form-components/mixins/form-field-options';
 
 import get from 'ember-metal/get';
 
