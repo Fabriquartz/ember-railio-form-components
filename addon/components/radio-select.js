@@ -16,7 +16,7 @@ export default Component.extend(formFieldOptions, {
 
   defaultEmpty: 'No option selected',
 
-  title: computed('cycle', 'value', 'options.@each.{code,label}', function() {
+  title: computed('cycle', 'value', 'options', function() {
     if (get(this, 'cycle')) {
       let next            = this._getNextOption();
       let optionLabelPath = get(this, 'optionLabelPath');
