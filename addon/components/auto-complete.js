@@ -8,9 +8,12 @@ import set          from 'ember-metal/set';
 
 import computed, { not } from 'ember-computed';
 
+import formFieldOptions from
+  'ember-railio-form-components/mixins/form-field-options';
+
 const { defineProperty } = Ember;
 
-export default Component.extend({
+export default Component.extend(formFieldOptions, {
   classNames:        ['auto-complete'],
   classNameBindings: ['_selectAll:auto-complete--selected-all'],
   layout,

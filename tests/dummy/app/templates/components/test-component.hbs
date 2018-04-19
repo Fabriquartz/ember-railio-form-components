@@ -19,3 +19,11 @@
                  value=value
                  updated=updated}}
 {{/form-field}}
+<br/>
+
+{{form-field type="text-area"
+             options=textAreaOptions
+             object=object
+             propertyPath="textArea"
+             updated=(action "update")
+             disabled=disabled}}

@@ -1,10 +1,12 @@
 import Component from 'ember-component';
+import formFieldOptions from
+  'ember-railio-form-components/mixins/form-field-options';
 
 function handleChanged() {
   this.send('changed', this.readDOMAttr('checked'));
 }
 
-export default Component.extend({
+export default Component.extend(formFieldOptions, {
   tagName:           'input',
   type:              'checkbox',
   attributeBindings: ['type', 'value:checked', 'disabled'],

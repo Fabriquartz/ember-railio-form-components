@@ -2,7 +2,10 @@ import Component from 'ember-component';
 import run       from 'ember-runloop';
 import service   from 'ember-service/inject';
 
-export default Component.extend({
+import formFieldOptions from
+  'ember-railio-form-components/mixins/form-field-options';
+
+export default Component.extend(formFieldOptions, {
   store: service('store'),
 
   lookupModel(query) {
