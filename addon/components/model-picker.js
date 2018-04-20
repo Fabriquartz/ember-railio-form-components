@@ -2,6 +2,9 @@
 import Component from 'ember-component';
 import layout    from '../templates/components/model-picker';
 
+import formFieldOptions from
+  'ember-railio-form-components/mixins/form-field-options';
+
 import { isBlank }       from 'ember-utils';
 import { task, timeout } from 'ember-concurrency';
 import invokeAction      from 'ember-invoke-action';
@@ -11,7 +14,7 @@ import computed from 'ember-computed';
 import get      from 'ember-metal/get';
 import service  from 'ember-service/inject';
 
-export default Component.extend({
+export default Component.extend(formFieldOptions, {
   classNames: ['model-picker'],
   layout,
 
@@ -48,7 +51,6 @@ export default Component.extend({
     let query = { filter };
 
     if (typeof preload == 'number') { query.per_page = preload; }
-
     return store.query(model, query);
   }),
 

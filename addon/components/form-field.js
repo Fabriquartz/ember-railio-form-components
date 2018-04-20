@@ -2,6 +2,9 @@ import Ember               from 'ember';
 import Component           from 'ember-component';
 import computed, { reads } from 'ember-computed';
 
+import formFieldOptions from
+  'ember-railio-form-components/mixins/form-field-options';
+
 const { defineProperty } = Ember;
 
 function spliceCapitalizedString(string) {
@@ -16,7 +19,7 @@ function isValidComputedProperty() {
   return propertyErrors == null || propertyErrors.length === 0;
 }
 
-export default Component.extend({
+export default Component.extend(formFieldOptions, {
   classNames:        'form-field',
   classNameBindings: [
     'isValid::form-field--invalid',
@@ -25,7 +28,7 @@ export default Component.extend({
 
   labelText: computed('label', 'propertyPath', function() {
     let propertyPath = this.get('propertyPath');
-    let label          = this.get('label');
+    let label        = this.get('label');
 
     if (typeof label === 'string') {
       return label;
@@ -61,7 +64,7 @@ export default Component.extend({
   actions: {
     update(value) {
       let object       = this.get('object');
-      let propertyPath = this. get('propertyPath');
+      let propertyPath = this.get('propertyPath');
 
       if (!this.get('disabled') && typeof this.attrs.updated === 'function') {
         this.attrs.updated(object, propertyPath, value);

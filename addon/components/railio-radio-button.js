@@ -3,10 +3,12 @@ import computed  from 'ember-computed';
 
 import { proxyIsEqual as isEqual } from 'ember-proxy-util';
 
+import formFieldOptions from
+  'ember-railio-form-components/mixins/form-field-options';
 import layout from
   'ember-railio-form-components/templates/components/railio-radio-button';
 
-export default Component.extend({
+export default Component.extend(formFieldOptions, {
   layout,
 
   classNames:        ['radio-select__option'],

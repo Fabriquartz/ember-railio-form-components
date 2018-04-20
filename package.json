@@ -1,6 +1,6 @@
 {
   "name": "ember-railio-form-components",
-  "version": "0.0.54",
+  "version": "0.0.55",
   "description": "Addon for all shared railio components.",
   "directories": {
     "doc": "doc",
@@ -37,7 +37,6 @@
     "ember-source": "~3.0.0",
     "ember-try": "^0.2.23",
     "loader.js": "^4.6.0",
-
     "babel-eslint": "8.2.2",
     "ember-cli-content-security-policy": "1.0.0",
     "ember-cli-dependency-checker": "^2.1.0",
@@ -51,7 +50,6 @@
     "ember-invoke-action": "1.5.0",
     "ember-suave": "4.0.1",
     "eslint-plugin-ember-suave": "1.0.0",
-
     "ember-proxy-util": "0.0.10",
     "ember-railio-formatting": "0.0.21"
   },
