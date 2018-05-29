@@ -27,3 +27,17 @@
              propertyPath="textArea"
              updated=(action "update")
              disabled=disabled}}
+<br/>
+
+{{form-field type="paper-input"
+             object=object
+             propertyPath="text"
+             updated=(action "update")
+             disabled=true
+             label="lel"}}
+<br/>
+
+
+<div class="layout layout-sm-column">
+{{paper-input class="flex-30" label="Name" value=object.text onChange=(action (mut object.text)) placeholder="Address" disabled=true}}
+</div>

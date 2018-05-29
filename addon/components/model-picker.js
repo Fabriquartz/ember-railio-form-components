@@ -9,6 +9,7 @@ import { isBlank }       from 'ember-utils';
 import { task, timeout } from 'ember-concurrency';
 import invokeAction      from 'ember-invoke-action';
 import groupBy           from '../utils/group-by';
+import { pluralize }     from 'ember-inflector';
 
 import computed from 'ember-computed';
 import get      from 'ember-metal/get';
@@ -80,6 +81,16 @@ export default Component.extend(formFieldOptions, {
   actions: {
     update(value) {
       invokeAction(this, 'updated', value);
+    },
+
+    removeItem(item) {
+      let value    = get(this, 'value') || [];
+      this.send('update', value.removeObject(item));
+    },
+
+    addItem(item) {
+      let value    = get(this, 'value') || [];
+      this.send('update', value.pushObject(item));
     }
   }
 });

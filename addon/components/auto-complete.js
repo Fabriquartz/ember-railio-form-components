@@ -61,6 +61,7 @@ export default Component.extend(formFieldOptions, {
   actions: {
     update(value) {
       set(this, '_selectAll', false);
+      console.log("value in autocomp", value)
       invokeAction(this, 'updated', value);
     },
     updateSelectAll(selectAll) {

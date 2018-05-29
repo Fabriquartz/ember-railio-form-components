@@ -8,28 +8,48 @@
     </span>
   {{/if}}
 {{/if}}
-
-{{#component (if multiSelect 'power-select-multiple' 'power-select')
+{{log onQueryChange}}
+{{#if (and isPaper multiSelect)}}
+  {{#paper-chips
+             readOnly=readOnly
              options=groupedContent
-             selected=value
-             placeholder=prompt
-             searchPlaceholder=prompt
              search=onQueryChange
-             searchEnabled=searchEnabled
+             content=value
+             placeholder=prompt
+             removeItem=removeItem
+             addItem=addItem
+             requireMatch=true
              searchField=optionLabelPath
-             onkeydown=onKeyDownDropDown
-             onchange=(action 'update')
-             allowClear=allowClear
-             disabled=disabled
-             classNames=(concat "auto-complete "
-                                (if multiSelect 'auto-complete--multiple'))
-             as |item|}}
-  <span class="auto-complete__item"
-        ondblclick={{action 'doubleClickItem' multiSelect item}}>
-    {{#if hasBlock}}
-      {{yield item}}
-    {{else}}
+             as |item|
+             }}
+    <span ondblclick={{action 'doubleClickItem' multiSelect item}}>
       {{get item optionLabelPath}}
-    {{/if}}
-  </span>
-{{/component}}
+    </span>
+  {{/paper-chips}}
+
+{{else}}
+  {{#component (if multiSelect 'power-select-multiple' 'power-select')
+              options=groupedContent
+              selected=value
+              placeholder=prompt
+              searchPlaceholder=prompt
+              search=onQueryChange
+              searchEnabled=searchEnabled
+              searchField=optionLabelPath
+              onkeydown=onKeyDownDropDown
+              onchange=(action 'update')
+              allowClear=allowClear
+              disabled=disabled
+              classNames=(concat "auto-complete "
+                                  (if multiSelect 'auto-complete--multiple'))
+              as |item|}}
+    <span class="auto-complete__item"
+          ondblclick={{action 'doubleClickItem' multiSelect item}}>
+      {{#if hasBlock}}
+        {{yield item}}
+      {{else}}
+        {{get item optionLabelPath}}
+      {{/if}}
+    </span>
+  {{/component}}
+{{/if}}
