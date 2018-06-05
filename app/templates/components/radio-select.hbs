@@ -16,13 +16,16 @@
                           inline=inline}}
   {{/if}}
 {{else}}
+  <span class="radio-select__list">
   {{#each options as |option|}}
     {{railio-radio-button optionLabelPath=optionLabelPath
                           optionValuePath=optionValuePath
+                          paper=true
                           option=option
                           selection=value
                           updated=(action "selectItem")
                           showIcon=showIcon
                           inline=inline}}
   {{/each}}
+  </span>
 {{/if}}

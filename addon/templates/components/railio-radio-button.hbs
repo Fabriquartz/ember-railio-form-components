@@ -1,8 +1,23 @@
-{{#if icon}}
-  {{#if checked}}
-    {{fa-icon "circle"}}
+{{#if paper}}
+  {{#if icon}}
+    {{#paper-radio toggle=true
+                   value=true
+                   groupValue=checked
+                   onChange=(action "select")}}
+      {{label}}
+    {{/paper-radio}}
   {{else}}
-    {{fa-icon "circle-thin"}}
+  <label>{{label}}</label>
   {{/if}}
+{{else}}
+<span onclick={{action "select"}}>
+  {{#if icon}}
+    {{#if checked}}
+      {{fa-icon "circle"}}
+    {{else}}
+      {{fa-icon "circle-thin"}}
+    {{/if}}
+  {{/if}}
+  <label>{{label}}</label>
+</span>
 {{/if}}
-<label>{{label}}</label>
