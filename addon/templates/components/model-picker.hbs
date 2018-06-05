@@ -1,4 +1,5 @@
 {{#auto-complete content=content
+                 isPaper=isPaper
                  multiSelect=multiSelect
                  enableSelectAll=enableSelectAll
                  _selectAll=_selectAll
@@ -11,6 +12,8 @@
                  prompt=(if _selectAll 'Selected all' prompt)
                  name=name
                  updated=(action 'update')
+                 removeItem=(action 'removeItem')
+                 addItem=(action 'addItem')
                  disableClear=disableClear
                  disabled=disabled
                  as |item|}}

@@ -43,16 +43,18 @@ export default Component.extend(formFieldOptions, {
     return this.get('option');
   }),
 
-  click() {
-    let optionValuePath = this.get('optionValuePath');
-    let value           = this.get('option');
+  actions: {
+    select() {
+      let optionValuePath = this.get('optionValuePath');
+      let value           = this.get('option');
 
-    if (optionValuePath) {
-      value = this.get(`option.${optionValuePath}`);
-    }
+      if (optionValuePath) {
+        value = this.get(`option.${optionValuePath}`);
+      }
 
-    if (typeof this.attrs.updated === 'function') {
-      this.attrs.updated(value);
+      if (typeof this.attrs.updated === 'function') {
+        this.attrs.updated(value);
+      }
     }
   }
 });
