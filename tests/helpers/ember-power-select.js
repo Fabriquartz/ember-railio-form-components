@@ -1,6 +1,6 @@
 import run from 'ember-runloop';
 import $   from 'jquery';
-import { click } from 'ember-native-dom-helpers';
+import { click } from '@ember/test-helpers';
 
 function fireNativeMouseEvent(eventType, selectorOrDomElement, options = {}) {
   let eventOptions = { bubbles: true, cancelable: true, view: window };
