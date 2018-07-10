@@ -223,8 +223,9 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
 
     let $items = $('.ember-power-select-dropdown li');
 
-    assert.equal($items[0].innerText, 'bar',  'preloaded item 1 sorted');
-    assert.equal($items[1].innerText, 'chad', 'preloaded item 2 sorted');
+      assert.equal($items[0].innerText, 'bar',  'preloaded item 1 sorted');
+      assert.equal($items[1].innerText, 'chad', 'preloaded item 2 sorted');
+    });
   });
 
   test('Sorts queried list using given sorting function', async function(assert) {
@@ -247,10 +248,11 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
 
     let $items = $('.ember-power-select-dropdown li');
 
-    assert.equal($items[0].innerText, 'bar',        'reloaded first item sorted');
-    assert.equal($items[1].innerText, 'bar second', 'reloaded second item sorted');
-    assert.equal($items[2].innerText, 'chad',       'reloaded third item sorted');
-    assert.equal($items[3].innerText, 'dave',       'reloaded fourth item sorted');
+      assert.equal($items[0].innerText, 'bar',        'reloaded first item sorted');
+      assert.equal($items[1].innerText, 'bar second', 'reloaded second item sorted');
+      assert.equal($items[2].innerText, 'chad',       'reloaded third item sorted');
+      assert.equal($items[3].innerText, 'dave',       'reloaded fourth item sorted');
+    });
   });
 
   test('Shows selected item', async function(assert) {
