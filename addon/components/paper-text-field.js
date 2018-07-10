@@ -1,5 +1,4 @@
 import Component        from 'ember-component';
-import { action }       from 'ember-decorators/object';
 import formFieldOptions from
   'ember-railio-form-components/mixins/form-field-options';
 import get   from 'ember-metal/get';
@@ -52,26 +51,26 @@ export default Component.extend(formFieldOptions, {
     set(this, '_value', value);
   },
 
-  @action
-  handleChanged(_value) {
-    set(this, '_value', _value)
-    if (typeof this.sanitizeValue === 'function') {
-      let originalValue = _value;
+  actions: {
+    handleChanged(_value) {
+      set(this, '_value', _value);
+      if (typeof this.sanitizeValue === 'function') {
+        let originalValue = _value;
 
-      _value = this.sanitizeValue(_value);
+        _value = this.sanitizeValue(_value);
 
-      if (originalValue !== _value) {
-        set(this, '_value', _value)
+        if (originalValue !== _value) {
+          set(this, '_value', _value);
+        }
       }
-    }
 
-    this.send('changed', _value);
-  },
+      this.send('changed', _value);
+    },
 
-  @action
-  changed(value) {
-    if (typeof this.attrs.updated === 'function') {
-      this.attrs.updated(value);
+    changed(value) {
+      if (typeof this.attrs.updated === 'function') {
+        this.attrs.updated(value);
+      }
     }
   }
 });
