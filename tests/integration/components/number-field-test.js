@@ -1,182 +1,191 @@
 import hbs   from 'htmlbars-inline-precompile';
 import run   from 'ember-runloop';
 import $     from 'jquery';
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
 
-moduleForComponent('number-field', 'Integration | Component | {{number-field}}', {
-  integration: true,
-  beforeEach() {
-    this.on('update', function(value) {
+import { render } from '@ember/test-helpers';
+
+module('Integration | Component | {{number-field}}', function(hooks) {
+  setupRenderingTest(hooks);
+
+  hooks.beforeEach(function() {
+    this.actions = {};
+    this.send = (actionName, ...args) => this.actions[actionName].apply(this, args);
+  });
+
+  hooks.beforeEach(function() {
+    this.actions.update = function(value) {
       this.set('number', value);
+    };
+  });
+
+  test('empty sets value to null', async function(assert) {
+    await render(hbs`{{number-field value=number}}`);
+
+    let $input = this.$('input');
+
+    run(() => {
+      $input.val('');
+      $input.trigger('input');
     });
-  }
-});
 
-test('empty sets value to null', function(assert) {
-  this.render(hbs`{{number-field value=number}}`);
-
-  let $input = this.$('input');
-
-  run(() => {
-    $input.val('');
-    $input.trigger('input');
+    assert.equal($input.val(), '');
+    assert.equal(this.get('number'), null);
   });
 
-  assert.equal($input.val(), '');
-  assert.equal(this.get('number'), null);
-});
+  test('value gets formatted with two decimals', async function(assert) {
+    this.set('number', 42);
+    await render(hbs`{{number-field value=number maxDecimals=2}}`);
 
-test('value gets formatted with two decimals', function(assert) {
-  this.set('number', 42);
-  this.render(hbs`{{number-field value=number maxDecimals=2}}`);
-
-  let $input = this.$('input');
-  assert.equal($input.val(), '42,00');
-});
-
-test('typing in value gets formatted', function(assert) {
-  this.render(hbs`
-    {{number-field maxDecimals="2" value=number updated=(action "update")}}
-  `);
-
-  let $input = this.$('input');
-
-  run(() => {
-    $input.trigger('focusin');
-    $input.val('42');
-    $input.trigger('input');
-    $input.trigger('focusout');
+    let $input = this.$('input');
+    assert.equal($input.val(), '42,00');
   });
 
-  assert.equal($input.val(), '42,00');
-});
+  test('typing in value gets formatted', async function(assert) {
+    await render(hbs`
+      {{number-field maxDecimals="2" value=number updated=(action "update")}}
+    `);
 
-test('arrow up increases value by one', function(assert) {
-  this.set('number', 1.345);
-  this.render(hbs`
-    {{number-field value=number updated=(action "update")}}
-  `);
+    let $input = this.$('input');
 
-  let $input = this.$('input');
-  assert.equal($input.val(), '1,345');
+    run(() => {
+      $input.trigger('focusin');
+      $input.val('42');
+      $input.trigger('input');
+      $input.trigger('focusout');
+    });
 
-  run(() => {
-    $input.trigger('focusin');
-    $input.trigger($.Event('keydown', { keyCode: 38 }));
+    assert.equal($input.val(), '42,00');
   });
 
-  assert.equal($input.val(), '2,345');
-  assert.inDelta(this.get('number'), 2.345, 0.01);
-});
+  test('arrow up increases value by one', async function(assert) {
+    this.set('number', 1.345);
+    await render(hbs`
+      {{number-field value=number updated=(action "update")}}
+    `);
 
-test('arrow up when empty sets value to 1', function(assert) {
-  this.render(hbs`
-    {{number-field value=number updated=(action "update")}}
-  `);
+    let $input = this.$('input');
+    assert.equal($input.val(), '1,345');
 
-  let $input = this.$('input');
-  assert.equal($input.val(), '');
+    run(() => {
+      $input.trigger('focusin');
+      $input.trigger($.Event('keydown', { keyCode: 38 }));
+    });
 
-  run(() => {
-    $input.trigger('focusin');
-    $input.trigger($.Event('keydown', { keyCode: 38 }));
+    assert.equal($input.val(), '2,345');
+    assert.inDelta(this.get('number'), 2.345, 0.01);
   });
 
-  assert.equal($input.val(), '1');
-  assert.inDelta(this.get('number'), 1, 0.01);
-});
+  test('arrow up when empty sets value to 1', async function(assert) {
+    await render(hbs`
+      {{number-field value=number updated=(action "update")}}
+    `);
 
-test('arrow down decreases value by one', function(assert) {
-  this.set('number', 8.456);
-  this.render(hbs`
-    {{number-field value=number updated=(action "update")}}
-  `);
+    let $input = this.$('input');
+    assert.equal($input.val(), '');
 
-  let $input = this.$('input');
-  assert.equal($input.val(), '8,456');
+    run(() => {
+      $input.trigger('focusin');
+      $input.trigger($.Event('keydown', { keyCode: 38 }));
+    });
 
-  run(() => {
-    $input.trigger('focusin');
-    $input.trigger($.Event('keydown', { keyCode: 40 }));
+    assert.equal($input.val(), '1');
+    assert.inDelta(this.get('number'), 1, 0.01);
   });
 
-  assert.equal($input.val(), '7,456');
-  assert.inDelta(this.get('number'), 7.456, 0.01);
-});
+  test('arrow down decreases value by one', async function(assert) {
+    this.set('number', 8.456);
+    await render(hbs`
+      {{number-field value=number updated=(action "update")}}
+    `);
 
-test('arrow down when empty sets value to -1', function(assert) {
-  this.render(hbs`
-    {{number-field value=number updated=(action "update")}}
-  `);
+    let $input = this.$('input');
+    assert.equal($input.val(), '8,456');
 
-  let $input = this.$('input');
-  assert.equal($input.val(), '');
+    run(() => {
+      $input.trigger('focusin');
+      $input.trigger($.Event('keydown', { keyCode: 40 }));
+    });
 
-  run(() => {
-    $input.trigger('focusin');
-    $input.trigger($.Event('keydown', { keyCode: 40 }));
+    assert.equal($input.val(), '7,456');
+    assert.inDelta(this.get('number'), 7.456, 0.01);
   });
 
-  assert.equal($input.val(), '-1');
-  assert.inDelta(this.get('number'), -1, 0.01);
-});
+  test('arrow down when empty sets value to -1', async function(assert) {
+    await render(hbs`
+      {{number-field value=number updated=(action "update")}}
+    `);
 
-test('arrow down to negative', function(assert) {
-  this.set('number', 0.4);
-  this.render(hbs`
-    {{number-field value=number updated=(action "update")}}
-  `);
+    let $input = this.$('input');
+    assert.equal($input.val(), '');
 
-  let $input = this.$('input');
+    run(() => {
+      $input.trigger('focusin');
+      $input.trigger($.Event('keydown', { keyCode: 40 }));
+    });
 
-  run(() => {
-    $input.trigger('focusin');
-    $input.trigger($.Event('keydown', { keyCode: 40 }));
+    assert.equal($input.val(), '-1');
+    assert.inDelta(this.get('number'), -1, 0.01);
   });
 
-  assert.equal(this.get('number'), -0.6, 'pressed arrow down once');
+  test('arrow down to negative', async function(assert) {
+    this.set('number', 0.4);
+    await render(hbs`
+      {{number-field value=number updated=(action "update")}}
+    `);
 
-  run(() => {
-    $input.trigger('focusin');
-    $input.trigger($.Event('keydown', { keyCode: 40 }));
+    let $input = this.$('input');
+
+    run(() => {
+      $input.trigger('focusin');
+      $input.trigger($.Event('keydown', { keyCode: 40 }));
+    });
+
+    assert.equal(this.get('number'), -0.6, 'pressed arrow down once');
+
+    run(() => {
+      $input.trigger('focusin');
+      $input.trigger($.Event('keydown', { keyCode: 40 }));
+    });
+
+    assert.equal(this.get('number'), -1.6, 'pressed arrow down twice');
+
+    run(() => {
+      $input.trigger('focusin');
+      $input.trigger($.Event('keydown', { keyCode: 40 }));
+    });
+
+    assert.equal(this.get('number'), -2.6, 'pressed arrow down three times');
   });
 
-  assert.equal(this.get('number'), -1.6, 'pressed arrow down twice');
+  test('arrow up from negative to positive', async function(assert) {
+    this.set('number', -2.7);
+    await render(hbs`
+      {{number-field value=number updated=(action "update")}}
+    `);
 
-  run(() => {
-    $input.trigger('focusin');
-    $input.trigger($.Event('keydown', { keyCode: 40 }));
+    let $input = this.$('input');
+
+    run(() => {
+      $input.trigger('focusin');
+      $input.trigger($.Event('keydown', { keyCode: 38 }));
+    });
+
+    assert.equal(this.get('number'), -1.7, 'pressed arrow up once');
+
+    run(() => {
+      $input.trigger('focusin');
+      $input.trigger($.Event('keydown', { keyCode: 38 }));
+    });
+
+    assert.equal(this.get('number'), -0.7, 'pressed arrow up twice');
+
+    run(() => {
+      $input.trigger('focusin');
+      $input.trigger($.Event('keydown', { keyCode: 38 }));
+    });
+
+    assert.equal(this.get('number'), 0.3, 'pressed arrow up three times');
   });
-
-  assert.equal(this.get('number'), -2.6, 'pressed arrow down three times');
-});
-
-test('arrow up from negative to positive', function(assert) {
-  this.set('number', -2.7);
-  this.render(hbs`
-    {{number-field value=number updated=(action "update")}}
-  `);
-
-  let $input = this.$('input');
-
-  run(() => {
-    $input.trigger('focusin');
-    $input.trigger($.Event('keydown', { keyCode: 38 }));
-  });
-
-  assert.equal(this.get('number'), -1.7, 'pressed arrow up once');
-
-  run(() => {
-    $input.trigger('focusin');
-    $input.trigger($.Event('keydown', { keyCode: 38 }));
-  });
-
-  assert.equal(this.get('number'), -0.7, 'pressed arrow up twice');
-
-  run(() => {
-    $input.trigger('focusin');
-    $input.trigger($.Event('keydown', { keyCode: 38 }));
-  });
-
-  assert.equal(this.get('number'), 0.3, 'pressed arrow up three times');
 });
