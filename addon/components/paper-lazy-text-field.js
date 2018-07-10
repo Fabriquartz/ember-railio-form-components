@@ -1,6 +1,6 @@
 import { run }              from '@ember/runloop';
-import { action } from 'ember-decorators/object';
-import PaperTextField       from 'ember-railio-form-components/components/paper-text-field';
+import PaperTextField       from
+  'ember-railio-form-components/components/paper-text-field';
 import get                  from 'ember-metal/get';
 import set                  from 'ember-metal/set';
 
@@ -25,10 +25,11 @@ export default PaperTextField.extend({
     run.next(() => set(this, 'isFocused', originalFocus));
   },
 
-  @action
-  changed(value) {
-    if (!get(this, 'isFocused')) {
-      this._super(...arguments);
+  actions: {
+    changed() {
+      if (!get(this, 'isFocused')) {
+        this._super(...arguments);
+      }
     }
   }
 });

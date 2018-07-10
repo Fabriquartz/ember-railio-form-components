@@ -1,4 +1,5 @@
-import PaperLazyTextField from 'ember-railio-form-components/components/paper-lazy-text-field';
+import PaperLazyTextField from
+  'ember-railio-form-components/components/paper-lazy-text-field';
 import get                from 'ember-metal/get';
 import set                from 'ember-metal/set';
 

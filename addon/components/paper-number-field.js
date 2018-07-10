@@ -1,5 +1,3 @@
-import { action }   from 'ember-decorators/object';
-import invokeAction from 'ember-invoke-action';
 import get          from 'ember-metal/get';
 import set          from 'ember-metal/set';
 
@@ -65,25 +63,26 @@ export default PaperLazyTextField.extend({
     this._super(...arguments);
   },
 
-  @action
-  changed(value) {
-    let numberValue;
+  actions: {
+    changed(value) {
+      let numberValue;
 
-    try {
-      numberValue = toNumber(value);
+      try {
+        numberValue = toNumber(value);
 
-      let maxDecimals = get(this, 'maxDecimals');
-      if (maxDecimals != null) {
-        numberValue = sliceDecimals(numberValue, get(this, 'maxDecimals'));
+        let maxDecimals = get(this, 'maxDecimals');
+        if (maxDecimals != null) {
+          numberValue = sliceDecimals(numberValue, get(this, 'maxDecimals'));
+        }
+      } catch(_) {
+        // continue regardless of error
       }
-    } catch(_) {
-      // continue regardless of error
-    }
 
-    if (isNaN(numberValue)) {
-      numberValue = null;
-    }
+      if (isNaN(numberValue)) {
+        numberValue = null;
+      }
 
-    this._super(numberValue);
+      this._super(numberValue);
+    }
   }
 });

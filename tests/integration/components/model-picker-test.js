@@ -78,6 +78,8 @@ test('Searches for given model by attribute', function(assert) {
 
   clickTrigger();
 
+  debugger;
+
   let $input = $('.ember-power-select-dropdown input');
   let $items = $('.ember-power-select-dropdown li');
 

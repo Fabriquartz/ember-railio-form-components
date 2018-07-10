@@ -1,8 +1,5 @@
-import Component      from 'ember-component';
 import PaperTextField from
   'ember-railio-form-components/components/paper-text-field';
-
-import { action } from 'ember-decorators/object';
 import get        from 'ember-metal/get';
 
 function textAreaAjust(element) {
@@ -29,10 +26,11 @@ export default PaperTextField.extend({
     get(this, 'element');
   },
 
-  @action
-  changed(value) {
-    this.resizeElement();
+  actions: {
+    changed(value) {
+      this.resizeElement();
 
-    this._super(value);
+      this._super(value);
+    }
   }
 });
