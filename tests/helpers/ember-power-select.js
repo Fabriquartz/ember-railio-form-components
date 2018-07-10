@@ -1,6 +1,6 @@
 import run from 'ember-runloop';
 import $   from 'jquery';
-import { click } from '@ember/test-helpers';
+import { click, fillIn } from '@ember/test-helpers';
 
 function fireNativeMouseEvent(eventType, selectorOrDomElement, options = {}) {
   let eventOptions = { bubbles: true, cancelable: true, view: window };
@@ -43,7 +43,7 @@ export function getMultipleTrigger(scope) {
   return $(selector);
 }
 
-export function clickTrigger(scope, options = {}) {
+export async function clickTrigger(scope, options = {}) {
   let selector = '.ember-power-select-trigger';
   if (scope) {
     selector = `${scope} ${selector}`;
@@ -51,7 +51,7 @@ export function clickTrigger(scope, options = {}) {
   return click(selector, options);
 }
 
-export function clickItem(eqValue, options = {}) {
+export async function clickItem(eqValue, options = {}) {
   let selector = '.ember-power-select-option';
   if (eqValue) {
     selector = `${selector}:eq(${eqValue})`;
@@ -66,4 +66,23 @@ export function currentOptions(scope) {
   }
 
   return $(selector);
+}
+
+export function typeInSearch(scopeOrText, text) {
+  let scope = '';
+
+  if (typeof text === 'undefined') {
+    text = scopeOrText;
+  } else {
+    scope = scopeOrText;
+  }
+
+  let selectors = [
+    '.ember-power-select-search-input',
+    '.ember-power-select-search input',
+    '.ember-power-select-trigger-multiple-input',
+    'input[type="search"]'
+  ].map((selector) => `${scope} ${selector}`).join(', ');
+
+  return fillIn(selectors, text);
 }

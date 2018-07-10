@@ -1,70 +1,66 @@
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+
+import { render } from '@ember/test-helpers';
 
 import EmberObject      from 'ember-object';
-import { clickTrigger } from '../../helpers/ember-power-select';
+import { clickTrigger, typeInSearch } from '../../helpers/ember-power-select';
 
 import hbs from 'htmlbars-inline-precompile';
-import run from 'ember-runloop';
 import $   from 'jquery';
 
-moduleForComponent(
-  'select-auto-complete', 'Integration | Component | {{select-auto-complete}}',
-{
-  integration: true,
+module('Integration | Component | {{select-auto-complete}}', function(hooks) {
+  setupRenderingTest(hooks);
 
-  beforeEach() {
-    this.on('updated', function() { });
-  }
-});
-
-test('filters content depending on search query', function(assert) {
-  this.set('content', [
-    EmberObject.create({ foo: 'dog' }),
-    EmberObject.create({ foo: 'cat' }),
-    EmberObject.create({ foo: 'lion' })
-  ]);
-
-  this.render(hbs`{{select-auto-complete content=content
-                                         optionLabelPath="foo"
-                                         updated=(action 'updated')}}`);
-
-  clickTrigger();
-
-  let $items = $('.ember-power-select-dropdown li');
-
-  assert.equal($items.length, 3);
-
-  run(() => {
-    let $input = $('.ember-power-select-dropdown input');
-    $input.val('o');
-    $input.trigger('input');
+  hooks.beforeEach(function() {
+    this.actions = {};
+    this.send = (actionName, ...args) => this.actions[actionName].apply(this, args);
   });
 
-  $items = $('.ember-power-select-dropdown li');
-  assert.equal($items.length, 2);
-
-  assert.equal($items[0].innerText.trim(), 'dog');
-  assert.equal($items[1].innerText.trim(), 'lion');
-});
-
-test('calls onQueryChange', function(assert) {
-  assert.expect(1);
-
-  this.on('queryChanged', function(query) {
-    assert.equal(query, 'o', 'calls onQueryChange with new query');
+  hooks.beforeEach(function() {
+    this.actions.updated = function() { };
   });
 
-  this.render(hbs`
-    {{select-auto-complete content=content
-                           optionLabelPath="foo"
-                           onQueryChange=(action "queryChanged")
-                           updated=(action 'updated')}}`);
+  test('filters content depending on search query', async function(assert) {
+    this.set('content', [
+      EmberObject.create({ foo: 'dog' }),
+      EmberObject.create({ foo: 'cat' }),
+      EmberObject.create({ foo: 'lion' })
+    ]);
 
-  clickTrigger();
+    await render(hbs`{{select-auto-complete content=content
+                                           optionLabelPath="foo"
+                                           updated=(action 'updated')}}`);
 
-  run(() => {
-    let $input = $('.ember-power-select-dropdown input');
-    $input.val('o');
-    $input.trigger('input');
+    await clickTrigger();
+
+    let $items = $('.ember-power-select-options li');
+
+    assert.equal($items.length, 3);
+
+    await typeInSearch('o');
+
+    $items = $('.ember-power-select-options li');
+    assert.equal($items.length, 2);
+
+    assert.equal($items[0].innerText.trim(), 'dog');
+    assert.equal($items[1].innerText.trim(), 'lion');
+  });
+
+  test('calls onQueryChange', async function(assert) {
+    assert.expect(1);
+
+    this.actions.queryChanged = function(query) {
+      assert.equal(query, 'o', 'calls onQueryChange with new query');
+    };
+
+    await render(hbs`
+      {{select-auto-complete content=content
+                             optionLabelPath="foo"
+                             onQueryChange=(action "queryChanged")
+                             updated=(action 'updated')}}`);
+
+    await clickTrigger();
+    await typeInSearch('o');
   });
 });

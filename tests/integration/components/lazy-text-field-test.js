@@ -1,98 +1,107 @@
-import { moduleForComponent, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+
+import { render, find } from '@ember/test-helpers';
 
 import hbs from 'htmlbars-inline-precompile';
 import run from 'ember-runloop';
 
-moduleForComponent(
-  'lazy-text-field', 'Integration | Component | {{lazy-text-field}}',
-  { integration: true });
+module('Integration | Component | {{lazy-text-field}}', function(hooks) {
+  setupRenderingTest(hooks);
 
-test('displays initial value', function(assert) {
-  this.set('value', 'puddy kat');
-  this.render(hbs`{{lazy-text-field value=value}}`);
-
-  assert.equal(this.$('input').val(), 'puddy kat');
-});
-
-test('focus in does not lose value', function(assert) {
-  this.set('value', 'test');
-  this.render(hbs`{{lazy-text-field value=value}}`);
-
-  let $input = this.$('input');
-
-  run(() => {
-    $input.trigger('focusin');
+  hooks.beforeEach(function() {
+    this.actions = {};
+    this.send = (actionName, ...args) => this.actions[actionName].apply(this, args);
   });
 
-  assert.equal($input.val(), 'test');
-  assert.equal(this.get('value'), 'test');
-});
+  test('displays initial value', async function(assert) {
+    this.set('value', 'puddy kat');
+    await render(hbs`{{lazy-text-field value=value}}`);
 
-test('typing with focus does not call updated', function(assert) {
-  assert.expect(1);
-
-  this.set('value', '');
-  this.on('update', function() {
-    assert.ok(false, 'calls update');
+    assert.equal(find('input').value, 'puddy kat');
   });
 
-  this.render(hbs`{{lazy-text-field value=value updated=(action "update")}}`);
+  test('focus in does not lose value', async function(assert) {
+    this.set('value', 'test');
+    await render(hbs`{{lazy-text-field value=value}}`);
 
-  let $input = this.$('input');
+    let $input = this.$('input');
 
-  run(() => {
-    $input.trigger('focusin');
-    $input.val('x');
-    $input.trigger('input');
+    run(() => {
+      $input.trigger('focusin');
+    });
+
+    assert.equal($input.val(), 'test');
+    assert.equal(this.get('value'), 'test');
   });
 
-  assert.equal(this.get('value'), '');
-});
+  test('typing with focus does not call updated', async function(assert) {
+    assert.expect(1);
 
-test('losing focus sends updated', function(assert) {
-  assert.expect(2);
+    this.set('value', '');
+    this.actions.update = function() {
+      assert.ok(false, 'calls update');
+    };
 
-  this.set('value', '');
-  this.on('update', function(value) {
-    assert.equal(value, 'x', 'calls update with new value');
+    await render(hbs`{{lazy-text-field value=value updated=(action "update")}}`);
+
+    let $input = this.$('input');
+
+    run(() => {
+      $input.trigger('focusin');
+      $input.val('x');
+      $input.trigger('input');
+    });
+
+    assert.equal(this.get('value'), '');
   });
 
-  this.render(hbs`{{lazy-text-field value=value updated=(action "update")}}`);
+  test('losing focus sends updated', async function(assert) {
+    assert.expect(2);
 
-  let $input = this.$('input');
+    this.set('value', '');
+    this.actions.update = function(value) {
+      assert.equal(value, 'x', 'calls update with new value');
+    };
 
-  run(() => {
-    $input.trigger('focusin');
-    $input.val('x');
-    $input.trigger('input');
+    await render(hbs`{{lazy-text-field value=value updated=(action "update")}}`);
 
-    $input.trigger('focusout');
+    let $input = this.$('input');
+
+    run(() => {
+      $input.trigger('focusin');
+      $input.val('x');
+      $input.trigger('input');
+
+      $input.trigger('focusout');
+    });
+
+    assert.equal(this.get('value'), '');
   });
 
-  assert.equal(this.get('value'), '');
-});
+  test('when having focus, updates to value are ignored', async function(assert) {
+    this.set('value', '');
+    await render(hbs`{{lazy-text-field value=value}}`);
 
-test('when having focus, updates to value are ignored', function(assert) {
-  this.set('value', '');
-  this.render(hbs`{{lazy-text-field value=value}}`);
+    let $input = this.$('input');
 
-  let $input = this.$('input');
+    run(() => {
+      $input.trigger('focusin');
+      this.set('value', 'x');
+    });
 
-  run(() => {
-    $input.trigger('focusin');
-    this.set('value', 'x');
+    assert.equal($input.val(), '');
   });
 
-  assert.equal($input.val(), '');
-});
+  test('when not having focus update to value are propagated',
+    async function(assert) {
+      this.set('value', '');
+      await render(hbs`{{lazy-text-field value=value}}`);
 
-test('when not having focus update to value are propagated', function(assert) {
-  this.set('value', '');
-  this.render(hbs`{{lazy-text-field value=value}}`);
+      run(() => {
+        this.set('value', 'x');
+      });
 
-  run(() => {
-    this.set('value', 'x');
-  });
-
-  assert.equal(this.$('input').val(), 'x');
+      assert.equal(find('input').value, 'x');
+    });
 });
