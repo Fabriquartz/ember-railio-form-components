@@ -1,25 +1,20 @@
-import { module, test } from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
-
-import { render, triggerEvent } from '@ember/test-helpers';
+import { moduleForComponent, test } from 'ember-qunit';
 
 import hbs from 'htmlbars-inline-precompile';
+import run from 'ember-runloop';
 
-module('Integration | Component | {{search-input}}', function(hooks) {
-  setupRenderingTest(hooks);
+moduleForComponent('search-input', 'Integration | Component | {{search-input}}', {
+  integration: true
+});
 
-  hooks.beforeEach(function() {
-    this.actions = {};
-    this.send = (actionName, ...args) => this.actions[actionName].apply(this, args);
-  });
+test('typing sends out onQueryChange event', function(assert) {
+  assert.expect(1);
 
-  test('typing sends out onQueryChange event', async function(assert) {
-    assert.expect(1);
+  this.on('onQueryChange', (query) => assert.equal(query, 'foo'));
+  this.render(hbs`{{search-input onQueryChange=(action "onQueryChange")}}`);
 
-    this.actions.onQueryChange = (query) => assert.equal(query, 'foo');
-    await render(hbs`{{search-input onQueryChange=(action "onQueryChange")}}`);
-
+  run(() => {
     this.$('input').val('foo');
-    await triggerEvent('input', 'input'); // syncs the value;
+    this.$('input').trigger('input'); // syncs the value;
   });
 });
