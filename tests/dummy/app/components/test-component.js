@@ -6,7 +6,8 @@ export default Component.extend({
     number:     -3.4,
     text:       'test text',
     textArea:   'This is a text area',
-    radioValue: ''
+    radioValue: '',
+    date:       new Date(2015, 0, 1, 12, 30)
   }),
 
   optionList: ['OPTION 1', 'OPTION 2', 'OPTION 3'],

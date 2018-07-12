@@ -1,12 +1,12 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 
-import { render, find } from '@ember/test-helpers';
+import { render, find, focus } from '@ember/test-helpers';
 
 import hbs from 'htmlbars-inline-precompile';
 import run from 'ember-runloop';
 
-module('Integration | Component | {{lazy-text-field}}', function(hooks) {
+module('Integration | Component | {{paper-lazy-text-field}}', function(hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function() {
@@ -16,14 +16,14 @@ module('Integration | Component | {{lazy-text-field}}', function(hooks) {
 
   test('displays initial value', async function(assert) {
     this.set('value', 'puddy kat');
-    await render(hbs`{{lazy-text-field value=value}}`);
+    await render(hbs`{{paper-lazy-text-field value=value}}`);
 
     assert.equal(find('input').value, 'puddy kat');
   });
 
   test('focus in does not lose value', async function(assert) {
     this.set('value', 'test');
-    await render(hbs`{{lazy-text-field value=value}}`);
+    await render(hbs`{{paper-lazy-text-field value=value}}`);
 
     let $input = this.$('input');
 
@@ -43,7 +43,8 @@ module('Integration | Component | {{lazy-text-field}}', function(hooks) {
       assert.ok(false, 'calls update');
     };
 
-    await render(hbs`{{lazy-text-field value=value updated=(action "update")}}`);
+    await render(hbs`{{paper-lazy-text-field value=value
+                                             updated=(action "update")}}`);
 
     let $input = this.$('input');
 
@@ -64,7 +65,8 @@ module('Integration | Component | {{lazy-text-field}}', function(hooks) {
       assert.equal(value, 'x', 'calls update with new value');
     };
 
-    await render(hbs`{{lazy-text-field value=value updated=(action "update")}}`);
+    await render(hbs`{{paper-lazy-text-field value=value
+                                             updated=(action "update")}}`);
 
     let $input = this.$('input');
 
@@ -81,14 +83,12 @@ module('Integration | Component | {{lazy-text-field}}', function(hooks) {
 
   test('when having focus, updates to value are ignored', async function(assert) {
     this.set('value', '');
-    await render(hbs`{{lazy-text-field value=value}}`);
+    await render(hbs`{{paper-lazy-text-field value=value}}`);
 
     let $input = this.$('input');
 
-    run(() => {
-      $input.trigger('focusin');
-      this.set('value', 'x');
-    });
+    await focus('input');
+    this.set('value', 'x');
 
     assert.equal($input.val(), '');
   });
@@ -96,7 +96,7 @@ module('Integration | Component | {{lazy-text-field}}', function(hooks) {
   test('when not having focus update to value are propagated',
     async function(assert) {
       this.set('value', '');
-      await render(hbs`{{lazy-text-field value=value}}`);
+      await render(hbs`{{paper-lazy-text-field value=value}}`);
 
       run(() => {
         this.set('value', 'x');
