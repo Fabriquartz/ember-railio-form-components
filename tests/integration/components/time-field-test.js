@@ -1,207 +1,198 @@
-import { module, test } from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
-
-import { render } from '@ember/test-helpers';
+import { moduleForComponent, test } from 'ember-qunit';
 
 import hbs from 'htmlbars-inline-precompile';
 import run from 'ember-runloop';
 import $   from 'jquery';
 
-module('Integration | Component | {{time-field}}', function(hooks) {
-  setupRenderingTest(hooks);
-
-  hooks.beforeEach(function() {
-    this.actions = {};
-    this.send = (actionName, ...args) => this.actions[actionName].apply(this, args);
-  });
-
-  hooks.beforeEach(function() {
-    this.actions.update = function(value) {
+moduleForComponent('time-field', 'Integration | Component | {{time-field}}', {
+  integration: true,
+  beforeEach() {
+    this.on('update', function(value) {
       this.set('value', value);
-    };
-  });
-
-  function fillIn(input, value) {
-    run(() => {
-      input.trigger('focusin');
-      input.val(value);
-      input.trigger('input');
-      input.trigger('focusout');
     });
   }
+});
 
-  function arrowKey(input, upOrDown, shift = false) {
-    let keyCode = upOrDown === 'up' ? 38 : 40;
-
-    run(() => {
-      input.trigger('focusin');
-      input.trigger($.Event('keydown', { keyCode, shiftKey: shift }));
-    });
-  }
-  function arrowUp(input, shift)   { arrowKey(input, 'up', shift);   }
-  function arrowDown(input, shift) { arrowKey(input, 'down', shift); }
-
-  test('date gets formatted to a time string', async function(assert) {
-    this.set('value', new Date(2015, 0, 1, 12, 15));
-    await render(hbs`{{time-field value=value updated=(action "update")}}`);
-
-    let $input = this.$('input');
-    assert.equal($input.val(), '12:15');
+function fillIn(input, value) {
+  run(() => {
+    input.trigger('focusin');
+    input.val(value);
+    input.trigger('input');
+    input.trigger('focusout');
   });
+}
 
-  test('null is a possibility', async function(assert) {
-    await render(hbs`{{time-field}}`);
+function arrowKey(input, upOrDown, shift = false) {
+  let keyCode = upOrDown === 'up' ? 38 : 40;
 
-    let $input = this.$('input');
-    assert.equal($input.val(), '');
+  run(() => {
+    input.trigger('focusin');
+    input.trigger($.Event('keydown', { keyCode, shiftKey: shift }));
   });
+}
+function arrowUp(input, shift)   { arrowKey(input, 'up', shift);   }
+function arrowDown(input, shift) { arrowKey(input, 'down', shift); }
 
-  test('typing in a time updates the time part of a date', async function(assert) {
-    this.set('value', new Date(2015, 0, 1, 12, 15));
-    await render(hbs`{{time-field value=value updated=(action "update")}}`);
+test('date gets formatted to a time string', function(assert) {
+  this.set('value', new Date(2015, 0, 1, 12, 15));
+  this.render(hbs`{{time-field value=value updated=(action "update")}}`);
 
-    let $input = this.$('input');
+  let $input = this.$('input');
+  assert.equal($input.val(), '12:15');
+});
 
-    fillIn($input, '12:30');
+test('null is a possibility', function(assert) {
+  this.render(hbs`{{time-field}}`);
 
-    assert.equal($input.val(), '12:30');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 12, 30)));
-  });
+  let $input = this.$('input');
+  assert.equal($input.val(), '');
+});
 
-  test('typing in an empty value', async function(assert) {
-    this.set('value', new Date(2015, 0, 1, 12, 15));
-    await render(hbs`{{time-field value=value updated=(action "update")}}`);
+test('typing in a time updates the time part of a date', function(assert) {
+  this.set('value', new Date(2015, 0, 1, 12, 15));
+  this.render(hbs`{{time-field value=value updated=(action "update")}}`);
 
-    let $input = this.$('input');
+  let $input = this.$('input');
 
-    fillIn($input, '');
+  fillIn($input, '12:30');
 
-    assert.equal($input.val(), '0:00');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 0, 0)));
-  });
+  assert.equal($input.val(), '12:30');
+  assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 12, 30)));
+});
 
-  test('typing in time shorthands', async function(assert) {
-    this.set('value', new Date(2015, 0, 1, 12, 15));
-    await render(hbs`{{time-field value=value updated=(action "update")}}`);
+test('typing in an empty value', function(assert) {
+  this.set('value', new Date(2015, 0, 1, 12, 15));
+  this.render(hbs`{{time-field value=value updated=(action "update")}}`);
 
-    let $input = this.$('input');
+  let $input = this.$('input');
 
-    fillIn($input, '1230');
+  fillIn($input, '');
 
-    assert.equal($input.val(), '12:30');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 12, 30)));
+  assert.equal($input.val(), '0:00');
+  assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 0, 0)));
+});
 
-    fillIn($input, '930');
+test('typing in time shorthands', function(assert) {
+  this.set('value', new Date(2015, 0, 1, 12, 15));
+  this.render(hbs`{{time-field value=value updated=(action "update")}}`);
 
-    assert.equal($input.val(), '9:30');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 9, 30)));
+  let $input = this.$('input');
 
-    fillIn($input, '12');
+  fillIn($input, '1230');
 
-    assert.equal($input.val(), '12:00');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 12, 0)));
+  assert.equal($input.val(), '12:30');
+  assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 12, 30)));
 
-    fillIn($input, '1');
+  fillIn($input, '930');
 
-    assert.equal($input.val(), '1:00');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 1, 0)));
-  });
+  assert.equal($input.val(), '9:30');
+  assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 9, 30)));
 
-  test('typing in with different seperators', async function(assert) {
-    this.set('value', new Date(2015, 0, 1, 12, 15));
-    await render(hbs`{{time-field value=value updated=(action "update")}}`);
+  fillIn($input, '12');
 
-    let $input = this.$('input');
+  assert.equal($input.val(), '12:00');
+  assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 12, 0)));
 
-    fillIn($input, '12;30');
+  fillIn($input, '1');
 
-    assert.equal($input.val(), '12:30');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 12, 30)));
+  assert.equal($input.val(), '1:00');
+  assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 1, 0)));
+});
 
-    fillIn($input, '13,30');
+test('typing in with different seperators', function(assert) {
+  this.set('value', new Date(2015, 0, 1, 12, 15));
+  this.render(hbs`{{time-field value=value updated=(action "update")}}`);
 
-    assert.equal($input.val(), '13:30');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 13, 30)));
+  let $input = this.$('input');
 
-    fillIn($input, '14.30');
+  fillIn($input, '12;30');
 
-    assert.equal($input.val(), '14:30');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 14, 30)));
-  });
+  assert.equal($input.val(), '12:30');
+  assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 12, 30)));
 
-  test('arrow up increases time by one hour', async function(assert) {
-    this.set('value', new Date(2015, 0, 1, 12, 15));
-    await render(hbs`{{time-field value=value updated=(action "update")}}`);
+  fillIn($input, '13,30');
 
-    let $input = this.$('input');
+  assert.equal($input.val(), '13:30');
+  assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 13, 30)));
 
-    arrowUp($input);
+  fillIn($input, '14.30');
 
-    assert.equal($input.val(), '13:15');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 13, 15)));
+  assert.equal($input.val(), '14:30');
+  assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 14, 30)));
+});
 
-    this.set('value', new Date(2015, 0, 1, 23, 15));
+test('arrow up increases time by one hour', function(assert) {
+  this.set('value', new Date(2015, 0, 1, 12, 15));
+  this.render(hbs`{{time-field value=value updated=(action "update")}}`);
 
-    arrowUp($input);
+  let $input = this.$('input');
 
-    assert.equal($input.val(), '0:15');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 2, 0, 15)));
-  });
+  arrowUp($input);
 
-  test('arrow down decreases time by one hour', async function(assert) {
-    this.set('value', new Date(2015, 0, 1, 12, 15));
-    await render(hbs`{{time-field value=value updated=(action "update")}}`);
+  assert.equal($input.val(), '13:15');
+  assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 13, 15)));
 
-    let $input = this.$('input');
+  this.set('value', new Date(2015, 0, 1, 23, 15));
 
-    arrowDown($input);
+  arrowUp($input);
 
-    assert.equal($input.val(), '11:15');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 11, 15)));
+  assert.equal($input.val(), '0:15');
+  assert.equal(+this.get('value'), +(new Date(2015, 0, 2, 0, 15)));
+});
 
-    this.set('value', new Date(2015, 0, 2, 0, 15));
+test('arrow down decreases time by one hour', function(assert) {
+  this.set('value', new Date(2015, 0, 1, 12, 15));
+  this.render(hbs`{{time-field value=value updated=(action "update")}}`);
 
-    arrowDown($input);
+  let $input = this.$('input');
 
-    assert.equal($input.val(), '23:15');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 23, 15)));
-  });
+  arrowDown($input);
 
-  test('shift + arrow up increases time by one minute', async function(assert) {
-    this.set('value', new Date(2015, 0, 1, 12, 15));
-    await render(hbs`{{time-field value=value updated=(action "update")}}`);
+  assert.equal($input.val(), '11:15');
+  assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 11, 15)));
 
-    let $input = this.$('input');
+  this.set('value', new Date(2015, 0, 2, 0, 15));
 
-    arrowUp($input, true);
+  arrowDown($input);
 
-    assert.equal($input.val(), '12:16');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 12, 16)));
+  assert.equal($input.val(), '23:15');
+  assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 23, 15)));
+});
 
-    this.set('value', new Date(2015, 0, 1, 23, 59));
+test('shift + arrow up increases time by one minute', function(assert) {
+  this.set('value', new Date(2015, 0, 1, 12, 15));
+  this.render(hbs`{{time-field value=value updated=(action "update")}}`);
 
-    arrowUp($input, true);
+  let $input = this.$('input');
 
-    assert.equal($input.val(), '0:00');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 2, 0, 0)));
-  });
+  arrowUp($input, true);
 
-  test('shift + arrow down decreases time by one minute', async function(assert) {
-    this.set('value', new Date(2015, 0, 1, 12, 15));
-    await render(hbs`{{time-field value=value updated=(action "update")}}`);
+  assert.equal($input.val(), '12:16');
+  assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 12, 16)));
 
-    let $input = this.$('input');
+  this.set('value', new Date(2015, 0, 1, 23, 59));
 
-    arrowDown($input, true);
+  arrowUp($input, true);
 
-    assert.equal($input.val(), '12:14');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 12, 14)));
+  assert.equal($input.val(), '0:00');
+  assert.equal(+this.get('value'), +(new Date(2015, 0, 2, 0, 0)));
+});
 
-    this.set('value', new Date(2015, 0, 2, 0, 0));
+test('shift + arrow down decreases time by one minute', function(assert) {
+  this.set('value', new Date(2015, 0, 1, 12, 15));
+  this.render(hbs`{{time-field value=value updated=(action "update")}}`);
 
-    arrowDown($input, true);
+  let $input = this.$('input');
 
-    assert.equal($input.val(), '23:59');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 23, 59)));
-  });
+  arrowDown($input, true);
+
+  assert.equal($input.val(), '12:14');
+  assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 12, 14)));
+
+  this.set('value', new Date(2015, 0, 2, 0, 0));
+
+  arrowDown($input, true);
+
+  assert.equal($input.val(), '23:59');
+  assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 23, 59)));
 });
