@@ -1,0 +1,11 @@
+{{#if hasBlock}}
+  {{yield (get object propertyPath) (action "update") disabled}}
+{{else}}
+  {{component type value=(get object propertyPath)
+                   name=name
+                   componentProperties=options
+                   updated=(action "update")
+                   label=labelText
+                   disabled=disabled}}
+{{/if}}
+{{after}}
