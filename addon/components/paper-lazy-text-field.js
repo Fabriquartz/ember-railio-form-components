@@ -25,6 +25,12 @@ export default PaperTextField.extend({
     run.next(() => set(this, 'isFocused', originalFocus));
   },
 
+  didReceiveAttrs() {
+    if (!get(this, 'isFocused')) {
+      this._super(...arguments);
+    }
+  },
+
   actions: {
     changed() {
       if (!get(this, 'isFocused')) {
