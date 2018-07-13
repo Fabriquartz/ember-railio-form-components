@@ -1,14 +1,11 @@
 /* eslint-disable camelcase */
-import Ember       from 'ember';
-import EmberObject from 'ember-object';
-import Service     from 'ember-service';
-import Pretender   from 'pretender';
-
-import { module, test } from 'qunit';
-
-import { setupRenderingTest } from 'ember-qunit';
-
-import { render, settled, findAll, find } from '@ember/test-helpers';
+import Ember                                   from 'ember';
+import EmberObject                             from 'ember-object';
+import Service                                 from 'ember-service';
+import Pretender                               from 'pretender';
+import { module, test }                        from 'qunit';
+import { setupRenderingTest }                  from 'ember-qunit';
+import { render, findAll, find, triggerEvent } from '@ember/test-helpers';
 
 import {
   getSelected,
@@ -105,32 +102,23 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
 
     await clickTrigger();
 
-    return settled()
-      .then(() => {
-        let $items = $('.ember-power-select-dropdown li');
+    let $items = $('.ember-power-select-dropdown li');
 
-        assert.equal($items.length, 4, 'gets all objects of type on preload');
-        assert.equal($items[0].innerText, 'chad');
-        assert.equal($items[1].innerText, 'bar');
-        assert.equal($items[2].innerText, 'dave');
-        assert.equal($items[3].innerText, 'bar second');
+    assert.equal($items.length, 4, 'gets all objects of type on preload');
+    assert.equal($items[0].innerText, 'chad');
+    assert.equal($items[1].innerText, 'bar');
+    assert.equal($items[2].innerText, 'dave');
+    assert.equal($items[3].innerText, 'bar second');
 
-        return settled();
-      })
-      .then(() => {
-        let $input = $('.ember-power-select-dropdown input');
-        $input.val('bar');
-        $input.trigger('input');
+    let $input = $('.ember-power-select-dropdown input');
+    $input.val('bar');
+    await $input.trigger('input');
 
-        return settled();
-      })
-      .then(() => {
-        let $items = $('.ember-power-select-dropdown li');
+    $items = $('.ember-power-select-dropdown li');
 
-        assert.equal($items.length, 2, 'finds searched model by label');
-        assert.equal($items[0].innerText, 'bar', 'first item');
-        assert.equal($items[1].innerText, 'bar second', 'second item');
-      });
+    assert.equal($items.length, 2, 'finds searched model by label');
+    assert.equal($items[0].innerText, 'bar', 'first item');
+    assert.equal($items[1].innerText, 'bar second', 'second item');
   });
 
   test('Pre-loads amount of objects given to preload', async function(assert) {
@@ -142,16 +130,12 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
 
     await clickTrigger();
 
-    return settled()
-      .then(() => {
-        let $items = $('.ember-power-select-dropdown li');
+    let $items = $('.ember-power-select-dropdown li');
 
-        assert.equal($items.length, 2, 'gets given amount of objects');
-        assert.equal($items[0].innerText, 'chad');
-        assert.equal($items[1].innerText, 'bar');
+    assert.equal($items.length, 2, 'gets given amount of objects');
+    assert.equal($items[0].innerText, 'chad');
+    assert.equal($items[1].innerText, 'bar');
 
-        return settled();
-      });
   });
 
   test('Pre-loads and queries again on search when queryOnSearch=true',
@@ -165,27 +149,19 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
 
     await clickTrigger();
 
-    return settled()
-      .then(() => {
-        let $items = $('.ember-power-select-dropdown li');
+    let $items = $('.ember-power-select-dropdown li');
 
-        assert.equal($items.length, 2, 'gets given amount of objects');
+    assert.equal($items.length, 2, 'gets given amount of objects');
 
-        return settled();
-      })
-      .then(() => {
-        let $input = $('.ember-power-select-dropdown input');
-        $input.val('dave');
-        $input.trigger('input');
+    let $input = $('.ember-power-select-dropdown input');
+    $input.val('dave');
 
-        return settled();
-      })
-      .then(() => {
-        let $items = $('.ember-power-select-dropdown li');
+    await triggerEvent('.ember-power-select-dropdown input', 'input');
 
-        assert.equal($items.length, 1, 'finds searched model after preload');
-        assert.equal($items[0].innerText, 'dave');
-      });
+    $items = $('.ember-power-select-dropdown li');
+
+    assert.equal($items.length, 1, 'finds searched model after preload');
+    assert.equal($items[0].innerText, 'dave');
   });
 
   test('Uses given filters on query', async function(assert) {
@@ -226,13 +202,9 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
 
     await clickTrigger();
 
-    return settled().then(() => {
-      let $input = $('.ember-power-select-dropdown input');
-      $input.val('bla');
-      $input.trigger('input');
-
-      return settled();
-    });
+    let $input = $('.ember-power-select-dropdown input');
+    $input.val('bla');
+    await $input.trigger('input');
   });
 
   test('Sorts preloaded list using given sorting function', async function(assert) {
@@ -249,12 +221,10 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
 
     await clickTrigger();
 
-    return settled().then(() => {
-      let $items = $('.ember-power-select-dropdown li');
+    let $items = $('.ember-power-select-dropdown li');
 
-      assert.equal($items[0].innerText, 'bar',  'preloaded item 1 sorted');
-      assert.equal($items[1].innerText, 'chad', 'preloaded item 2 sorted');
-    });
+    assert.equal($items[0].innerText, 'bar',  'preloaded item 1 sorted');
+    assert.equal($items[1].innerText, 'chad', 'preloaded item 2 sorted');
   });
 
   test('Sorts queried list using given sorting function', async function(assert) {
@@ -270,20 +240,17 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
 
     await clickTrigger();
 
-    return settled().then(() => {
-      let $input = $('.ember-power-select-dropdown input');
+    let $input = $('.ember-power-select-dropdown input');
 
-      $input.val('a');
-      $input.trigger('input');
-      return settled();
-    }).then(() => {
-      let $items = $('.ember-power-select-dropdown li');
+    $input.val('a');
+    await triggerEvent('.ember-power-select-dropdown input', 'input');
 
-      assert.equal($items[0].innerText, 'bar',        'reloaded first item sorted');
-      assert.equal($items[1].innerText, 'bar second', 'reloaded second item sorted');
-      assert.equal($items[2].innerText, 'chad',       'reloaded third item sorted');
-      assert.equal($items[3].innerText, 'dave',       'reloaded fourth item sorted');
-    });
+    let $items = $('.ember-power-select-dropdown li');
+
+    assert.equal($items[0].innerText, 'bar',        'reloaded first item sorted');
+    assert.equal($items[1].innerText, 'bar second', 'reloaded second item sorted');
+    assert.equal($items[2].innerText, 'chad',       'reloaded third item sorted');
+    assert.equal($items[3].innerText, 'dave',       'reloaded fourth item sorted');
   });
 
   test('Shows selected item', async function(assert) {
@@ -316,18 +283,11 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
 
     let $selectAll = $('.auto-complete__select-all');
 
-    return settled().then(() => {
-      assert.equal($selectAll[0].checked, false,
-                   'not selected all when different value than content');
-      return settled();
-    }).then(() => {
-      this.set('selection', FOOS);
-      return settled();
-    }).then(() => {
-      assert.equal($selectAll[0].checked, true,
-                   'all selected when current value equals content');
-      return settled();
-    });
+    assert.equal($selectAll[0].checked, false,
+                  'not selected all when different value than content');
+    this.set('selection', FOOS);
+    assert.equal($selectAll[0].checked, true,
+                  'all selected when current value equals content');
   });
 
   test('selectAll does not show all selected values', async function(assert) {

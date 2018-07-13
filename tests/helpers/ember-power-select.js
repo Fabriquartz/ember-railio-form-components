@@ -1,5 +1,5 @@
-import run from 'ember-runloop';
-import $   from 'jquery';
+import run               from 'ember-runloop';
+import $                 from 'jquery';
 import { click, fillIn } from '@ember/test-helpers';
 
 function fireNativeMouseEvent(eventType, selectorOrDomElement, options = {}) {
