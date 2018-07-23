@@ -19,7 +19,7 @@ module('Integration | Component | {{auto-complete}}', function(hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function() {
-    this.actions = { updated: ()=>{} };
+    this.actions = { updated: () => {} };
   });
 
   test('renders the content', async function(assert) {
