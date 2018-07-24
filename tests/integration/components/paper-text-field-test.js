@@ -2,7 +2,6 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render, find, blur, triggerEvent, focus } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import run from 'ember-runloop';
 
 module('Integration | Component | {{paper-text-field}}', function(hooks) {
   setupRenderingTest(hooks);
@@ -30,9 +29,7 @@ module('Integration | Component | {{paper-text-field}}', function(hooks) {
     this.set('value', 'testing');
     await render(hbs`{{paper-text-field value=value}}`);
 
-    run(() => {
-      this.set('value', 'gnitset');
-    });
+    await this.set('value', 'gnitset');
 
     assert.equal(find('input').value, 'gnitset');
   });
@@ -48,10 +45,8 @@ module('Integration | Component | {{paper-text-field}}', function(hooks) {
     await render(hbs`{{paper-text-field value=value updated=(action "update")}}`);
 
     let $input = this.$('input');
-    run(() => {
-      $input.val('x');
-      $input.trigger('input');
-    });
+    $input.val('x');
+    await $input.trigger('input');
 
     assert.equal(this.get('value'), '');
   });
