@@ -1,20 +1,20 @@
-import { module, test } from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
-import { render, find, blur, triggerEvent, focus } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { module, test }         from 'qunit';
+import { setupRenderingTest }   from 'ember-qunit';
+import { render, find, blur,
+  triggerEvent, focus, fillIn } from '@ember/test-helpers';
+import hbs                      from 'htmlbars-inline-precompile';
 
 module('Integration | Component | {{paper-text-field}}', function(hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function() {
-    this.actions = {};
-    this.send = (actionName, ...args) => this.actions[actionName].apply(this, args);
+    this.actions = { updated: () => {} };
   });
 
   test('renders input with placeholder', async function(assert) {
     await render(hbs`{{paper-text-field placeholder='Type your value here'}}`);
 
-    assert.equal(this.$('input')[0].getAttribute('placeholder'),
+    assert.equal(find('input').getAttribute('placeholder'),
                  'Type your value here');
   });
 
@@ -44,9 +44,8 @@ module('Integration | Component | {{paper-text-field}}', function(hooks) {
 
     await render(hbs`{{paper-text-field value=value updated=(action "update")}}`);
 
-    let $input = this.$('input');
-    $input.val('x');
-    await $input.trigger('input');
+    let $input = find('input');
+    await fillIn($input, 'x');
 
     assert.equal(this.get('value'), '');
   });
