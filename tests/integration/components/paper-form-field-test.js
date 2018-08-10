@@ -1,7 +1,7 @@
-import { module, test } from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
-import EmberObject from 'ember-object';
+import { module, test }         from 'qunit';
+import { setupRenderingTest }   from 'ember-qunit';
+import { render, fillIn, find } from '@ember/test-helpers';
+import EmberObject              from 'ember-object';
 
 import hbs from 'htmlbars-inline-precompile';
 import run from 'ember-runloop';
@@ -10,20 +10,15 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function() {
-    this.actions = {};
-    this.send = (actionName, ...args) => this.actions[actionName].apply(this, args);
-  });
-
-  hooks.beforeEach(function() {
-    this.actions.update = function(object, propertyPath, value) {
+    this.actions = { update: (object, propertyPath, value) => {
       object.set(propertyPath, value);
-    };
+    } };
   });
 
   test(`Renders a div with class 'form-field'`, async function(assert) {
     await render(hbs `{{paper-form-field updated=(action 'update')}}`);
 
-    let $component = this.$('div.form-field');
+    let $component = this.element.querySelectorAll('div.form-field');
     assert.equal($component.length, 1);
   });
 
@@ -32,11 +27,10 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
                                          type="paper-text-field"
                                          updated=(action 'update')}}`);
 
-    let $labels = this.$('.form-field').find('label');
-
+    let $labels = this.element.querySelectorAll('label');
     assert.equal($labels.length, 1, 'shows a label');
 
-    let labelText = $labels.text();
+    let labelText = $labels[0].textContent;
     assert.equal(labelText, 'Number', 'label is same as propertyPath');
   });
 
@@ -45,7 +39,7 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
                                          type="paper-text-field"
                                          updated=(action 'update')}}`);
 
-    let labelText  = this.$('.form-field').find('label').text();
+    let labelText  = this.element.querySelector('label').textContent;
 
     assert.equal(labelText, 'Number value');
   });
@@ -55,7 +49,7 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
                                          type="paper-text-field"
                                          updated=(action 'update')}}`);
 
-    let $labels = this.$('.form-field').find('label');
+    let $labels = this.element.querySelectorAll('label');
 
     assert.equal($labels.length, 0);
   });
@@ -65,7 +59,7 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
                                          type="paper-text-field"
                                          updated=(action 'update')}}`);
 
-    let labelText  = this.$('.form-field').find('label').text();
+    let labelText  = this.element.querySelector('label').textContent;
 
     assert.equal(labelText, 'Object nr.');
   });
@@ -82,13 +76,13 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
                                  propertyPath="numberValue"
                                  updated=(action 'update')}}`);
 
-    let $component = this.$('.form-field');
+    let $component = this.element.querySelector('.form-field');
 
-    assert.ok($component.hasClass('form-field--invalid'));
+    assert.ok($component.classList.contains('form-field--invalid'));
 
     run(() => this.set('object.errors.numberValue', null));
 
-    assert.ok(!$component.hasClass('form-field--invalid'));
+    assert.ok(!$component.classList.contains('form-field--invalid'));
   });
 
   test(`Gets class 'changed' when value is unsaved`, async function(assert) {
@@ -100,12 +94,12 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
                                  propertyPath="numberValue"
                                  updated=(action 'update')}}`);
 
-    let $component = this.$('.form-field');
-    assert.ok($component.hasClass('form-field--changed'));
+    let $component = this.element.querySelector('.form-field');
+    assert.ok($component.classList.contains('form-field--changed'));
 
     run(() => this.set('object.numberValueIsChanged', false));
 
-    assert.ok(!$component.hasClass('form-field--changed'));
+    assert.ok(!$component.classList.contains('form-field--changed'));
   });
 
   test(`Gets class 'changed' when origin value is unsaved`, async function(assert) {
@@ -119,8 +113,8 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
                    propertyPath="numberValue"
                    updated=(action 'update')}}`);
 
-    let $component = this.$('.form-field');
-    assert.ok($component.hasClass('form-field--changed'));
+    let $component = this.element.querySelector('.form-field');
+    assert.ok($component.classList.contains('form-field--changed'));
   });
 
   test(`Gets class 'different' when values are different`, async function(assert) {
@@ -132,12 +126,12 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
                                  propertyPath="numberValue"
                                  updated=(action 'update')}}`);
 
-    let $component = this.$('.form-field');
-    assert.ok($component.hasClass('form-field--different'));
+    let $component = this.element.querySelector('.form-field');
+    assert.ok($component.classList.contains('form-field--different'));
 
     run(() => this.set('object.numberValueIsDifferent', false));
 
-    assert.ok(!$component.hasClass('form-field--different'));
+    assert.ok(!$component.classList.contains('form-field--different'));
   });
 
   test(`Shows a given template and aliasses value`, async function(assert) {
@@ -152,10 +146,10 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
         <div class="aGivenTemplateClass">{{value}}</div>
       {{/paper-form-field}}`);
 
-    let $template = this.$('.form-field').find('.aGivenTemplateClass');
-    assert.equal($template.length, 1, 'shows the given template');
+    let $template = this.element.querySelector('.aGivenTemplateClass');
+    assert.ok($template, 'shows the given template');
 
-    let templateText = $template.text();
+    let templateText = $template.textContent;
     assert.equal(templateText, 'Value string', 'shows aliasses value');
   });
 
@@ -175,12 +169,8 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
         {{paper-text-field value=value updated=updated}}
       {{/paper-form-field}}`);
 
-    let $input = this.$('input');
-
-    run(() => {
-      $input.val('Another value');
-      $input.trigger('input');
-    });
+    await fillIn('input', 'Another value');
+    await find('input').blur();
 
     assert.equal(this.get('object.stringValue'), 'Another value');
   });
@@ -191,15 +181,15 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
     }));
 
     await render(hbs`
-      {{paper-form-field type="text-field"
+      {{paper-form-field type="paper-text-field"
                    object=object
                    propertyPath="name"
                    updated=(action 'update')}}`);
 
-    let $input = this.$('.form-field').find('input.text-field');
-    assert.equal($input.length, 1, 'shows the component depending on given type');
+    let $input = this.element.querySelector('input.md-input');
+    assert.ok($input, 'shows the component depending on given type');
 
-    let inputText = $input.val();
+    let inputText = $input.value;
     assert.equal(inputText, 'John White', 'shown component has correct value');
   });
 
@@ -209,14 +199,14 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
     }));
 
     await render(hbs`
-      {{paper-form-field type="text-field"
+      {{paper-form-field type="paper-text-field"
                    object=object
                    propertyPath="name"
                    name="person-name"
                    updated=(action 'update')}}`);
 
-    let $input = this.$('input.text-field');
-    assert.equal($input.attr('name'), 'person-name', 'passes name to component');
+    let $input = this.element.querySelector('input.md-input');
+    assert.equal($input.name, 'person-name', 'passes name to component');
   });
 
   test(`The component doesn't update the value, but calls an action`,
@@ -236,19 +226,17 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
     };
 
     await render(hbs`
-      {{paper-form-field type="text-field"
+      {{paper-form-field type="paper-text-field"
                    object=object
                    propertyPath="name"
                    updated=(action "update")}}`);
 
-    let $input = this.$('.form-field').find('input.text-field');
+    let $input = this.element.querySelector('input.md-input');
 
-    run(() => {
-      $input.val('John Black');
-      $input.trigger('input');
-    });
+    await fillIn($input, 'John Black');
+    await find($input).blur();
 
-    assert.equal($input.val(), 'John Black', 'changes the input value');
+    assert.equal($input.value, 'John Black', 'changes the input value');
     assert.equal(this.get('object.name'), 'John White',
                  `doesn't update object value`);
   });

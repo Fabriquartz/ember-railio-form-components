@@ -1,11 +1,10 @@
-import Ember               from 'ember';
 import Component           from 'ember-component';
 import computed, { reads } from 'ember-computed';
+import { set }             from '@ember/object';
+import { defineProperty }  from '@ember/object';
 
 import formFieldOptions from
   'ember-railio-form-components/mixins/form-field-options';
-
-const { defineProperty } = Ember;
 
 function spliceCapitalizedString(string) {
   string = string.replace(/([A-Z])/g, ' $1');
@@ -51,6 +50,14 @@ export default Component.extend(formFieldOptions, {
     } else if (typeof this.attrs.updated !== 'function') {
       throw new Error(`The 'update' action on '{{form-field}} must be a function.`);
     }
+
+    if (this.attrs.name) {
+      if (this.attrs.options) {
+        set(this.attrs.options, 'passThru', { name: this.attrs.name });
+      } else {
+        set(this, 'options', { passThru: { name: this.attrs.name } });
+      }
+    }
     let originPath   = this.get('originPath');
     let propertyPath = this.get('propertyPath');
     let errorsPath   = this.get('errorsPath');
@@ -59,6 +66,8 @@ export default Component.extend(formFieldOptions, {
     defineProperty(this, 'isValid', computed(errorsPath, isValidComputedProperty));
     defineProperty(this, 'isChanged', reads(`object.${changedPath}IsChanged`));
     defineProperty(this, 'isDifferent', reads(`object.${propertyPath}IsDifferent`));
+
+    this._super(...arguments);
   },
 
   actions: {
