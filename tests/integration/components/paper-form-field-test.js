@@ -234,7 +234,6 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
     let $input = this.element.querySelector('input.md-input');
 
     await fillIn($input, 'John Black');
-    await find($input).blur();
 
     assert.equal($input.value, 'John Black', 'changes the input value');
     assert.equal(this.get('object.name'), 'John White',
