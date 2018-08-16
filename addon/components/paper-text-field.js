@@ -41,6 +41,8 @@ export default Component.extend(formFieldOptions, {
       value = this.formatValue(value);
     }
     set(this, '_value', value);
+
+    this._super(...arguments);
   },
 
   actions: {

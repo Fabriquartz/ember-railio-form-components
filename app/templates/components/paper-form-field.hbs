@@ -1,0 +1,11 @@
+{{#if hasBlock}}
+  {{yield (get object propertyPath) (action "update") disabled}}
+{{else if type}}
+    {{component (concat "paper-" type) value=(get object propertyPath)
+                                       name=name
+                                       componentProperties=options
+                                       updated=(action "update")
+                                       label=labelText
+                                       disabled=disabled}}
+{{/if}}
+{{after}}
