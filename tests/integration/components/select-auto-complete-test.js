@@ -11,12 +11,7 @@ module('Integration | Component | {{select-auto-complete}}', function(hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function() {
-    this.actions = {};
-    this.send = (actionName, ...args) => this.actions[actionName].apply(this, args);
-  });
-
-  hooks.beforeEach(function() {
-    this.actions.updated = function() { };
+    this.actions = { updated: () => {} };
   });
 
   test('filters content depending on search query', async function(assert) {

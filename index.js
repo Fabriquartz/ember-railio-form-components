@@ -4,8 +4,7 @@
 module.exports = {
   name: 'ember-railio-form-components',
 
-  included: function(app) {
+  included(app) {
     this._super.included(app);
   }
-
 };
