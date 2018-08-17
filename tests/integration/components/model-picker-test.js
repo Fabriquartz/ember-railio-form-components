@@ -1,11 +1,11 @@
 /* eslint-disable camelcase */
-import Ember                                   from 'ember';
-import EmberObject                             from 'ember-object';
-import Service                                 from 'ember-service';
-import Pretender                               from 'pretender';
-import { module, test }                        from 'qunit';
-import { setupRenderingTest }                  from 'ember-qunit';
-import { render, findAll, find, triggerEvent } from '@ember/test-helpers';
+import Ember                                          from 'ember';
+import EmberObject                                    from 'ember-object';
+import Service                                        from 'ember-service';
+import Pretender                                      from 'pretender';
+import { module, test }                               from 'qunit';
+import { setupRenderingTest }                         from 'ember-qunit';
+import { render, findAll, find, triggerEvent, click } from '@ember/test-helpers';
 
 import {
   getSelected,
@@ -315,7 +315,7 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
     assert.equal($input.attr('placeholder'), 'Prompt text',
                   'By default given prompt as placeholder');
 
-    $selectAll.click();
+    await click('.auto-complete__select-all');
 
     let $options = $('.ember-power-select-multiple-option');
 

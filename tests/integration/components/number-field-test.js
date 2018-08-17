@@ -1,7 +1,8 @@
-import hbs   from 'htmlbars-inline-precompile';
-import run   from 'ember-runloop';
-import $     from 'jquery';
+import hbs                          from 'htmlbars-inline-precompile';
+import run                          from 'ember-runloop';
+import $                            from 'jquery';
 import { moduleForComponent, test } from 'ember-qunit';
+import wait                         from 'ember-test-helpers/wait';
 
 moduleForComponent('number-field', 'Integration | Component | {{number-field}}', {
   integration: true,
@@ -67,6 +68,8 @@ test('arrow up increases value by one', function(assert) {
 
   assert.equal($input.val(), '2,345');
   assert.inDelta(this.get('number'), 2.345, 0.01);
+
+  return wait();
 });
 
 test('arrow up when empty sets value to 1', function(assert) {
@@ -84,6 +87,8 @@ test('arrow up when empty sets value to 1', function(assert) {
 
   assert.equal($input.val(), '1');
   assert.inDelta(this.get('number'), 1, 0.01);
+
+  return wait();
 });
 
 test('arrow down decreases value by one', function(assert) {
@@ -102,6 +107,8 @@ test('arrow down decreases value by one', function(assert) {
 
   assert.equal($input.val(), '7,456');
   assert.inDelta(this.get('number'), 7.456, 0.01);
+
+  return wait();
 });
 
 test('arrow down when empty sets value to -1', function(assert) {
@@ -119,6 +126,8 @@ test('arrow down when empty sets value to -1', function(assert) {
 
   assert.equal($input.val(), '-1');
   assert.inDelta(this.get('number'), -1, 0.01);
+
+  return wait();
 });
 
 test('arrow down to negative', function(assert) {
@@ -149,6 +158,8 @@ test('arrow down to negative', function(assert) {
   });
 
   assert.equal(this.get('number'), -2.6, 'pressed arrow down three times');
+
+  return wait();
 });
 
 test('arrow up from negative to positive', function(assert) {
@@ -179,4 +190,6 @@ test('arrow up from negative to positive', function(assert) {
   });
 
   assert.equal(this.get('number'), 0.3, 'pressed arrow up three times');
+
+  return wait();
 });
