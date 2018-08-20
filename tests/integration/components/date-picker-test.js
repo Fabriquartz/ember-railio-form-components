@@ -1,7 +1,8 @@
-import hbs from 'htmlbars-inline-precompile';
-import run from 'ember-runloop';
-import $   from 'jquery';
+import hbs                          from 'htmlbars-inline-precompile';
+import run                          from 'ember-runloop';
+import $                            from 'jquery';
 import { moduleForComponent, test } from 'ember-qunit';
+import wait                         from 'ember-test-helpers/wait';
 
 moduleForComponent('date-picker', 'Integration | Component | {{date-picker}}', {
   integration: true,
@@ -157,6 +158,8 @@ test('arrow up increases date by one day', function(assert) {
 
   assert.equal($input.val(), '01-02-15');
   assert.equal(+this.get('value'), +(new Date(2015, 1, 1)));
+
+  return wait();
 });
 
 test('shift + arrow up increases date by one month', function(assert) {
@@ -176,6 +179,8 @@ test('shift + arrow up increases date by one month', function(assert) {
 
   assert.equal($input.val(), '01-01-16');
   assert.equal(+this.get('value'), +(new Date(2016, 0, 1)));
+
+  return wait();
 });
 
 test('arrow down decreases date by one day', function(assert) {
@@ -195,6 +200,8 @@ test('arrow down decreases date by one day', function(assert) {
 
   assert.equal($input.val(), '31-01-15');
   assert.equal(+this.get('value'), +(new Date(2015, 0, 31)));
+
+  return wait();
 });
 
 test('shift + arrow month decreases date by one month', function(assert) {
@@ -214,4 +221,6 @@ test('shift + arrow month decreases date by one month', function(assert) {
 
   assert.equal($input.val(), '01-12-14');
   assert.equal(+this.get('value'), +(new Date(2014, 11)));
+
+  return wait();
 });

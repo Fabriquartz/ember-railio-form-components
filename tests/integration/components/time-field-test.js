@@ -1,8 +1,9 @@
 import { moduleForComponent, test } from 'ember-qunit';
 
-import hbs from 'htmlbars-inline-precompile';
-import run from 'ember-runloop';
-import $   from 'jquery';
+import hbs  from 'htmlbars-inline-precompile';
+import run  from 'ember-runloop';
+import $    from 'jquery';
+import wait from 'ember-test-helpers/wait';
 
 moduleForComponent('time-field', 'Integration | Component | {{time-field}}', {
   integration: true,
@@ -138,6 +139,8 @@ test('arrow up increases time by one hour', function(assert) {
 
   assert.equal($input.val(), '0:15');
   assert.equal(+this.get('value'), +(new Date(2015, 0, 2, 0, 15)));
+
+  return wait();
 });
 
 test('arrow down decreases time by one hour', function(assert) {
@@ -157,6 +160,8 @@ test('arrow down decreases time by one hour', function(assert) {
 
   assert.equal($input.val(), '23:15');
   assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 23, 15)));
+
+  return wait();
 });
 
 test('shift + arrow up increases time by one minute', function(assert) {
@@ -176,6 +181,8 @@ test('shift + arrow up increases time by one minute', function(assert) {
 
   assert.equal($input.val(), '0:00');
   assert.equal(+this.get('value'), +(new Date(2015, 0, 2, 0, 0)));
+
+  return wait();
 });
 
 test('shift + arrow down decreases time by one minute', function(assert) {
@@ -195,4 +202,6 @@ test('shift + arrow down decreases time by one minute', function(assert) {
 
   assert.equal($input.val(), '23:59');
   assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 23, 59)));
+
+  return wait();
 });
