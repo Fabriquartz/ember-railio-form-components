@@ -32,9 +32,10 @@ export default Component.extend(formFieldOptions, {
   didReceiveAttrs() {
     if (!get(this, 'groupedContent')) {
       let groupLabelPath = get(this, 'groupLabelPath');
+      let groupLabelPathCamelized = groupLabelPath && groupLabelPath.camelize();
 
       defineProperty(this, 'groupedContent',
-      computed(`content.@each.{${groupLabelPath}}`, 'sortFunction', function() {
+      computed(`content.@each.{${groupLabelPathCamelized}}`, 'sortFunction', function() {
         let sortFunction = get(this, 'sortFunction');
         let content      = get(this, 'content') || [];
 
