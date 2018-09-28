@@ -10,6 +10,8 @@ module.exports = function(environment) {
 
         // Allow CSS loaded from https://fonts.googleapis.com
         'style-src': ["'self'", "https://fonts.googleapis.com"],
+
+        'script-src':  ["'self'", "'unsafe-eval'"],
     }
   }
   return ENV;
