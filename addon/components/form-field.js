@@ -59,12 +59,12 @@ export default Component.extend({
   },
 
   actions: {
-    update(value) {
+    update(value, event) {
       let object       = this.get('object');
       let propertyPath = this. get('propertyPath');
 
       if (!this.get('disabled') && typeof this.attrs.updated === 'function') {
-        this.attrs.updated(object, propertyPath, value);
+        this.attrs.updated(object, propertyPath, value, event);
       }
     }
   }
