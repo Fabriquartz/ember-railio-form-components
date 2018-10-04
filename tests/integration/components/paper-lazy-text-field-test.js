@@ -1,7 +1,7 @@
-import { module, test }        from 'qunit';
-import { setupRenderingTest }  from 'ember-qunit';
-import { render, find, focus } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { module, test }                from 'qunit';
+import { setupRenderingTest }          from 'ember-qunit';
+import { render, find, focus, fillIn } from '@ember/test-helpers';
+import hbs                             from 'htmlbars-inline-precompile';
 module('Integration | Component | {{paper-lazy-text-field}}', function(hooks) {
   setupRenderingTest(hooks);
   hooks.beforeEach(function() {
@@ -17,9 +17,9 @@ module('Integration | Component | {{paper-lazy-text-field}}', function(hooks) {
   test('focus in does not lose value', async function(assert) {
     this.set('value', 'test');
     await render(hbs`{{paper-lazy-text-field value=value}}`);
-    let $input = this.$('input');
-    await $input.trigger('focusin');
-    assert.equal($input.val(), 'test');
+    let $input = find('input');
+    await focus($input);
+    assert.equal($input.value, 'test');
     assert.equal(this.get('value'), 'test');
   });
 
@@ -31,10 +31,9 @@ module('Integration | Component | {{paper-lazy-text-field}}', function(hooks) {
     };
     await render(hbs`{{paper-lazy-text-field value=value
                                              updated=(action "update")}}`);
-    let $input = this.$('input');
-    await $input.trigger('focusin');
-    await $input.val('x');
-    await $input.trigger('input');
+    let $input = find('input');
+    await focus($input);
+    await fillIn($input, 'x');
     assert.equal(this.get('value'), '');
   });
 
@@ -46,21 +45,20 @@ module('Integration | Component | {{paper-lazy-text-field}}', function(hooks) {
     };
     await render(hbs`{{paper-lazy-text-field value=value
                                              updated=(action "update")}}`);
-    let $input = this.$('input');
-    $input.trigger('focusin');
-    $input.val('x');
-    $input.trigger('input');
-    $input.trigger('focusout');
+    let $input = find('input');
+    await focus($input);
+    await fillIn($input, 'x');
+    this.$('input').trigger('focusout');
     assert.equal(this.get('value'), '');
   });
 
   test('when having focus, updates to value are ignored', async function(assert) {
     this.set('value', '');
     await render(hbs`{{paper-lazy-text-field value=value}}`);
-    let $input = this.$('input');
+    let $input = find('input');
     await focus('input');
     this.set('value', 'x');
-    assert.equal($input.val(), '');
+    assert.equal($input.value, '');
   });
 
   test('when not having focus update to value are propagated',
