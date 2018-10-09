@@ -26,7 +26,6 @@
                  updated=updated}}
 {{/form-field}}
 <br/>
-
 {{form-field type="text-area"
              options=textAreaOptions
              object=object
@@ -40,7 +39,14 @@
                    updated=(action "update")
                    disabled=disabled}}
 <br/>
+{{paper-form-field type="lazy-text-field"
+                   object=object
+                   propertyPath="text"
+                   updated=(action "update")
+                   disabled=disabled}}
+<br/>
 {{paper-form-field type="number-field"
                    object=object
                    propertyPath="number"
-                   updated=(action "update")}}
+                   updated=(action "update")
+                   disabled=disabled}}
