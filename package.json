@@ -45,6 +45,7 @@
     "ember-try": "^0.2.23",
     "eslint-plugin-ember-suave": "1.0.0",
     "loader.js": "^4.7.0",
+    "moment": "2.22.2",
     "ember-proxy-util": "0.0.12",
     "ember-railio-formatting": "0.0.23",
     "qunit-dom": "^0.7.1"
