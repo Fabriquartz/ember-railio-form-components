@@ -2,34 +2,30 @@ import Mixin from 'ember-metal/mixin';
 import get   from 'ember-metal/get';
 import set   from 'ember-metal/set';
 
+function handleChanged(event) {
+  let value = this.readDOMAttr('value');
+
+  if (typeof this.sanitizeValue === 'function') {
+    let originalValue = value;
+    let [input]         = this.$();
+    let caretPos      = input.selectionStart;
+
+    value = this.sanitizeValue(value);
+
+    if (originalValue !== value) {
+      this.$().val(value);
+      input.setSelectionRange(caretPos - 1, caretPos - 1);
+    }
+  }
+
+  this.send('changed', value, event);
+}
+
 export default Mixin.create({
   attributeBindings: ['_value:value', 'disabled', 'placeholder', 'name'],
 
-  input(event) {
-    this.handleChanged(event);
-  },
-  change(event) {
-    this.handleChanged(event);
-  },
-
-  handleChanged(event) {
-    let value = this.readDOMAttr('value');
-
-    if (typeof this.sanitizeValue === 'function') {
-      let originalValue = value;
-      let [input]         = this.$();
-      let caretPos      = input.selectionStart;
-
-      value = this.sanitizeValue(value);
-
-      if (originalValue !== value) {
-        this.$().val(value);
-        input.setSelectionRange(caretPos - 1, caretPos - 1);
-      }
-    }
-
-    this.send('changed', value, event);
-  },
+  input:  handleChanged,
+  change: handleChanged,
 
   focusIn() {
     if (typeof this.attrs.focusIn === 'function') {
