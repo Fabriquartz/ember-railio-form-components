@@ -32,10 +32,10 @@ export default Component.extend(textInputMixin, formFieldOptions, {
   },
 
   actions: {
-    changed(value) {
+    changed(value, e) {
       this.resizeElement();
 
-      this._super(value);
+      this._super(value, e);
     }
   }
 });
