@@ -3065,9 +3065,9 @@ ember-composability-tools@0.0.9:
     ember-cli-htmlbars "^1.0.3"
     ember-wormhole "0.5.3"
 
-ember-concurrency@0.8.21:
-  version "0.8.21"
-  resolved "https://registry.yarnpkg.com/ember-concurrency/-/ember-concurrency-0.8.21.tgz#23263e00455d32bb7f5b1b344376143019796ac6"
+ember-concurrency@0.8.22:
+  version "0.8.22"
+  resolved "https://registry.yarnpkg.com/ember-concurrency/-/ember-concurrency-0.8.22.tgz#900e870aae486e1f5fcb168bbb4efba02561a5ad"
   dependencies:
     babel-core "^6.24.1"
     ember-cli-babel "^6.8.2"
@@ -3243,9 +3243,9 @@ ember-paper@^1.0.0-beta.4:
     resolve "^1.3.3"
     virtual-each "~0.6.0"
 
-ember-power-select@2.0.8:
-  version "2.0.8"
-  resolved "https://registry.yarnpkg.com/ember-power-select/-/ember-power-select-2.0.8.tgz#1d3ed341ef2c620df3c2b0fb31c5d951382d3c06"
+ember-power-select@2.0.9:
+  version "2.0.9"
+  resolved "https://registry.yarnpkg.com/ember-power-select/-/ember-power-select-2.0.9.tgz#ebe08f7d3f2fdec44558370adaa6b533486132b5"
   dependencies:
     ember-basic-dropdown "^1.0.0"
     ember-cli-babel "^6.16.0"
@@ -6258,7 +6258,7 @@ moment-timezone@^0.5.13:
   dependencies:
     moment ">= 2.9.0"
 
-"moment@>= 2.6.0", "moment@>= 2.9.0", moment@^2.19.3:
+moment@2.22.2, "moment@>= 2.6.0", "moment@>= 2.9.0", moment@^2.19.3:
   version "2.22.2"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.2.tgz#3c257f9839fc0e93ff53149632239eb90783ff66"
 

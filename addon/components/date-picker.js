@@ -1,44 +1,30 @@
 import LazyTextField from '../components/lazy-text-field';
-
-const A_DAY = 1000 * 60 * 60 * 24;
-
-function today() {
-  let date = new Date();
-  date.setHours(0);
-  date.setMinutes(0);
-  date.setSeconds(0);
-  date.setMilliseconds(0);
-
-  return date;
-}
+import moment        from 'moment';
+import { get, set }  from '@ember/object';
 
 export default LazyTextField.extend({
   classNames: ['date-picker'],
+  dateFormat: 'DD-MM-YYYY',
 
   didReceiveAttrs() {
-    this.set('date', this.getAttr('value'));
+    set(this, 'date', this.getAttr('value'));
     this._super(...arguments);
   },
 
   keyDown(e) {
-    let value = this.get('date');
+    let value = moment(get(this, 'date'));
+    let scale = e.shiftKey ? 'month' : 'day';
 
     if ([38, 40].indexOf(e.keyCode) !== -1) {
       this.withLazyDisabled(() => {
-        if (e.keyCode === 38) {
-          if (e.shiftKey) {
-            this.send('changed', new Date(value.setMonth(value.getMonth() + 1)));
-          } else {
-            this.send('changed', new Date(+value + A_DAY));
-          }
+        if (e.keyCode === 38) { // arrow up
+          value = value.add(1, scale);
+          return this.send('changed', value);
         }
 
-        if (e.keyCode === 40) {
-          if (e.shiftKey) {
-            this.send('changed', new Date(value.setMonth(value.getMonth() - 1)));
-          } else {
-            this.send('changed', new Date(+value - A_DAY));
-          }
+        if (e.keyCode === 40) { // arrow down
+          value = value.subtract(1, scale);
+          return this.send('changed', value);
         }
       });
     }
@@ -60,48 +46,19 @@ export default LazyTextField.extend({
 
   actions: {
     changed(value) {
-      if (value instanceof Date) {
+      value = value === '' ? null : value;
+
+      if (value instanceof Date || value == null) {
         return this._super(value);
       }
 
-      let date = this.get('date');
-
-      if (value == null || value === '') {
-        return this._super(null);
+      // Add a zero for shorthand: DMM => DDMM or DMMYY => DDMMYY
+      if ([3, 5].includes(get(value, 'length'))) {
+        value = `0${value}`;
       }
 
-      if (date == null) {
-        date = today();
-      } else {
-        date = new Date(date);
-      }
-
-      let parsed = value.replace(/[;/\\,.]/g, '-');
-
-      if (parsed.indexOf('-') === -1) {
-        let year  = (new Date()).getFullYear().toString().slice(-2);
-        let month = (`0${((new Date()).getMonth() + 1)}`).toString().slice(-2);
-
-        if (parsed.length >= 5) {
-          parsed =
-            `${parsed.slice(0, -4)}-${parsed.slice(-4, -2)}-${parsed.slice(-2)}`;
-        } else if (parsed.length >= 3) {
-          parsed = `${parsed.slice(0, -2)}-${parsed.slice(-2)}-${year}`;
-        } else {
-          parsed = `${parsed.slice(-2)}-${month}-${year}`;
-        }
-      }
-
-      let [days, months, years] = parsed.split('-');
-      years  = 2000 + (+years);
-      months = (+months) - 1;
-      days   = (+days);
-
-      date.setFullYear(years);
-      date.setMonth(months);
-      date.setDate(days);
-
-      this._super(date);
+      value = moment(value, get(this, 'dateFormat'));
+      this._super(value.toDate());
     }
   }
 });
