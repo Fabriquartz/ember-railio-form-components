@@ -5,6 +5,8 @@
   "scripts": {
     "start": "ember server",
     "build": "ember build",
+    "lint:hbs": "ember-template-lint .",
+    "lint:js": "eslint .",
     "test": "ember test",
     "test:all": "ember try:each"
   },
