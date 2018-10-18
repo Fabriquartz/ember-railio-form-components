@@ -1,6 +1,4 @@
-# unconventional js
-/blueprints/*/files/
-/vendor/
+# See https://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output
 /dist/
@@ -8,10 +6,16 @@
 
 # dependencies
 /bower_components/
+/node_modules/
 
 # misc
+/.sass-cache
+/connect.lock
 /coverage/
-root/*
+/libpeerconnection.log
+/npm-debug.log*
+/testem.log
+/yarn-error.log
 
 # ember-try
 /.node_modules.ember-try/
