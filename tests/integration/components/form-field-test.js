@@ -210,7 +210,7 @@ test(`passes the name to the form field`, function(assert) {
 
 test(`The component doesn't update the value, but calls an action`,
 function(assert) {
-  assert.expect(5);
+  assert.expect(6);
 
   let person = EmberObject.create({
     name: 'John White'
@@ -218,10 +218,11 @@ function(assert) {
 
   this.set('object', person);
 
-  this.on('update', function(object, propertyPath, value) {
+  this.on('update', function(object, propertyPath, value, event) {
     assert.equal(object, person, 'update function gets right object');
     assert.equal(propertyPath, 'name', 'update function gets right propertyPath');
     assert.equal(value, 'John Black', 'update function gets new value');
+    assert.equal(event.handleObj.type, 'input', 'Event is passed as fourth element');
   });
 
   this.render(hbs`

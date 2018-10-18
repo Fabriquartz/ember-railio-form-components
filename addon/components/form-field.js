@@ -62,12 +62,12 @@ export default Component.extend(formFieldOptions, {
   },
 
   actions: {
-    update(value) {
+    update(value, ...args) {
       let object       = this.get('object');
       let propertyPath = this.get('propertyPath');
 
       if (!this.get('disabled') && typeof this.attrs.updated === 'function') {
-        this.attrs.updated(object, propertyPath, value);
+        this.attrs.updated(object, propertyPath, value, ...args);
       }
     }
   }
