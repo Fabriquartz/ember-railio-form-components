@@ -72,7 +72,9 @@ export default Component.extend(formFieldOptions, {
         list = list.toArray();
       }
 
-      list = list.sort(sortFunction);
+      if (sortFunction) {
+        list.sort(sortFunction);
+      }
       return groupBy(list, groupLabelPath);
     });
   }).restartable(),
