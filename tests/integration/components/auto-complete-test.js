@@ -65,7 +65,7 @@ module('Integration | Component | {{auto-complete}}', function(hooks) {
 
     await clickTrigger();
 
-    this.set('sortFunction', (a, b) => a.foo > b.foo);
+    this.set('sortFunction', (a, b) => a.foo > b.foo ? 1 : a.foo < b.foo ? -1 : 0);
 
     await clickTrigger();
     $items = $('.ember-power-select-dropdown li');
@@ -343,7 +343,7 @@ module('Integration | Component | {{auto-complete}}', function(hooks) {
         this.set('selection', option);
       });
 
-      assert.equal(getSelected()[0].innerText.indexOf('b'), 0,
+      assert.equal(getSelected()[0].innerText.trim().indexOf('b'), 0,
                    'change selected item');
 
       run(() => {

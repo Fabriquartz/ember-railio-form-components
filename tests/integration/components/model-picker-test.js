@@ -262,7 +262,7 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
                                    searchProperty="name"}}`);
 
     let $selectedOption = getSelected();
-    assert.equal($selectedOption[0].innerText.indexOf('bar test'), 0);
+    assert.equal($selectedOption[0].innerText.trim().indexOf('bar test'), 0);
     await clickTrigger();
   });
 
