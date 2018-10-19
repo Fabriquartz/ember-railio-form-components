@@ -1,12 +1,13 @@
+/* globals module */
 'use strict';
 
 module.exports = function(environment) {
   let ENV = {
     modulePrefix: 'dummy',
     environment,
-    rootURL: '/',
+    rootURL:      '/',
     locationType: 'auto',
-    EmberENV: {
+    EmberENV:     {
       FEATURES: {
         // Here you can enable experimental features on an ember canary build
         // e.g. 'with-controller': true

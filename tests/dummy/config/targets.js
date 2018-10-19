@@ -1,3 +1,4 @@
+/* globals module process */
 'use strict';
 
 const browsers = [
