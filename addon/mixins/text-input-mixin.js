@@ -2,7 +2,7 @@ import Mixin from 'ember-metal/mixin';
 import get   from 'ember-metal/get';
 import set   from 'ember-metal/set';
 
-function handleChanged() {
+function handleChanged(event) {
   let value = this.readDOMAttr('value');
 
   if (typeof this.sanitizeValue === 'function') {
@@ -18,7 +18,7 @@ function handleChanged() {
     }
   }
 
-  this.send('changed', value);
+  this.send('changed', value, event);
 }
 
 export default Mixin.create({
@@ -73,9 +73,9 @@ export default Mixin.create({
   },
 
   actions: {
-    changed(value) {
+    changed(value, event) {
       if (typeof this.attrs.updated === 'function') {
-        this.attrs.updated(value);
+        this.attrs.updated(value, event);
       }
     }
   }
