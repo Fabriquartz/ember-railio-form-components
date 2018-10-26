@@ -93,4 +93,5 @@ You could use the block-form usage of the form-field component with components t
 
 ## Using your own components
 
-You could use your own components by implementing it in the form-field component like above in the block-form usage. 
+You can use your own components by using the form-field component in block form, like shown above.
+
