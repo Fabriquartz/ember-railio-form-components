@@ -1,7 +1,7 @@
-import { module, test }         from 'qunit';
-import { setupRenderingTest }   from 'ember-qunit';
-import { render, fillIn, find } from '@ember/test-helpers';
-import EmberObject              from 'ember-object';
+import { module, test }       from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render, fillIn }     from '@ember/test-helpers';
+import EmberObject            from 'ember-object';
 
 import hbs from 'htmlbars-inline-precompile';
 import run from 'ember-runloop';
@@ -132,47 +132,6 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
     run(() => this.set('object.numberValueIsDifferent', false));
 
     assert.ok(!$component.classList.contains('form-field--different'));
-  });
-
-  test(`Shows a given template and aliasses value`, async function(assert) {
-    this.set('object', EmberObject.create({
-      stringValue: 'Value string'
-    }));
-
-    await render(hbs`
-      {{#paper-form-field object=object
-                          updated=(action 'update')
-                          propertyPath="stringValue" as |value|}}
-        <div class="aGivenTemplateClass">{{value}}</div>
-      {{/paper-form-field}}`);
-
-    let $template = this.element.querySelector('.aGivenTemplateClass');
-    assert.ok($template, 'shows the given template');
-
-    let templateText = $template.textContent;
-    assert.equal(templateText, 'Value string', 'shows aliasses value');
-  });
-
-  test(`Passes update action to block template`, async function(assert) {
-    this.set('object', EmberObject.create({
-      stringValue: 'Value string'
-    }));
-    this.actions.update = function(object, propertyPath, value) {
-      object.set(propertyPath, value);
-    };
-
-    await render(hbs`
-      {{#paper-form-field updated=(action "update")
-                          object=object
-                          propertyPath="stringValue"
-                          as |value updated|}}
-        {{paper-text-field value=value updated=updated}}
-      {{/paper-form-field}}`);
-
-    await fillIn('input', 'Another value');
-    await find('input').blur();
-
-    assert.equal(this.get('object.stringValue'), 'Another value');
   });
 
   test(`Shows a component depending on the given type`, async function(assert) {
