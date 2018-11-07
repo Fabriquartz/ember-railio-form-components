@@ -3,56 +3,56 @@
              propertyPath="number"
              after=object.number
              updated=(action "update")}}
-<br/>
+<br>
 {{form-field type="text-field"
              object=object
              propertyPath="text"
              after=object.text
              updated=(action "update")}}
-<br/>
+<br>
 {{form-field type="date-picker"
              object=object
              propertyPath="date"
              after=object.date
              updated=(action "update")}}
-<br/>
+<br>
 {{form-field type="lazy-text-field"
              object=object
              propertyPath="text"
              after=object.text
              updated=(action "update")}}
-<br/>
+<br>
 {{#form-field object=object
               propertyPath="radioValue"
               updated=(action "update")
               disabled=disabled
-              as |value updated disabled|}}
+              as |value updated|}}
   {{radio-select options=optionList
                  value=value
                  updated=updated}}
 {{/form-field}}
-<br/>
+<br>
 {{form-field type="text-area"
              options=textAreaOptions
              object=object
-             propertyPath="textArea"
+             propertyPath="paperTextArea"
              updated=(action "update")
              disabled=disabled}}
-<br/>
+<br>
 {{paper-form-field type="text-field"
                    object=object
-                   propertyPath="text"
+                   propertyPath="paperTextField"
                    updated=(action "update")
                    disabled=disabled}}
-<br/>
+<br>
 {{paper-form-field type="lazy-text-field"
                    object=object
-                   propertyPath="text"
+                   propertyPath="paperLazyTextField"
                    updated=(action "update")
                    disabled=disabled}}
-<br/>
+<br>
 {{paper-form-field type="number-field"
                    object=object
-                   propertyPath="number"
+                   propertyPath="paperNumberField"
                    updated=(action "update")
                    disabled=disabled}}

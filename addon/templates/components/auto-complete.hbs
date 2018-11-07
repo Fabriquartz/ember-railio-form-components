@@ -1,7 +1,7 @@
 {{#if multiSelect}}
   {{#if enableSelectAll}}
     {{check-box value=_selectAll
-                updated=(action 'updateSelectAll')
+                updated=(action "updateSelectAll")
                 classNames="auto-complete__select-all"}}
     <span class="auto-complete__select-all-label">
       Select all ({{content.length}})
@@ -9,7 +9,7 @@
   {{/if}}
 {{/if}}
 
-{{#component (if multiSelect 'power-select-multiple' 'power-select')
+{{#component (if multiSelect "power-select-multiple" "power-select")
              options=groupedContent
              selected=value
              placeholder=prompt
@@ -19,14 +19,14 @@
              searchEnabled=searchEnabled
              searchField=optionLabelPath
              onkeydown=onKeyDownDropDown
-             onchange=(action 'update')
+             onchange=(action "update")
              allowClear=allowClear
              disabled=disabled
              classNames=(concat "auto-complete "
-                                (if multiSelect 'auto-complete--multiple'))
+                                (if multiSelect "auto-complete--multiple"))
              as |item|}}
   <span class="auto-complete__item"
-        ondblclick={{action 'doubleClickItem' multiSelect item}}>
+        ondblclick={{action "doubleClickItem" multiSelect item}}>
     {{#if hasBlock}}
       {{yield item}}
     {{else}}
