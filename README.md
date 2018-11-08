@@ -2,6 +2,9 @@
 
 An Ember addon for data-down/action-up based form-fields for (Ember) objects. By installing this addon, you can use the form-field component to add form-fields that can be used on data-down / action-up.
 
+If you want to use our paper form fields, you install the addon as described below. [Click here](../master/paper-form-components) for
+the documentation.
+
 ## Install
 
 In your application's directory:

@@ -87,6 +87,6 @@ press the enter key. There's no default for this function.
 **escape()** You can pass a function called escape, that will be executed everytime
 you press the escape key. There's no default for this function.
 
-**format(value)** Gets the value and formats its, before updating the object.
+**format(value)** Gets the value and formats it, before updating the object.
 There's no default this function.
 
