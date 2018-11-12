@@ -21,8 +21,8 @@ export default Component.extend(formFieldOptions, {
   },
 
   keyUp(e) {
-    if (e.keyCode === 13) { typeof this.enter  === 'function' && this.enter(); }
-    if (e.keyCode === 27) { typeof this.escape === 'function' && this.escape(); }
+    if (e.key === 'Enter')  { typeof this.enter  === 'function' && this.enter(); }
+    if (e.key === 'Escape') { typeof this.escape === 'function' && this.escape(); }
   },
 
   didReceiveAttrs() {

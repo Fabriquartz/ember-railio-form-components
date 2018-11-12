@@ -54,12 +54,12 @@
   "keywords": [	
     "ember-addon"	
   ],	
-  "repository": "Fabriquartz/ember-railio-form-components",	
-  "license": "MIT",	
-  "author": "",	
-  "directories": {	
-    "doc": "doc",	
-    "test": "tests"	
+  "repository": "Fabriquartz/ember-railio-form-components",
+  "license": "MIT",
+  "author": "",
+  "directories": {
+    "doc": "doc",
+    "test": "tests"
   },
   "dependencies": {
     "ember-cli-babel": "7.1.2",

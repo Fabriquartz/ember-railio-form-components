@@ -1,5 +1,5 @@
-import { get } from '@ember/object';
-import { isBlank }  from '@ember/utils';
+import { get }     from '@ember/object';
+import { isBlank } from '@ember/utils';
 
 import PaperTextField from
   'ember-railio-form-components/components/paper/text-field';
@@ -17,14 +17,16 @@ export default PaperTextField.extend({
   lazy:     true,
 
   keyDown(e) {
+    let addValue;
     let value = get(this, '_value') || 0;
 
-    let keyValue = e.keyCode === 38 ? 1  : 0 ||
-                   e.keyCode === 40 ? -1 : 0;
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      addValue = e.key === 'ArrowUp' ? 1 : -1;
+    }
 
-    if (keyValue) {
+    if (addValue) {
       e.preventDefault();
-      this.send('changedWetherLazyOrNot', increaseNumber(value, keyValue));
+      this.send('changedWetherLazyOrNot', increaseNumber(value, addValue));
     }
 
     this._super(...arguments);
