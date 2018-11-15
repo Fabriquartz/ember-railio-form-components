@@ -20,16 +20,13 @@ export default PaperTextField.extend({
     let addValue;
     let value = get(this, '_value') || 0;
 
-    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-      addValue = e.key === 'ArrowUp' ? 1 : -1;
-    }
+    if (e.key === 'ArrowUp')   { addValue = 1; }
+    if (e.key === 'ArrowDown') { addValue = -1; }
 
     if (addValue) {
       e.preventDefault();
-      this.send('changedWetherLazyOrNot', increaseNumber(value, addValue));
+      this.send('changed', increaseNumber(value, addValue), e, false);
     }
-
-    this._super(...arguments);
   },
 
   format(value) {

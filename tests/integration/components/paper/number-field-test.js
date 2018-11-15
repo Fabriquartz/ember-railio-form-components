@@ -23,9 +23,16 @@ module('Integration | Component | {{paper/number-field}}', function(hooks) {
     assert.equal(this.get('number'), null);
   });
 
+  test('value gets formatted with two decimals', async function(assert) {
+    this.set('number', 42);
+    await render(hbs`{{paper/number-field value=number maxDecimals=2}}`);
+    let $input = find('input');
+    assert.equal($input.value, '42,00');
+  });
+
   test('typing in value gets formatted', async function(assert) {
     await render(hbs`
-      {{paper/number-field maxDecimals="2" value=number updated=(action "update")}}
+      {{paper/number-field maxDecimals="2" value=number _update=(action "update")}}
     `);
 
     let $input = find('input');
@@ -41,7 +48,7 @@ module('Integration | Component | {{paper/number-field}}', function(hooks) {
     await render(hbs`
       {{paper/number-field decimals=3
                            value=number
-                           updated=(action "update")}}
+                           _update=(action "update")}}
     `);
 
     let $input = find('input');
@@ -57,7 +64,7 @@ module('Integration | Component | {{paper/number-field}}', function(hooks) {
 
   test('arrow up when empty sets value to 1', async function(assert) {
     await render(hbs`
-      {{paper/number-field value=number updated=(action "update")}}
+      {{paper/number-field value=number _update=(action "update")}}
     `);
 
     let $input = find('input');
@@ -75,7 +82,7 @@ module('Integration | Component | {{paper/number-field}}', function(hooks) {
     await render(hbs`
       {{paper/number-field value=number
                            decimals=3
-                           updated=(action "update")}}
+                           _update=(action "update")}}
     `);
 
     let $input = find('input');
@@ -90,7 +97,7 @@ module('Integration | Component | {{paper/number-field}}', function(hooks) {
 
   test('arrow down when empty sets value to -1', async function(assert) {
     await render(hbs`
-      {{paper/number-field value=number updated=(action "update")}}
+      {{paper/number-field value=number _update=(action "update")}}
     `);
 
     let $input = find('input');
@@ -106,7 +113,7 @@ module('Integration | Component | {{paper/number-field}}', function(hooks) {
   test('arrow down to negative', async function(assert) {
     this.set('number', 0.4);
     await render(hbs`
-      {{paper/number-field value=number updated=(action "update")}}
+      {{paper/number-field value=number _update=(action "update")}}
     `);
 
     let $input = find('input');
@@ -133,7 +140,7 @@ module('Integration | Component | {{paper/number-field}}', function(hooks) {
   test('arrow up from negative to positive', async function(assert) {
     this.set('number', -2.7);
     await render(hbs`
-      {{paper/number-field value=number updated=(action "update")}}
+      {{paper/number-field value=number _update=(action "update")}}
     `);
 
     let $input = find('input');

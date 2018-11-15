@@ -1,4 +1,6 @@
-import Component        from 'ember-component';
+import Component     from '@ember/component';
+import { isPresent } from '@ember/utils';
+
 import formFieldOptions from
   'ember-railio-form-components/mixins/form-field-options';
 import { computed, get, set } from '@ember/object';
@@ -6,34 +8,26 @@ import { computed, get, set } from '@ember/object';
 export default Component.extend(formFieldOptions, {
   lazy: false,
 
-  focusIn() {
-    set(this, 'isFocused', true);
-  },
-
-  focusOut() {
-    let value = this.format(get(this, '_value'));
-
-    set(this, 'isFocused', false);
-    set(this, '_value', value);
-    this.send('changed', value);
-
-    this._super(...arguments);
+  focusOut(e) {
+    let value = this._format(get(this, '_value'));
+    this.send('changed', value, e);
   },
 
   keyUp(e) {
-    if (e.key === 'Enter')  { typeof this.enter  === 'function' && this.enter(); }
-    if (e.key === 'Escape') { typeof this.escape === 'function' && this.escape(); }
+    if (e.key === 'Enter')  { typeof this.enter  === 'function' && this.enter(e); }
+    if (e.key === 'Escape') { typeof this.escape === 'function' && this.escape(e); }
   },
 
   didReceiveAttrs() {
     let value = get(this, 'value');
-    set(this, '_value', this.format(value));
+    set(this, '_value', this._format(value));
+
     this._super(...arguments);
   },
 
-  format(value) {
-    return value;
-  },
+  _format: computed('format', function() {
+    return typeof this.format === 'function' ? this.format : (value) => value;
+  }),
 
   _htmlAttributes: computed('htmlAttributes', 'name', function() {
     let name           = get(this, 'name');
@@ -47,16 +41,14 @@ export default Component.extend(formFieldOptions, {
   }),
 
   actions: {
-    changed(value) {
+    changed(value, event, lazy) {
+      lazy = isPresent(lazy) ? lazy : get(this, 'lazy');
+
       set(this, '_value', value);
 
-      if (!get(this, 'lazy') || !get(this, 'isFocused')) {
-        this.updated(value);
+      if (!lazy || (event && event.type === 'focusout')) {
+        this._update(value);
       }
-    },
-
-    changedWetherLazyOrNot(value) {
-      this.updated(value);
     }
   }
 });

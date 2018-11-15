@@ -1,5 +1,5 @@
-import { module, test }         from 'qunit';
-import { setupRenderingTest }   from 'ember-qunit';
+import { module, test }       from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
 import {
   render, find, blur,
   triggerEvent, focus, fillIn } from '@ember/test-helpers';
@@ -10,7 +10,7 @@ module('Integration | Component | {{paper/text-field}}', function(hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function() {
-    this.actions = { updated: () => {} };
+    this.actions = { _update: () => {} };
   });
 
   test('renders input with placeholder', async function(assert) {
@@ -36,7 +36,7 @@ module('Integration | Component | {{paper/text-field}}', function(hooks) {
     assert.equal(find('input').value, 'gnitset');
   });
 
-  test(`typing doesn't change value but sends updated`, async function(assert) {
+  test(`typing doesn't change value but sends _update`, async function(assert) {
     assert.expect(2);
 
     this.set('value', '');
@@ -44,7 +44,7 @@ module('Integration | Component | {{paper/text-field}}', function(hooks) {
       assert.equal(value, 'x', 'calls update function with new value');
     };
 
-    await render(hbs`{{paper/text-field value=value updated=(action "update")}}`);
+    await render(hbs`{{paper/text-field value=value _update=(action "update")}}`);
 
     let $input = find('input');
     await fillIn($input, 'x');
@@ -60,7 +60,7 @@ module('Integration | Component | {{paper/text-field}}', function(hooks) {
       assert.equal(value, 'x', 'calls update function with new value');
     };
 
-    await render(hbs`{{paper/text-field value=value updated=(action "update")}}`);
+    await render(hbs`{{paper/text-field value=value _update=(action "update")}}`);
 
     let $input = find('input');
 
@@ -75,7 +75,7 @@ module('Integration | Component | {{paper/text-field}}', function(hooks) {
     assert.expect(6);
 
     this.set('value', 'Foo');
-    this.set('updated', () => {});
+    this.set('_update', () => {});
 
     this.set('format', (value) => {
       assert.equal(value, expectedValue, 'calls the format function with value');
@@ -86,7 +86,7 @@ module('Integration | Component | {{paper/text-field}}', function(hooks) {
 
     await render(hbs`{{paper/text-field value=value
                                         format=format
-                                        updated=updated}}`);
+                                        _update=_update}}`);
 
     expectedValue = 'Fooz';
 

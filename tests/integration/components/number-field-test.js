@@ -67,6 +67,8 @@ test('arrow up increases value by one', function(assert) {
   });
 
   assert.equal($input.val(), '2,345');
+  assert.equal(this.get('number'), 2.345);
+
   return wait();
 });
 
@@ -84,6 +86,8 @@ test('arrow up when empty sets value to 1', function(assert) {
   });
 
   assert.equal($input.val(), '1');
+  assert.equal(this.get('number'), 1);
+
   return wait();
 });
 
@@ -102,6 +106,8 @@ test('arrow down decreases value by one', function(assert) {
   });
 
   assert.equal($input.val(), '7,456');
+  assert.equal(this.get('number'), 7.456);
+
   return wait();
 });
 
@@ -119,6 +125,8 @@ test('arrow down when empty sets value to -1', function(assert) {
   });
 
   assert.equal($input.val(), '-1');
+  assert.equal(this.get('number'), -1);
+
   return wait();
 });
 

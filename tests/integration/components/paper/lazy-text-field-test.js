@@ -23,28 +23,28 @@ module('Integration | Component | {{paper/lazy-text-field}}', function(hooks) {
     assert.equal(this.get('value'), 'test');
   });
 
-  test('typing with focus does not call updated', async function(assert) {
+  test('typing with focus does not call _update', async function(assert) {
     assert.expect(1);
     this.set('value', '');
     this.actions.update = function() {
       assert.ok(false, 'calls update');
     };
     await render(hbs`{{paper/lazy-text-field value=value
-                                             updated=(action "update")}}`);
+                                             _update=(action "update")}}`);
     let $input = find('input');
     await focus($input);
     await fillIn($input, 'x');
     assert.equal(this.get('value'), '');
   });
 
-  test('losing focus sends updated', async function(assert) {
+  test('losing focus sends _update', async function(assert) {
     assert.expect(2);
     this.set('value', '');
     this.actions.update = function(value) {
       assert.equal(value, 'x', 'calls update with new value');
     };
     await render(hbs`{{paper/lazy-text-field value=value
-                                             updated=(action "update")}}`);
+                                             _update=(action "update")}}`);
     let $input = find('input');
     await focus($input);
     await fillIn($input, 'x');
