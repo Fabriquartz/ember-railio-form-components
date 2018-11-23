@@ -51,9 +51,9 @@
     "qunit-dom": "^0.8.0",
     "sass": "^1.14.2"
   },
-  "keywords": [	
-    "ember-addon"	
-  ],	
+  "keywords": [
+    "ember-addon"
+  ],
   "repository": "Fabriquartz/ember-railio-form-components",
   "license": "MIT",
   "author": "",

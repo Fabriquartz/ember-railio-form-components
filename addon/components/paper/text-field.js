@@ -8,7 +8,13 @@ import { computed, get, set } from '@ember/object';
 export default Component.extend(formFieldOptions, {
   lazy: false,
 
+  focusIn() {
+    set(this, 'hasFocus', true);
+  },
+
   focusOut(e) {
+    set(this, 'hasFocus', false);
+
     let value = this._format(get(this, '_value'));
     this.send('changed', value, e);
   },
@@ -19,8 +25,10 @@ export default Component.extend(formFieldOptions, {
   },
 
   didReceiveAttrs() {
-    let value = get(this, 'value');
-    set(this, '_value', this._format(value));
+    if (!get(this, 'hasFocus')) {
+      let value = get(this, 'value');
+      set(this, '_value', this._format(value));
+    }
 
     this._super(...arguments);
   },
