@@ -1,7 +1,7 @@
 {{#if type}}
   {{component (concat "paper/" type) value=(get object propertyPath)
                                      componentProperties=options
-                                     _update=(action "update")
+                                     updated=(action "update")
                                      label=(humanize (underscore _label))
                                      name=name
                                      disabled=disabled}}

@@ -15,7 +15,9 @@ export default Component.extend(formFieldOptions, {
   focusOut(e) {
     set(this, 'hasFocus', false);
 
-    let value = this._format(get(this, '_value'));
+    let value = get(this, '_value');
+    value = typeof this.format === 'function' ? this.format(value) : value;
+
     this.send('changed', value, e);
   },
 
@@ -27,15 +29,13 @@ export default Component.extend(formFieldOptions, {
   didReceiveAttrs() {
     if (!get(this, 'hasFocus')) {
       let value = get(this, 'value');
-      set(this, '_value', this._format(value));
+      value = typeof this.format === 'function' ? this.format(value) : value;
+
+      set(this, '_value', value);
     }
 
     this._super(...arguments);
   },
-
-  _format: computed('format', function() {
-    return typeof this.format === 'function' ? this.format : (value) => value;
-  }),
 
   _htmlAttributes: computed('htmlAttributes', 'name', function() {
     let name           = get(this, 'name');
@@ -54,8 +54,9 @@ export default Component.extend(formFieldOptions, {
 
       set(this, '_value', value);
 
-      if (!lazy || (event && event.type === 'focusout')) {
-        this._update(value);
+      if (typeof this.updated === 'function' &&
+          (!lazy || (event && event.type === 'focusout'))) {
+        this.updated(value);
       }
     }
   }
