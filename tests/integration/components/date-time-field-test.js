@@ -1,5 +1,6 @@
-import hbs from 'htmlbars-inline-precompile';
-import run from 'ember-runloop';
+import hbs    from 'htmlbars-inline-precompile';
+import run    from 'ember-runloop';
+import moment from 'moment';
 
 import { moduleForComponent, test } from 'ember-qunit';
 
@@ -38,7 +39,8 @@ test('shows date and time', function(assert) {
 test('set to now', function(assert) {
   this.render(hbs`{{date-time-field value=value updated=(action "update")}}`);
   this.$('.date-time-field-clock').click();
-  assert.inDelta(+this.get('value'), +(new Date()), 1000);
+  assert.equal(moment(this.get('value')).seconds(0).milliseconds(0).toISOString(),
+               moment().seconds(0).milliseconds(0).toISOString());
 });
 
 test('unset time', function(assert) {

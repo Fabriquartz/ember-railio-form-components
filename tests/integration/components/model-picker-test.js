@@ -180,19 +180,20 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
       assert.equal(query.filter.code_cont, 'test', 'queries with filter');
     };
 
-    this.owner.register('service:store', Service.extend({
+    this.set('store', {
       query(modelName, query) {
         assert.equal(modelName, 'foo', 'queries with given modelName');
         queryExpects(query);
         return;
       }
-    }));
+    });
 
     await render(hbs`{{model-picker updated=(action 'update')
                                     model="foo"
                                     preload=50
                                     queryOnSearch=true
                                     searchProperty="name_cont"
+                                    store=store
                                     filter=filters}}`);
 
     queryExpects = (query) => {
@@ -203,7 +204,6 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
     };
 
     await clickTrigger();
-
     await fillIn('.ember-power-select-dropdown input', 'bla');
     await clickTrigger();
     return wait();
@@ -269,9 +269,7 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
   test('selectAll true when already everything selected', async function(assert) {
     this.set('selection', [{}, {}, {}, {}]);
 
-    this.owner.register('service:store', Service.extend({
-      query() { return FOOS; }
-    }));
+    this.set('store', { query() { return FOOS; } });
 
     await render(hbs`{{model-picker value=selection
                                    model="foo"
@@ -280,7 +278,8 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
                                    preload=true
                                    updated=(action 'update')
                                    optionLabelPath="name"
-                                   searchProperty="name"}}`);
+                                   searchProperty="name"
+                                   store=store}}`);
 
     let $selectAll = $('.auto-complete__select-all');
 

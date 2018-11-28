@@ -1,10 +1,12 @@
-import { module, test }         from 'qunit';
-import { setupRenderingTest }   from 'ember-qunit';
-import { render, find, blur,
+import { module, test }       from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import {
+  render, find, blur,
   triggerEvent, focus, fillIn } from '@ember/test-helpers';
-import hbs                      from 'htmlbars-inline-precompile';
 
-module('Integration | Component | {{paper-text-field}}', function(hooks) {
+import hbs from 'htmlbars-inline-precompile';
+
+module('Integration | Component | {{paper/text-field}}', function(hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function() {
@@ -12,7 +14,7 @@ module('Integration | Component | {{paper-text-field}}', function(hooks) {
   });
 
   test('renders input with placeholder', async function(assert) {
-    await render(hbs`{{paper-text-field placeholder='Type your value here'}}`);
+    await render(hbs`{{paper/text-field placeholder='Type your value here'}}`);
 
     assert.equal(find('input').getAttribute('placeholder'),
                  'Type your value here');
@@ -20,14 +22,14 @@ module('Integration | Component | {{paper-text-field}}', function(hooks) {
 
   test('input value is set to value', async function(assert) {
     this.set('value', 'testing');
-    await render(hbs`{{paper-text-field value=value}}`);
+    await render(hbs`{{paper/text-field value=value}}`);
 
     assert.equal(find('input').value, 'testing');
   });
 
   test('changing value changes input text', async function(assert) {
     this.set('value', 'testing');
-    await render(hbs`{{paper-text-field value=value}}`);
+    await render(hbs`{{paper/text-field value=value}}`);
 
     await this.set('value', 'gnitset');
 
@@ -42,7 +44,7 @@ module('Integration | Component | {{paper-text-field}}', function(hooks) {
       assert.equal(value, 'x', 'calls update function with new value');
     };
 
-    await render(hbs`{{paper-text-field value=value updated=(action "update")}}`);
+    await render(hbs`{{paper/text-field value=value updated=(action "update")}}`);
 
     let $input = find('input');
     await fillIn($input, 'x');
@@ -58,7 +60,7 @@ module('Integration | Component | {{paper-text-field}}', function(hooks) {
       assert.equal(value, 'x', 'calls update function with new value');
     };
 
-    await render(hbs`{{paper-text-field value=value updated=(action "update")}}`);
+    await render(hbs`{{paper/text-field value=value updated=(action "update")}}`);
 
     let $input = find('input');
 
@@ -68,25 +70,36 @@ module('Integration | Component | {{paper-text-field}}', function(hooks) {
     assert.equal(this.get('value'), '');
   });
 
-  test('Format function only triggers when focusOut', async function(assert) {
-    this.set('value', '');
+  test('Format function only triggers on init and on focusOut',
+  async function(assert) {
+    assert.expect(6);
+
+    this.set('value', 'Foo');
+    this.set('updated', () => {});
 
     this.set('format', (value) => {
-      assert.equal(value, '2', 'calls the format function with value');
-      return `${value}0`;
+      assert.equal(value, expectedValue, 'calls the format function with value');
+      return `${value}z`;
     });
 
-    await render(hbs`{{paper-text-field value=value format=format}}`);
+    let expectedValue = 'Foo';
+
+    await render(hbs`{{paper/text-field value=value
+                                        format=format
+                                        updated=updated}}`);
+
+    expectedValue = 'Fooz';
 
     let $input = find('input');
+    assert.equal($input.value, 'Fooz', 'Init triggers format function');
+
     await focus($input);
+    assert.equal($input.value, 'Fooz', 'Focus does not format on changing');
 
-    $input.value = '2';
     await triggerEvent($input, 'input');
-
-    assert.equal($input.value, '2', 'Input does not format on changing');
+    assert.equal($input.value, 'Fooz', 'Input does not format on changing');
 
     await blur($input);
-    assert.equal($input.value, '20', 'FocusOut triggers format function');
+    assert.equal($input.value, 'Foozz', 'FocusOut triggers format function');
   });
 });
