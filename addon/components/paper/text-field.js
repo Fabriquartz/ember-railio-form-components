@@ -6,7 +6,9 @@ import formFieldOptions from
 import { computed, get, set } from '@ember/object';
 
 export default Component.extend(formFieldOptions, {
-  lazy: false,
+  layoutName: 'components/paper/input-field',
+  inputType:  'text',
+  lazy:       false,
 
   focusIn() {
     set(this, 'hasFocus', true);

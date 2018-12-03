@@ -12,8 +12,10 @@ function increaseNumber(value, add) {
 }
 
 export default PaperTextField.extend({
-  decimals: null,
-  lazy:     true,
+  layoutName: 'components/paper/input-field',
+  inputType:  'text',
+  decimals:   null,
+  lazy:       true,
 
   keyDown(e) {
     let addValue;
