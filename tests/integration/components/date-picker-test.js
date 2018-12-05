@@ -7,6 +7,7 @@ import wait                         from 'ember-test-helpers/wait';
 moduleForComponent('date-picker', 'Integration | Component | {{date-picker}}', {
   integration: true,
   beforeEach() {
+    this.set('value', new Date(2018, 9, 10, 0, 0));
     this.on('update', function(value) {
       this.set('value', value);
     });
@@ -45,6 +46,8 @@ test('null is an option', function(assert) {
   this.render(hbs`{{date-picker value=value}}`);
 
   let $input = this.$('input');
+  fillIn($input, null);
+
   assert.equal($input.val(), '');
 });
 
@@ -223,4 +226,14 @@ test('shift + arrow month decreases date by one month', function(assert) {
   assert.equal(+this.get('value'), +(new Date(2014, 11)));
 
   return wait();
+});
+
+test('Does not lose time after change the date', function(assert) {
+  this.set('value', new Date(2018, 11, 5, 14, 57));
+
+  this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
+
+  fillIn(this.$('input'), '1-12-2018');
+
+  assert.equal(+this.get('value'), +(new Date(2018, 11, 1, 14, 57)));
 });
