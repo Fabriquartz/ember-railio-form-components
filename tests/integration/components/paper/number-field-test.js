@@ -25,9 +25,12 @@ module('Integration | Component | {{paper/number-field}}', function(hooks) {
 
   test('value gets formatted with two decimals by default', async function(assert) {
     this.set('number', 42);
-    await render(hbs`{{paper/number-field value=number}}`);
+    this.set('options', { decimals: 4 });
+    await render(hbs`
+      {{paper/number-field value=number
+                           componentProperties=options}}`);
     let $input = find('input');
-    assert.equal($input.value, '42,00');
+    assert.equal($input.value, '42,0000');
   });
 
   test('typing in value gets formatted', async function(assert) {
@@ -40,7 +43,7 @@ module('Integration | Component | {{paper/number-field}}', function(hooks) {
     await focus($input);
     await fillIn($input, '42');
     await blur($input);
-    assert.equal($input.value, '42,00');
+    assert.equal($input.value, '42');
   });
 
   test('arrow up increases value by one', async function(assert) {
@@ -74,7 +77,7 @@ module('Integration | Component | {{paper/number-field}}', function(hooks) {
     triggerKeyEvent($input, 'keydown', 38);
     await blur($input);
 
-    assert.equal($input.value, '1,00');
+    assert.equal($input.value, '1');
   });
 
   test('arrow down decreases value by one', async function(assert) {
@@ -107,11 +110,11 @@ module('Integration | Component | {{paper/number-field}}', function(hooks) {
     triggerKeyEvent($input, 'keydown', 40);
     await blur($input);
 
-    assert.equal($input.value, '-1,00');
+    assert.equal($input.value, '-1');
   });
 
   test('arrow down to negative', async function(assert) {
-    this.set('number', 0.4);
+    this.set('number', 0.46);
     await render(hbs`
       {{paper/number-field value=number updated=(action "update")}}
     `);
@@ -122,23 +125,23 @@ module('Integration | Component | {{paper/number-field}}', function(hooks) {
     triggerKeyEvent($input, 'keydown', 40);
     await blur($input);
 
-    assert.equal(this.get('number'), '-0,60', 'pressed arrow down once');
+    assert.equal(this.get('number'), '-0,54', 'pressed arrow down once');
 
     await focus($input);
     triggerKeyEvent($input, 'keydown', 40);
     await blur($input);
 
-    assert.equal(this.get('number'), '-1,60', 'pressed arrow down twice');
+    assert.equal(this.get('number'), '-1,54', 'pressed arrow down twice');
 
     await focus($input);
     triggerKeyEvent($input, 'keydown', 40);
     await blur($input);
 
-    assert.equal(this.get('number'), '-2,60', 'pressed arrow down three times');
+    assert.equal(this.get('number'), '-2,54', 'pressed arrow down three times');
   });
 
   test('arrow up from negative to positive', async function(assert) {
-    this.set('number', -2.7);
+    this.set('number', -2.73);
     await render(hbs`
       {{paper/number-field value=number updated=(action "update")}}
     `);
@@ -149,18 +152,18 @@ module('Integration | Component | {{paper/number-field}}', function(hooks) {
     triggerKeyEvent($input, 'keydown', 38);
     await blur($input);
 
-    assert.equal(this.get('number'), '-1,70', 'pressed arrow up once');
+    assert.equal(this.get('number'), '-1,73', 'pressed arrow up once');
 
     await focus($input);
     triggerKeyEvent($input, 'keydown', 38);
     await blur($input);
 
-    assert.equal(this.get('number'), '-0,70', 'pressed arrow up twice');
+    assert.equal(this.get('number'), '-0,73', 'pressed arrow up twice');
 
     await focus($input);
     triggerKeyEvent($input, 'keydown', 38);
     await blur($input);
 
-    assert.equal(this.get('number'), '0,30', 'pressed arrow up three times');
+    assert.equal(this.get('number'), '0,27', 'pressed arrow up three times');
   });
 });

@@ -27,14 +27,14 @@ export default Component.extend(formFieldOptions, {
   },
 
   didReceiveAttrs() {
+    this._super(...arguments);
+
     if (!get(this, 'hasFocus')) {
       let value = get(this, 'value');
       value = typeof this.format === 'function' ? this.format(value) : value;
 
       set(this, '_value', value);
     }
-
-    this._super(...arguments);
   },
 
   _htmlAttributes: computed('htmlAttributes', 'name', function() {

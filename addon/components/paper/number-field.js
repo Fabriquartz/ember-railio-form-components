@@ -3,6 +3,7 @@ import { isBlank } from '@ember/utils';
 
 import PaperTextField from
   'ember-railio-form-components/components/paper/text-field';
+
 import { toNumber, formatNumber } from 'ember-railio-formatting';
 
 function increaseNumber(value, add) {
@@ -11,7 +12,7 @@ function increaseNumber(value, add) {
 }
 
 export default PaperTextField.extend({
-  decimals: 2,
+  decimals: null,
   lazy:     true,
 
   keyDown(e) {
@@ -23,7 +24,15 @@ export default PaperTextField.extend({
 
     if (addValue) {
       e.preventDefault();
-      this.send('changed', increaseNumber(value, addValue), e, false);
+      let decimalIndex   = value.toString().indexOf(',');
+      let decimalsAmount = 0;
+
+      if (decimalIndex !== -1) {
+        decimalsAmount = value.toString().slice(decimalIndex).length;
+      }
+
+      value = increaseNumber(value, addValue).toFixed(decimalsAmount);
+      this.send('changed', this.format(value), e, false);
     }
   },
 
