@@ -17,14 +17,14 @@ export default PaperTextField.extend({
 
   keyDown(e) {
     let addValue;
-    let value = get(this, '_value') || 0;
+    let value = get(this, 'value') || 0;
 
     if (e.key === 'ArrowUp')   { addValue = 1; }
     if (e.key === 'ArrowDown') { addValue = -1; }
 
     if (addValue) {
       e.preventDefault();
-      let decimalIndex   = value.toString().indexOf(',');
+      let decimalIndex   = value.toString().indexOf('.');
       let decimalsAmount = 0;
 
       if (decimalIndex !== -1) {
@@ -32,12 +32,16 @@ export default PaperTextField.extend({
       }
 
       value = increaseNumber(value, addValue).toFixed(decimalsAmount);
-      this.send('changed', this.format(value), e, false);
+      this.send('changed', toNumber(value), e, false);
     }
   },
 
   format(value) {
     let decimals = get(this, 'decimals');
     return formatNumber(value, { decimals });
+  },
+
+  formatBeforeUpdate(value) {
+    return toNumber(value);
   }
 });

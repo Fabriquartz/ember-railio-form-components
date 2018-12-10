@@ -62,7 +62,7 @@ module('Integration | Component | {{paper/number-field}}', function(hooks) {
     await blur($input);
 
     assert.equal($input.value, '2,345');
-    assert.equal(this.get('number'), '2,345');
+    assert.equal(this.get('number'), 2.345);
   });
 
   test('arrow up when empty sets value to 1', async function(assert) {
@@ -125,19 +125,19 @@ module('Integration | Component | {{paper/number-field}}', function(hooks) {
     triggerKeyEvent($input, 'keydown', 40);
     await blur($input);
 
-    assert.equal(this.get('number'), '-0,54', 'pressed arrow down once');
+    assert.equal(this.get('number'), -0.54, 'pressed arrow down once');
 
     await focus($input);
     triggerKeyEvent($input, 'keydown', 40);
     await blur($input);
 
-    assert.equal(this.get('number'), '-1,54', 'pressed arrow down twice');
+    assert.equal(this.get('number'), -1.54, 'pressed arrow down twice');
 
     await focus($input);
     triggerKeyEvent($input, 'keydown', 40);
     await blur($input);
 
-    assert.equal(this.get('number'), '-2,54', 'pressed arrow down three times');
+    assert.equal(this.get('number'), -2.54, 'pressed arrow down three times');
   });
 
   test('arrow up from negative to positive', async function(assert) {
@@ -152,18 +152,18 @@ module('Integration | Component | {{paper/number-field}}', function(hooks) {
     triggerKeyEvent($input, 'keydown', 38);
     await blur($input);
 
-    assert.equal(this.get('number'), '-1,73', 'pressed arrow up once');
+    assert.equal(this.get('number'), -1.73, 'pressed arrow up once');
 
     await focus($input);
     triggerKeyEvent($input, 'keydown', 38);
     await blur($input);
 
-    assert.equal(this.get('number'), '-0,73', 'pressed arrow up twice');
+    assert.equal(this.get('number'), -0.73, 'pressed arrow up twice');
 
     await focus($input);
     triggerKeyEvent($input, 'keydown', 38);
     await blur($input);
 
-    assert.equal(this.get('number'), '0,27', 'pressed arrow up three times');
+    assert.equal(this.get('number'), 0.27, 'pressed arrow up three times');
   });
 });

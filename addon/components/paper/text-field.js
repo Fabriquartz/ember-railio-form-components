@@ -28,7 +28,6 @@ export default Component.extend(formFieldOptions, {
 
   didReceiveAttrs() {
     this._super(...arguments);
-
     if (!get(this, 'hasFocus')) {
       let value = get(this, 'value');
       value = typeof this.format === 'function' ? this.format(value) : value;
@@ -56,6 +55,9 @@ export default Component.extend(formFieldOptions, {
 
       if (typeof this.updated === 'function' &&
           (!lazy || (event && event.type === 'focusout'))) {
+
+        let format = this.formatBeforeUpdate;
+        value = typeof format === 'function' ? format(value) : value;
         this.updated(value);
       }
     }
