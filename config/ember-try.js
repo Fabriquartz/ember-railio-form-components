@@ -76,7 +76,8 @@ module.exports = function() {
             devDependencies: {
               '@ember/jquery': '^0.5.1'
             }
-          }
+          },
+          bower: {}
         }
       ]
     };
