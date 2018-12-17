@@ -5,10 +5,22 @@ import formFieldOptions from
   'ember-railio-form-components/mixins/form-field-options';
 import { computed, get, set } from '@ember/object';
 
+function canUpdate(event, lazy) {
+  return !lazy || (event && event.type === 'focusout');
+}
+
 export default Component.extend(formFieldOptions, {
   layoutName: 'components/paper/input-field',
   inputType:  'text',
   lazy:       false,
+
+  format(value) {
+    return value;
+  },
+
+  formatBeforeUpdate(value) {
+    return value;
+  },
 
   focusIn() {
     set(this, 'hasFocus', true);
@@ -16,11 +28,7 @@ export default Component.extend(formFieldOptions, {
 
   focusOut(e) {
     set(this, 'hasFocus', false);
-
-    let value = get(this, '_value');
-    value = typeof this.format === 'function' ? this.format(value) : value;
-
-    this.send('changed', value, e);
+    this.send('changed', get(this, '_value'), e);
   },
 
   keyUp(e) {
@@ -53,13 +61,11 @@ export default Component.extend(formFieldOptions, {
     changed(value, event, lazy) {
       lazy = isPresent(lazy) ? lazy : get(this, 'lazy');
 
-      set(this, '_value', value);
+      let _value = canUpdate(event, lazy) ? this.format(value) : value;
+      set(this, '_value', _value);
 
-      if (typeof this.updated === 'function' &&
-          (!lazy || (event && event.type === 'focusout'))) {
-
-        let format = this.formatBeforeUpdate;
-        value = typeof format === 'function' ? format(value) : value;
+      if (canUpdate(event, lazy)) {
+        value = this.formatBeforeUpdate(value);
         this.updated(value);
       }
     }
