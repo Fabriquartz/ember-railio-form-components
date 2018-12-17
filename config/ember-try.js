@@ -77,20 +77,6 @@ module.exports = function() {
               '@ember/jquery': '^0.5.1'
             }
           }
-        },
-        {
-          name: 'ember-default-with-jquery',
-          env:  {
-            EMBER_OPTIONAL_FEATURES: JSON.stringify({
-              'jquery-integration': true
-            })
-          },
-          npm: {
-            devDependencies: {
-              '@ember/jquery': '^0.5.1'
-            }
-          },
-          bower: {}
         }
       ]
     };
