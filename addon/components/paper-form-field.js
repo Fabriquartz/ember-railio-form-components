@@ -11,7 +11,8 @@ export default Component.extend(formFieldOptions, {
   classNameBindings: [
     'isValid::form-field--invalid',
     'isChanged:form-field--changed',
-    'isDifferent:form-field--different'],
+    'isDifferent:form-field--different',
+    'after:form-field--has-after'],
 
   _label: computed('label', 'propertyPath', function() {
     let label        = get(this, 'label');

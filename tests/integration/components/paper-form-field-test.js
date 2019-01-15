@@ -198,4 +198,42 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
     assert.equal(this.get('object.name'), 'John White',
                  `doesn't update object value`);
   });
+
+   test(`Shows a after content depending on the given content`, async function(assert) {
+    this.set('object', EmberObject.create({
+      text: 'voorbeeld'
+    }));
+
+    await render(hbs`
+      {{paper-form-field type="text-field"
+                         object=object
+                         after="after tekst"
+                         propertyPath="text"
+                         updated=(action 'update')}}`);
+
+    let $input = this.element.querySelector('input.md-input').value;
+    assert.equal($input, 'voorbeeld', 'shown component has correct value');
+
+    let $component = this.element.querySelector('.form-field--has-after');
+    assert.ok($component.classList.contains('form-field--has-after'));
+
+    let $afterContent = this.element.querySelector('.form-field__after').textContent;
+    assert.equal($afterContent, 'after tekst', 'shows after content');
+  });
+
+  test(`passes the name to the form field`, async function(assert) {
+    this.set('object', EmberObject.create({
+      name: 'John White'
+    }));
+
+    await render(hbs`
+      {{paper-form-field type="text-field"
+                         object=object
+                         propertyPath="name"
+                         name="person-name"
+                         updated=(action 'update')}}`);
+
+    let $input = this.element.querySelector('input.md-input');
+    assert.equal($input.name, 'person-name', 'passes name to component');
+  });
 });
