@@ -199,26 +199,27 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
                  `doesn't update object value`);
   });
 
-   test(`Shows a after content depending on the given content`, async function(assert) {
+  test(`Shows a after content depending on the given content`,
+  async function(assert) {
     this.set('object', EmberObject.create({
-      text: 'voorbeeld'
+      text: 'example'
     }));
 
     await render(hbs`
       {{paper-form-field type="text-field"
                          object=object
-                         after="after tekst"
+                         after="after text"
                          propertyPath="text"
                          updated=(action 'update')}}`);
 
     let $input = this.element.querySelector('input.md-input').value;
-    assert.equal($input, 'voorbeeld', 'shown component has correct value');
+    assert.equal($input, 'example', 'shown component has correct value');
 
-    let $component = this.element.querySelector('.form-field--has-after');
+    let $component = this.element.querySelector('.form-field');
     assert.ok($component.classList.contains('form-field--has-after'));
 
     let $afterContent = this.element.querySelector('.form-field__after').textContent;
-    assert.equal($afterContent, 'after tekst', 'shows after content');
+    assert.equal($afterContent, 'after text', 'shows after content');
   });
 
   test(`passes the name to the form field`, async function(assert) {
