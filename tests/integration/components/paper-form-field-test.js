@@ -198,4 +198,53 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
     assert.equal(this.get('object.name'), 'John White',
                  `doesn't update object value`);
   });
+
+  test(`Shows after content depending on the given content`,
+  async function(assert) {
+    this.set('object', EmberObject.create({ text: 'example' }));
+    this.set('afterText', 'After text');
+
+    await render(hbs`
+      {{paper-form-field type="text-field"
+                         object=object
+                         after=afterText
+                         propertyPath="text"
+                         updated=(action 'update')}}`);
+
+    let $component    = this.element.querySelector('.form-field');
+    let $afterContent = this.element.querySelector('.form-field__after').textContent;
+
+    assert.ok($component.classList.contains('form-field--has-after'),
+               'Does have --has-after when after is a string ');
+    assert.equal($afterContent, 'After text',
+                 'shows after content when after is a string');
+
+    this.set('afterText', '');
+    assert.notOk($component.classList.contains('form-field--has-after'),
+                 'Does not have --has-after when after is an empty string ');
+    assert.notOk(this.element.querySelector('.form-field__after'),
+                 'Does not have an after when after is an empty string');
+
+    this.set('afterText', null);
+    assert.notOk($component.classList.contains('form-field--has-after'),
+                'Does not have --has-after when after is null ');
+    assert.notOk(this.element.querySelector('.form-field__after'),
+                'Does not have an after when after is null');
+  });
+
+  test(`passes the name to the form field`, async function(assert) {
+    this.set('object', EmberObject.create({
+      name: 'John White'
+    }));
+
+    await render(hbs`
+      {{paper-form-field type="text-field"
+                         object=object
+                         propertyPath="name"
+                         name="person-name"
+                         updated=(action 'update')}}`);
+
+    let $input = this.element.querySelector('input.md-input');
+    assert.equal($input.name, 'person-name', 'passes name to component');
+  });
 });
