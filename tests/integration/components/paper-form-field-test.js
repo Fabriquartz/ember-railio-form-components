@@ -199,27 +199,39 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
                  `doesn't update object value`);
   });
 
-  test(`Shows a after content depending on the given content`,
+  test(`Shows after content depending on the given content`,
   async function(assert) {
-    this.set('object', EmberObject.create({
-      text: 'example'
-    }));
+    this.set('object', EmberObject.create({ text: 'example' }));
+    this.set('afterText', 'After text');
 
     await render(hbs`
       {{paper-form-field type="text-field"
                          object=object
-                         after="after text"
+                         after=afterText
                          propertyPath="text"
                          updated=(action 'update')}}`);
 
-    let $input = this.element.querySelector('input.md-input').value;
-    assert.equal($input, 'example', 'shown component has correct value');
+    let $component    = this.element.querySelector('.form-field');
+    let $after        = this.element.querySelector('.form-field__after');
+    let $afterContent = $after.textContent;
 
-    let $component = this.element.querySelector('.form-field');
-    assert.ok($component.classList.contains('form-field--has-after'));
+    assert.ok($component.classList.contains('form-field--has-after'),
+               'Does have --has-after when after is a string ');
 
-    let $afterContent = this.element.querySelector('.form-field__after').textContent;
-    assert.equal($afterContent, 'after text', 'shows after content');
+    assert.equal($afterContent, 'After text',
+                 'shows after content when after is a string');
+
+    this.set('afterText', '');
+    assert.notOk($component.classList.contains('form-field--has-after'),
+                 'Does not have --has-after when after is an empty string ');
+
+    assert.notOk($after, 'Does not have an after when after is an empty string');
+
+    this.set('afterText', null);
+    assert.notOk($component.classList.contains('form-field--has-after'),
+                'Does not have --has-after when after is null ');
+
+    assert.notOk($after, 'Does not have an after when after is null');
   });
 
   test(`passes the name to the form field`, async function(assert) {
