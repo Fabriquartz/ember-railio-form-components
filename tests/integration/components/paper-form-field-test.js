@@ -212,26 +212,24 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
                          updated=(action 'update')}}`);
 
     let $component    = this.element.querySelector('.form-field');
-    let $after        = this.element.querySelector('.form-field__after');
-    let $afterContent = $after.textContent;
+    let $afterContent = this.element.querySelector('.form-field__after').textContent;
 
     assert.ok($component.classList.contains('form-field--has-after'),
                'Does have --has-after when after is a string ');
-
     assert.equal($afterContent, 'After text',
                  'shows after content when after is a string');
 
     this.set('afterText', '');
     assert.notOk($component.classList.contains('form-field--has-after'),
                  'Does not have --has-after when after is an empty string ');
-
-    assert.notOk($after, 'Does not have an after when after is an empty string');
+    assert.notOk(this.element.querySelector('.form-field__after'),
+                 'Does not have an after when after is an empty string');
 
     this.set('afterText', null);
     assert.notOk($component.classList.contains('form-field--has-after'),
                 'Does not have --has-after when after is null ');
-
-    assert.notOk($after, 'Does not have an after when after is null');
+    assert.notOk(this.element.querySelector('.form-field__after'),
+                'Does not have an after when after is null');
   });
 
   test(`passes the name to the form field`, async function(assert) {

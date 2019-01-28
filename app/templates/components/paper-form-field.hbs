@@ -5,7 +5,7 @@
                                      label=(humanize (underscore _label))
                                      name=name
                                      disabled=disabled}}
-  {{#if after)}}
+  {{#unless (is-empty after)}}
     <span class="form-field__after">{{after}}</span>
-  {{/if}}
+  {{/unless}}
 {{/if}}
