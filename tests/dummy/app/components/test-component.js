@@ -11,6 +11,11 @@ export default Component.extend({
 
   optionList: ['OPTION 1', 'OPTION 2', 'OPTION 3'],
 
+  paperRadioGroupOptions: {
+    labelPropertyPath: 'label',
+    options: [{ label: 'Option 1' }, { label: 'Option 2' }, { label: 'Option 3' }]
+  },
+
   textAreaOptions: {
     sizeOnInput: true
   },
