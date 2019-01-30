@@ -19,7 +19,7 @@ export default PaperTextField.extend({
 
     if (addValue) {
       e.preventDefault();
-      this.send('changed', value.add(addValue, scale).toDate(), e, false);
+      this.send('changed', value.add(addValue, scale).toDate(), e, true);
     }
 
     this._super(...arguments);

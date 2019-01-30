@@ -34,7 +34,7 @@ export default PaperTextField.extend({
       }
 
       value = increaseNumber(value, addValue).toFixed(decimalsAmount);
-      this.send('changed', toNumber(value), e, false);
+      this.send('changed', toNumber(value), e, true);
     }
   },
 
