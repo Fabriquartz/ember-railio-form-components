@@ -47,7 +47,7 @@ the number by one. It _won't_ round the number, so it's useable with floats.
 default it formats a number with a space as thousands separator and a comma as decimal
 separator, like so: '17 009,87'.
 
-**formatBeforeUpdate(value)** Get the value and formats it before the actual value is
+**serialize(value)** Get the value and formats it before the actual value is
 updated. Be default it formats a number to an actual float. So, '17 009,87' becomes
 '17009.87'.
 
@@ -94,7 +94,7 @@ you press the escape key. There's no default for this function.
 **format(value)** Gets the value and formats it (only for displaying). There's no
 default function.
 
-**formatBeforeUpdate(value)** Get the value and formats it before the actual value is
+**serialize(value)** Get the value and formats it before the actual value is
 updated. There's no default function.
 
 ### check-box

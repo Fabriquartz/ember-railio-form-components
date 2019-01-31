@@ -4,7 +4,7 @@ import formFieldOptions from
   'ember-railio-form-components/mixins/form-field-options';
 import { computed, get, set } from '@ember/object';
 
-function focussedOut(event) {
+function isFocusOutEvent(event) {
   return event && event.type === 'focusout';
 }
 
@@ -17,7 +17,7 @@ export default Component.extend(formFieldOptions, {
     return value;
   },
 
-  formatBeforeUpdate(value) {
+  serialize(value) {
     return value;
   },
 
@@ -59,11 +59,13 @@ export default Component.extend(formFieldOptions, {
     changed(value, event, forceUpdate) {
       let lazy = get(this, 'lazy');
 
-      let _value = forceUpdate || focussedOut(event) ? this.format(value) : value;
+      let _value = forceUpdate ||
+        isFocusOutEvent(event) ? this.format(value) : value;
+
       set(this, '_value', _value);
 
-      if (forceUpdate || !lazy || focussedOut(event)) {
-        value = this.formatBeforeUpdate(value);
+      if (forceUpdate || !lazy || isFocusOutEvent(event)) {
+        value = this.serialize(value);
         this.updated(value);
       }
     }

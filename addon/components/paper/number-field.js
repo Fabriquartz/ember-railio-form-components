@@ -43,7 +43,7 @@ export default PaperTextField.extend({
     return formatNumber(value, { decimals });
   },
 
-  formatBeforeUpdate(value) {
+  serialize(value) {
     return toNumber(value);
   }
 });

@@ -29,7 +29,7 @@ export default PaperTextField.extend({
     return value ? moment(value).format('DD-MM-YY') : '';
   },
 
-  formatBeforeUpdate(value) {
+  serialize(value) {
     value = value === '' ? null : value;
 
     if (value instanceof Date || value == null) {
