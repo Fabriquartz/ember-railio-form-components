@@ -34,7 +34,6 @@ export default Component.extend(formFieldOptions, {
       let input = this.element.querySelector('input');
       input.value = null;
       input.dispatchEvent(new Event('change', { bubbles: true }));
-      // this.send('change');
     },
 
     change() {
