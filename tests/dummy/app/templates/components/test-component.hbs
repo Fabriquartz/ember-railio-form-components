@@ -47,13 +47,6 @@
              updated=(action "update")
              disabled=disabled}}
 <br>
-{{form-field type="file-input"
-             options=fileInputOptions
-             object=object
-             propertyPath="files"
-             updated=(action "update")
-             disabled=disabled}}
-<br>
 {{paper-form-field type="text-field"
                    object=object
                    propertyPath="text"
@@ -69,5 +62,12 @@
 {{paper-form-field type="number-field"
                    object=object
                    propertyPath="number"
+                   updated=(action "update")
+                   disabled=disabled}}
+<br>
+{{paper-form-field type="file-input"
+                   options=fileInputOptions
+                   object=object
+                   propertyPath="files"
                    updated=(action "update")
                    disabled=disabled}}

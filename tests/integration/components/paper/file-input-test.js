@@ -4,11 +4,11 @@ import hbs                    from 'htmlbars-inline-precompile';
 import { setupRenderingTest } from 'ember-qunit';
 import { module, test }       from 'qunit';
 
-module('Integration | Component | {{file-input}}', function(hooks) {
+module('Integration | Component | {{paper/file-input}}', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
-    await render(hbs`{{file-input}}`);
+    await render(hbs`{{paper/file-input}}`);
     assert.ok(find('button'), 'shows a button');
     assert.ok(find('button > i.fa.fa-upload'), 'shows default icon in button');
     assert.ok(find('input[type=file]'), 'Has (hidden) file input');
@@ -17,14 +17,15 @@ module('Integration | Component | {{file-input}}', function(hooks) {
   });
 
   test('sets `accept` attribute on input', async function(assert) {
-    await render(hbs`{{file-input}}`);
+    this.set('type', 'null');
+
+    await render(hbs`{{paper/file-input type=type}}`);
 
     let $input = find('input');
     assert.equal($input.getAttribute('accept'), '*/*',
       'accept all files by default');
 
     this.set('type', 'foobar');
-    await render(hbs`{{file-input type=type}}`);
     $input = find('input');
 
     assert.equal($input.getAttribute('accept'), '*/*',
@@ -41,17 +42,21 @@ module('Integration | Component | {{file-input}}', function(hooks) {
     this.set('type', 'audio');
     assert.equal($input.getAttribute('accept'), 'audio/*',
       'accept all audio files by when type is audio');
+  });
 
+  test('accept attribute on input is overridden by component attribute',
+  async function(assert) {
+    this.set('type', 'image');
     this.set('accept', '.foo');
-    await render(hbs`{{file-input accept=accept}}`);
-    $input = find('input');
-    assert.equal($input.getAttribute('accept'), '.foo',
+
+    await render(hbs`{{paper/file-input type=type accept=accept}}`);
+    assert.equal(find('input').getAttribute('accept'), '.foo',
       'accept attribut is overridden by component attribute');
   });
 
   test('shows `clear` button', async function(assert) {
     this.set('fileCount', 0);
-    await render(hbs`{{file-input fileCount=fileCount}}`);
+    await render(hbs`{{paper/file-input fileCount=fileCount}}`);
     assert.notOk(find('.file-input__clear'),
       'shows no `clear` button when no files are selected');
 
@@ -63,7 +68,7 @@ module('Integration | Component | {{file-input}}', function(hooks) {
   test('shows file names', async function(assert) {
     this.set('fileNames', ['foo.bar', 'baz.bar']);
     this.set('fileCount', 0);
-    await render(hbs`{{file-input fileCount=fileCount fileNames=fileNames}}`);
+    await render(hbs`{{paper/file-input fileCount=fileCount fileNames=fileNames}}`);
 
     assert.notOk(find('.file-input__file-names'),
      'shows no file names when no files are selected');
@@ -82,7 +87,7 @@ module('Integration | Component | {{file-input}}', function(hooks) {
   test('shows number of files', async function(assert) {
     this.set('fileCount', 0);
 
-    await render(hbs`{{file-input fileCount=fileCount multiple=true}}`);
+    await render(hbs`{{paper/file-input fileCount=fileCount multiple=true}}`);
     let $fileCount = find('.file-input__file-count');
 
     assert.notOk($fileCount, 'shows no count when no files are selected');
@@ -102,7 +107,7 @@ module('Integration | Component | {{file-input}}', function(hooks) {
     this.set('multiple', false);
     this.set('type', 'image');
 
-    await render(hbs`{{file-input fileCount=fileCount
+    await render(hbs`{{paper/file-input fileCount=fileCount
                                   multiple=multiple
                                   type=type}}`);
 
