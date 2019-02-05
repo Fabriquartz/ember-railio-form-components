@@ -84,15 +84,15 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
     let $items = $('.ember-power-select-options li');
 
     assert.equal($items.length, 1, 'by default no content');
-    assert.equal($items[0].innerText, 'Type to search');
+    assert.equal($items[0].textContent.trim(), 'Type to search');
 
     await typeInSearch('bar');
 
     $items = $('.ember-power-select-options li');
 
     assert.equal($items.length, 2, 'finds searched model by label');
-    assert.equal($items[0].innerText, 'bar', 'first item');
-    assert.equal($items[1].innerText, 'bar second', 'second item');
+    assert.equal($items[0].textContent.trim(), 'bar', 'first item');
+    assert.equal($items[1].textContent.trim(), 'bar second', 'second item');
     await clickTrigger();
   });
 
@@ -108,18 +108,18 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
     let $items = $('.ember-power-select-dropdown li');
 
     assert.equal($items.length, 4, 'gets all objects of type on preload');
-    assert.equal($items[0].innerText, 'chad');
-    assert.equal($items[1].innerText, 'bar');
-    assert.equal($items[2].innerText, 'dave');
-    assert.equal($items[3].innerText, 'bar second');
+    assert.equal($items[0].textContent.trim(), 'chad');
+    assert.equal($items[1].textContent.trim(), 'bar');
+    assert.equal($items[2].textContent.trim(), 'dave');
+    assert.equal($items[3].textContent.trim(), 'bar second');
 
     await fillIn('.ember-power-select-dropdown input', 'bar');
 
     $items = $('.ember-power-select-dropdown li');
 
     assert.equal($items.length, 2, 'finds searched model by label');
-    assert.equal($items[0].innerText, 'bar', 'first item');
-    assert.equal($items[1].innerText, 'bar second', 'second item');
+    assert.equal($items[0].textContent.trim(), 'bar', 'first item');
+    assert.equal($items[1].textContent.trim(), 'bar second', 'second item');
     await clickTrigger();
   });
 
@@ -135,8 +135,8 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
     let $items = $('.ember-power-select-dropdown li');
 
     assert.equal($items.length, 2, 'gets given amount of objects');
-    assert.equal($items[0].innerText, 'chad');
-    assert.equal($items[1].innerText, 'bar');
+    assert.equal($items[0].textContent.trim(), 'chad');
+    assert.equal($items[1].textContent.trim(), 'bar');
 
   });
 
@@ -162,7 +162,7 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
     $items = $('.ember-power-select-dropdown li');
 
     assert.equal($items.length, 1, 'finds searched model after preload');
-    assert.equal($items[0].innerText, 'dave');
+    assert.equal($items[0].textContent.trim(), 'dave');
     await clickTrigger();
   });
 
@@ -225,8 +225,8 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
 
     let $items = $('.ember-power-select-dropdown li');
 
-    assert.equal($items[0].innerText, 'bar',  'preloaded item 1 sorted');
-    assert.equal($items[1].innerText, 'chad', 'preloaded item 2 sorted');
+    assert.equal($items[0].textContent.trim(), 'bar',  'preloaded item 1 sorted');
+    assert.equal($items[1].textContent.trim(), 'chad', 'preloaded item 2 sorted');
     await clickTrigger();
   });
 
@@ -246,23 +246,27 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
 
     let $items = $('.ember-power-select-dropdown li');
 
-    assert.equal($items[0].innerText, 'bar',        'reloaded first item sorted');
-    assert.equal($items[1].innerText, 'bar second', 'reloaded second item sorted');
-    assert.equal($items[2].innerText, 'chad',       'reloaded third item sorted');
-    assert.equal($items[3].innerText, 'dave',       'reloaded fourth item sorted');
+    assert.equal($items[0].textContent.trim(), 'bar',
+      'reloaded first item sorted');
+    assert.equal($items[1].textContent.trim(), 'bar second',
+      'reloaded second item sorted');
+    assert.equal($items[2].textContent.trim(), 'chad',
+      'reloaded third item sorted');
+    assert.equal($items[3].textContent.trim(), 'dave',
+      'reloaded fourth item sorted');
     await clickTrigger();
   });
 
   test('Shows selected item', async function(assert) {
     set(this, 'currentFoo', EmberObject.create({ id: 6, name: 'bar test' }));
     await render(hbs`{{model-picker value=currentFoo
-                                   updated=(action 'update')
-                                   model="foo"
-                                   optionLabelPath="name"
-                                   searchProperty="name"}}`);
+                                    updated=(action 'update')
+                                    model="foo"
+                                    optionLabelPath="name"
+                                    searchProperty="name"}}`);
 
     let $selectedOption = getSelected();
-    assert.equal($selectedOption[0].innerText.trim().indexOf('bar test'), 0);
+    assert.equal($selectedOption[0].textContent.trim().indexOf('bar test'), 0);
     await clickTrigger();
   });
 

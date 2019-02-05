@@ -62,7 +62,7 @@ export default LazyTextField.extend({
       let hours   = _value.hours();
       let minutes = _value.minute();
 
-      value = moment(value, format).add('hours', hours).add('minutes', minutes);
+      value = moment(value, format).add(hours, 'hours').add(minutes, 'minutes');
       this._super(value.toDate());
     }
   }

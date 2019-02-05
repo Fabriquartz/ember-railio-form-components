@@ -36,8 +36,8 @@ module('Integration | Component | {{select-auto-complete}}', function(hooks) {
     $items = $('.ember-power-select-options li');
     assert.equal($items.length, 2);
 
-    assert.equal($items[0].innerText.trim(), 'dog');
-    assert.equal($items[1].innerText.trim(), 'lion');
+    assert.equal($items[0].textContent.trim(), 'dog');
+    assert.equal($items[1].textContent.trim(), 'lion');
   });
 
   test('calls onQueryChange', async function(assert) {
