@@ -1,6 +1,6 @@
 {
   "name": "ember-railio-form-components",
-  "version": "0.0.67",
+  "version": "0.0.68",
   "description": "Addon for all shared railio components.",
   "scripts": {
     "start": "ember server",
