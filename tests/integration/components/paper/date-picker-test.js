@@ -9,19 +9,19 @@ module('Integration | Component | {{paper/date-picker}}', function(hooks) {
 
   hooks.beforeEach(function() {
     this.set('value', new Date(2018, 9, 10, 0, 0));
-    this.actions = { update: (value) => {
-      this.set('value', value);
-    } };
+    this.actions = {
+      update: (value) => { this.set('value', value); }
+    };
   });
 
   test('date gets formatted to date string', async function(assert) {
-    this.set('value', new Date(2015, 0, 1));
+    this.set('value', new Date(2015, 0, 28));
     await render(hbs`{{paper/date-picker value=value updated=(action "update")}}`);
     let $input = find('input');
-    assert.equal($input.value, '01-01-15');
+    assert.equal($input.value, '28-01-15');
   });
 
-  test('typing in an empty value', async function(assert) {
+  test('Filling in an empty value', async function(assert) {
     await render(hbs`{{paper/date-picker value=value updated=(action "update")}}`);
 
     let $input = find('input');
@@ -40,14 +40,14 @@ module('Integration | Component | {{paper/date-picker}}', function(hooks) {
     let $input = find('input');
 
     await focus($input);
-    await fillIn(find('input'), '05-05-15');
+    await fillIn(find('input'), '23-05-15');
     await blur('input');
 
-    assert.equal(find('input').value, '05-05-15');
-    assert.equal(+this.get('value'), +(new Date(2015, 4, 5)));
+    assert.equal(find('input').value, '23-05-15');
+    assert.equal(+this.get('value'), +(new Date(2015, 4, 23)));
   });
 
-  test('typing in date shorthands', async function(assert) {
+  test('Filling in date shorthands', async function(assert) {
     await render(hbs`{{paper/date-picker value=value updated=(action "update")}}`);
 
     let $input  = find('input');
@@ -56,87 +56,109 @@ module('Integration | Component | {{paper/date-picker}}', function(hooks) {
     let month   = `0${(new Date()).getMonth() + 1}`.substr(-2);
 
     await focus($input);
-    await fillIn($input, '050515');
+    await fillIn($input, '23052015');
     await blur($input);
 
-    assert.equal($input.value, '05-05-15');
-    assert.equal(+this.get('value'), +(new Date(2015, 4, 5)));
+    assert.equal($input.value, '23-05-15',
+                 'Formats 8-digit shorthand to date string');
+    assert.equal(+this.get('value'), +(new Date(2015, 4, 23)),
+                 'Formats 8-digit shorthand to date');
 
     await focus($input);
     await fillIn($input, '150515');
     await blur($input);
 
-    assert.equal($input.value, '15-05-15');
-    assert.equal(+this.get('value'), +(new Date(2015, 4, 15)));
+    assert.equal($input.value, '15-05-15',
+                 'Formats 6-digit shorthand to date string');
+    assert.equal(+this.get('value'), +(new Date(2015, 4, 15)),
+                 'Formats 6-digit shorthand to date');
 
     await focus($input);
-    await fillIn($input, '50515');
+    await fillIn($input, '90515');
     await blur($input);
 
-    assert.equal($input.value, '05-05-15');
-    assert.equal(+this.get('value'), +(new Date(2015, 4, 5)));
+    assert.equal($input.value, '09-05-15',
+                 'Formats 5-digit shorthand to date string');
+    assert.equal(+this.get('value'), +(new Date(2015, 4, 9)),
+                 'Formats 5-digit shorthand to date');
 
     await focus($input);
-    await fillIn($input, '1505');
+    await fillIn($input, '2305');
     await blur($input);
 
-    assert.equal($input.value, `15-05-${yearStr}`);
-    assert.equal(+this.get('value'), +(new Date(year, 4, 15)));
+    assert.equal($input.value, `23-05-${yearStr}`,
+                 'Formats 4-digit shorthand to date string');
+    assert.equal(+this.get('value'), +(new Date(year, 4, 23)),
+                 'Formats 4-digit shorthand to date');
 
     await focus($input);
-    await fillIn($input, '505');
+    await fillIn($input, '705');
     await blur($input);
 
-    assert.equal($input.value, `05-05-${yearStr}`);
-    assert.equal(+this.get('value'), +(new Date(year, 4, 5)));
+    assert.equal($input.value, `07-05-${yearStr}`,
+                 'Formats 3-digit shorthand to date string');
+    assert.equal(+this.get('value'), +(new Date(year, 4, 7)),
+                 'Formats 3-digit shorthand to date');
 
     await focus($input);
     await fillIn($input, '4');
     await blur($input);
 
-    assert.equal($input.value, `04-${month}-${yearStr}`);
-    assert.equal(+this.get('value'), +(new Date(year, month - 1, 4)));
+    assert.equal($input.value, `04-${month}-${yearStr}`,
+                 'Formats 1-digit shorthand to date string');
+    assert.equal(+this.get('value'), +(new Date(year, month - 1, 4)),
+                 'Formats 1-digit shorthand to date');
   });
 
-  test('typing in with different separators', async function(assert) {
+  test('Filling in with different separators', async function(assert) {
     await render(hbs`{{paper/date-picker value=value updated=(action "update")}}`);
 
     let $input = find('input');
 
     await focus($input);
-    await fillIn($input, '05;05;15');
+    await fillIn($input, '07;05;15');
     await blur($input);
 
-    assert.equal($input.value, '05-05-15');
-    assert.equal(+this.get('value'), +(new Date(2015, 4, 5)));
+    assert.equal($input.value, '07-05-15',
+                 'Format date string that contains ;');
+    assert.equal(+this.get('value'), +(new Date(2015, 4, 7)),
+                 'Can format date string with ; to date');
 
     await focus($input);
     await fillIn($input, '06/05/15');
     await blur($input);
 
-    assert.equal($input.value, '06-05-15');
-    assert.equal(+this.get('value'), +(new Date(2015, 4, 6)));
+    assert.equal($input.value, '06-05-15',
+                 'Format date string that contains /');
+    assert.equal(+this.get('value'), +(new Date(2015, 4, 6)),
+                 'Can format date string with / to date');
 
     await focus($input);
-    await fillIn($input, '05\\05\\15');
+    await fillIn($input, '07\\05\\15');
     await blur($input);
 
-    assert.equal($input.value, '05-05-15');
-    assert.equal(+this.get('value'), +(new Date(2015, 4, 5)));
+    assert.equal($input.value, '07-05-15',
+                 'Format date string that contains \\');
+    assert.equal(+this.get('value'), +(new Date(2015, 4, 7)),
+                 'Can format date string with \\ to date');
 
     await focus($input);
     await fillIn($input, '06,05,15');
     await blur($input);
 
-    assert.equal($input.value, '06-05-15');
-    assert.equal(+this.get('value'), +(new Date(2015, 4, 6)));
+    assert.equal($input.value, '06-05-15',
+                 'Format date string that contains ,');
+    assert.equal(+this.get('value'), +(new Date(2015, 4, 6)),
+                 'Can format date string with , to date');
 
     await focus($input);
-    await fillIn($input, '05.05.15');
+    await fillIn($input, '07.05.15');
     await blur($input);
 
-    assert.equal($input.value, '05-05-15');
-    assert.equal(+this.get('value'), +(new Date(2015, 4, 5)));
+    assert.equal($input.value, '07-05-15',
+                 'Format date string that contains .');
+    assert.equal(+this.get('value'), +(new Date(2015, 4, 7)),
+                 'Can format date string with . to date');
   });
 
   test('arrow up increases date by one day', async function(assert) {

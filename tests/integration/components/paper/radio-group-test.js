@@ -15,32 +15,31 @@ module('Integration | Component | {{paper/radio-group}}', function(hooks) {
     let $options = findAll('md-radio-button');
 
     assert.equal($options.length, 2, 'shows all options');
-    assert.equal($options[0].innerText.trim(), 'Option 1', 'shows option 1 value');
-    assert.equal($options[1].innerText.trim(), 'Option 2', 'shows option 2 value');
+    assert.equal($options[0].textContent.trim(), 'Option 1', 'shows option 1 value');
+    assert.equal($options[1].textContent.trim(), 'Option 2', 'shows option 2 value');
   });
 
   test('value selected', async function(assert) {
-    let selectValue =  'Option 2';
-    this.set('options', ['Option 1', selectValue]);
-    this.set('selectedOption', selectValue);
+    let options = this.set('options', ['Option 1', 'Option 2']);
+    this.set('selectedOption', options[1]);
 
     await render(hbs`{{paper/radio-group selectedOption=selectedOption
                                          options=options}}`);
 
     let $selectedOption = findAll('md-radio-button.md-checked');
     assert.equal($selectedOption.length, 1);
-    assert.equal($selectedOption[0].innerText.trim(), 'Option 2');
+    assert.equal($selectedOption[0].textContent.trim(), 'Option 2');
   });
 
   test('select value calls updated action', async function(assert) {
     assert.expect(1);
 
-    let selectValue =  'Option 2';
-    this.set('options', ['Option 1', selectValue, 'Option 3']);
+    let options = this.set('options', ['Option 1', 'Option 2', 'Option 3']);
+
     this.set('selection', null);
 
     this.set('updated', function(value) {
-      assert.equal(value, selectValue, 'calls update action with clicked value');
+      assert.equal(value, options[1], 'calls update action with clicked value');
     });
 
     await render(hbs`{{paper/radio-group value=selection
@@ -68,7 +67,7 @@ module('Integration | Component | {{paper/radio-group}}', function(hooks) {
                                          valuePropertyPath="value"
                                          updated=updated}}`);
 
-    assert.equal(findAll('md-radio-button')[1].innerText.trim(), 'Option 2',
+    assert.equal(findAll('md-radio-button')[1].textContent.trim(), 'Option 2',
                  'shows option 2 label');
 
     click(findAll('md-radio-button')[1]);

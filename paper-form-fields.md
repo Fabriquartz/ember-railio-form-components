@@ -47,8 +47,8 @@ the number by one. It _won't_ round the number, so it's useable with floats.
 default it formats a number with a space as thousands separator and a comma as decimal
 separator, like so: '17 009,87'.
 
-**serialize(value)** Get the value and formats it before the actual value is
-updated. Be default it formats a number to an actual float. So, '17 009,87' becomes
+**serialize(value)** Gets the value and formats it before the actual value is
+updated. By default it formats a number to an actual float. So, '17 009,87' becomes
 '17009.87'.
 
 #### Example
@@ -94,7 +94,7 @@ you press the escape key. There's no default for this function.
 **format(value)** Gets the value and formats it (only for displaying). There's no
 default function.
 
-**serialize(value)** Get the value and formats it before the actual value is
+**serialize(value)** Gets the value and formats it before the actual value is
 updated. There's no default function.
 
 ### check-box
@@ -108,13 +108,13 @@ _not_ render an actual HTML input[type="radio"] element. There are no attributes
 methods to override. Possible attributes and methods for this field include:
 
 **options (required)** This array can contain number, strings or objects. If you have an array
-objects, you need te pass a labelPath too.
+of objects, you need te pass a labelPropertyPath too.
 
-**labelPath** If the options contain objects, you have to pass a propertyPath as string
+**labelPropertyPath** If the options contain objects, you have to pass a propertyPath as string
 to tell which attribute of the object should be displayed as the label of the option.
 
 ### Auto-complete
-Renders a md-autocomplete that contains a ember-power-select.
+Renders an md-autocomplete that contains a ember-power-select.
 
 **multiSelect** If you want to select more than one option, you can pass true. It will
 render the 'paper-chips' component instead of the 'paper-autocomplete' component. The
@@ -123,7 +123,7 @@ default is false.
 **enableSelectAll** You can display a 'select all' and 'deselect all' button by passing
 true. The default is false. Only works when 'multiSelect' is enabled.
 
-**allowClear** Wether the button to clear the input field should be available or not.
+**allowClear** Whether the button to clear the input field should be available or not.
 Default is true.
 
 **readOnly** A boolean that can disable the autocomplete to make it a read only.
@@ -137,9 +137,9 @@ an error message when the input field is empty. Default is false.
 **searchPath (required)** You have to pass a propertyPath as string to tell on which
 attribute you want to search.
 
-**labelPath (required)** You have to pass a propertyPath as string to tell on
+**labelPropertyPath (required)** You have to pass a propertyPath as string to tell
 which attribute of the object should be displayed as the label of the option.
 
 **doubleClickItem(value)** This action will be called after a doublick on an option.
-There's no default function
+There's no default function.
 

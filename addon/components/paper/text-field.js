@@ -13,13 +13,8 @@ export default Component.extend(formFieldOptions, {
   inputType:  'text',
   lazy:       false,
 
-  format(value) {
-    return value;
-  },
-
-  serialize(value) {
-    return value;
-  },
+  format:    (value) => value,
+  serialize: (value) => value,
 
   focusIn() {
     set(this, 'hasFocus', true);
