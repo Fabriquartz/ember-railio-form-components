@@ -1,4 +1,4 @@
-import { render, find }       from '@ember/test-helpers';
+import { render, find } from '@ember/test-helpers';
 
 import hbs                    from 'htmlbars-inline-precompile';
 import { setupRenderingTest } from 'ember-qunit';
@@ -29,19 +29,19 @@ module('Integration | Component | {{paper/file-input}}', function(hooks) {
     $input = find('input');
 
     assert.equal($input.getAttribute('accept'), '*/*',
-      'accept all files by when type is not a regular file type');
+      'accept all files when type is not a regular file type');
 
     this.set('type', 'image');
     assert.equal($input.getAttribute('accept'), 'image/*',
-      'accept all image files by when type is image');
+      'accept all image files when type is image');
 
     this.set('type', 'video');
     assert.equal($input.getAttribute('accept'), 'video/*',
-      'accept all video files by when type is video');
+      'accept all video files when type is video');
 
     this.set('type', 'audio');
     assert.equal($input.getAttribute('accept'), 'audio/*',
-      'accept all audio files by when type is audio');
+      'accept all audio files when type is audio');
   });
 
   test('accept attribute on input is overridden by component attribute',
@@ -51,7 +51,7 @@ module('Integration | Component | {{paper/file-input}}', function(hooks) {
 
     await render(hbs`{{paper/file-input type=type accept=accept}}`);
     assert.equal(find('input').getAttribute('accept'), '.foo',
-      'accept attribut is overridden by component attribute');
+      'accept attribute is overridden by component attribute');
   });
 
   test('shows `clear` button', async function(assert) {

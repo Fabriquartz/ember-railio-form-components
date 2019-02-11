@@ -5,7 +5,7 @@ import { get, set, computed } from '@ember/object';
 import invokeAction from 'ember-invoke-action';
 
 import formFieldOptions from '../../mixins/form-field-options';
-import layout           from '../../templates/components/file-input';
+import layout           from '../../templates/components/paper/file-input';
 
 export default Component.extend(formFieldOptions, {
   layout,

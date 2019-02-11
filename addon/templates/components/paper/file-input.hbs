@@ -6,9 +6,9 @@
 {{/paper-button}}
 
 {{#if fileCount}}
-  <label class="file-input__file-count">
+  <span class="file-input__file-count">
     {{pluralize fileCount type without-count=(not multiple)}} selected
-  </label>
+  </span>
   <ul class="file-input__file-names">
     {{#each fileNames as |fileName|}}
       <li>{{fileName}}</li>
@@ -21,9 +21,9 @@
     {{/paper-tooltip}}
   </div>
 {{else}}
-  <label class="file-input__no-files">
+  <span class="file-input__no-files">
     No {{if multiple (pluralize type) (singularize type)}} selected
-  </label>
+  </span>
 {{/if}}
 
 {{input type="file"
