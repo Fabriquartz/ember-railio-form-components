@@ -25,6 +25,10 @@ export default Component.extend({
     sizeOnInput: true
   },
 
+  fileInputOptions: {
+    multiple: true
+  },
+
   actions: {
     update(object, propertyPath, value) {
       object.set(propertyPath, value);

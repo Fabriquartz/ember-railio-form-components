@@ -39,9 +39,9 @@ module('Integration | Component | {{auto-complete}}', function(hooks) {
 
     assert.equal($items.length, 3, 'content length');
 
-    assert.equal($items[0].innerText.trim(), 'a', 'shows first item');
-    assert.equal($items[1].innerText.trim(), 'b', 'shows second item');
-    assert.equal($items[2].innerText.trim(), 'c', 'shows third item');
+    assert.equal($items[0].textContent.trim(), 'a', 'shows first item');
+    assert.equal($items[1].textContent.trim(), 'b', 'shows second item');
+    assert.equal($items[2].textContent.trim(), 'c', 'shows third item');
   });
 
   test('sorts the content', async function(assert) {
@@ -118,9 +118,9 @@ module('Integration | Component | {{auto-complete}}', function(hooks) {
 
     let $items = $('.ember-power-select-dropdown li');
 
-    assert.equal($items[0].innerText.trim(), 'a');
-    assert.equal($items[1].innerText.trim(), 'b');
-    assert.equal($items[2].innerText.trim(), 'c');
+    assert.equal($items[0].textContent.trim(), 'a');
+    assert.equal($items[1].textContent.trim(), 'b');
+    assert.equal($items[2].textContent.trim(), 'c');
   });
 
   test('renders the search input on open', async function(assert) {
@@ -195,7 +195,7 @@ module('Integration | Component | {{auto-complete}}', function(hooks) {
     let $selection = getSelected();
 
     assert.equal($selection.length, 1);
-    assert.equal($selection[0].innerText.trim(), 'b', 'value selected');
+    assert.equal($selection[0].textContent.trim(), 'b', 'value selected');
   });
 
   test('typing sends out onQueryChange event', async function(assert) {
@@ -251,7 +251,7 @@ module('Integration | Component | {{auto-complete}}', function(hooks) {
 
     assert.equal($items.length, 2);
     assert.equal($highlighted.length, 1);
-    assert.equal($highlighted[0].innerText.trim(), 'Alex', 'first item selected');
+    assert.equal($highlighted[0].textContent.trim(), 'Alex', 'first item selected');
   });
 
   test('remove button clears the selection', async function(assert) {
@@ -343,7 +343,7 @@ module('Integration | Component | {{auto-complete}}', function(hooks) {
         this.set('selection', option);
       });
 
-      assert.equal(getSelected()[0].innerText.trim().indexOf('b'), 0,
+      assert.equal(getSelected()[0].textContent.trim().indexOf('b'), 0,
                    'change selected item');
 
       run(() => {
@@ -360,7 +360,7 @@ module('Integration | Component | {{auto-complete}}', function(hooks) {
                                     prompt="Select your item"
                                     optionLabelPath="foo"}}`);
 
-    let autoCompleteText = $('.auto-complete')[0].innerText.trim();
+    let autoCompleteText = $('.auto-complete')[0].textContent.trim();
 
     assert.equal(autoCompleteText, 'Select your item');
   });

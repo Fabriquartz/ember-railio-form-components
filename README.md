@@ -44,6 +44,19 @@ Indicates a boolean value, so can only be false or true.
 
 Needs a datetime as a value, and uses a datepicker for selecting the date. Also you are able to set the current datetime and empty the value.
 
+#### file-input
+
+Button that opens a file dialog, and uses an `EmberArray` containing the files selected by the user (as native [`File`](https://developer.mozilla.org/docs/Web/API/File) objects) as a value.
+
+Unlike the other fields this field does not show an initial value, as it can only handle files after the user selects them in a browser dialog (its behaviour mimics that of an `HTMLInputElement` with `type=file`)
+
+Available options: 
+ - multiple: true/false, wether or not the user should be able to select multiple files, defaults to `false`
+ - type: string, used in labels and to infer accepted files, defaults to `'file'`
+ - accept: [unique file type specifier](https://developer.mozilla.org//docs/Web/HTML/Element/input/file#Unique_file_type_specifiers), accepted file type(s) (automatically inferred from `type` when it is one of image, video or audio) defaults to `'*/*'`
+ - iconComponent: string, name of the component to use to render an icon in the button, defaults to 'fa-icon'
+ - iconName: string, name passed to the icon component, defaults to `'upload'`
+
 #### Components for use with block-form
 
 Other form-components that are need to be used with the block-form:

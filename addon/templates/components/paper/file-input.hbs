@@ -1,0 +1,32 @@
+{{#paper-button class="file-input__button" disabled=disabled iconButton=true raised=true onClick=(action "triggerInput")}}
+  {{component iconComponent iconName}}
+  {{#paper-tooltip}}
+    Select {{if multiple (pluralize type) (singularize type)}}
+  {{/paper-tooltip}}
+{{/paper-button}}
+
+{{#if fileCount}}
+  <span class="file-input__file-count">
+    {{pluralize fileCount type without-count=(not multiple)}} selected
+  </span>
+  <ul class="file-input__file-names">
+    {{#each fileNames as |fileName|}}
+      <li>{{fileName}}</li>
+    {{/each}}
+  </ul>
+  <div class="file-input__clear" {{action "clear"}}>
+    {{fa-icon "times"}}
+    {{#paper-tooltip}}
+      Clear {{pluralize fileCount type without-count=(not multiple)}}
+    {{/paper-tooltip}}
+  </div>
+{{else}}
+  <span class="file-input__no-files">
+    No {{if multiple (pluralize type) (singularize type)}} selected
+  </span>
+{{/if}}
+
+{{input type="file"
+        accept=accept
+        multiple=multiple
+        change=(action "change")}}

@@ -17,8 +17,8 @@ test('shows options', function(assert) {
   let $options = this.$('.radio-select__option');
 
   assert.equal($options.length, 2, 'shows all options');
-  assert.equal($options[0].innerText.trim(), 'Option 1', 'shows option 1 value');
-  assert.equal($options[1].innerText.trim(), 'Option 2', 'shows option 2 value');
+  assert.equal($options[0].textContent.trim(), 'Option 1', 'shows option 1 value');
+  assert.equal($options[1].textContent.trim(), 'Option 2', 'shows option 2 value');
 });
 
 test('value selected', function(assert) {
@@ -30,7 +30,7 @@ test('value selected', function(assert) {
 
   let $selectedOption = this.$('.radio-select__option--selected');
   assert.equal($selectedOption.length, 1);
-  assert.equal($selectedOption[0].innerText.trim(), 'Option 2');
+  assert.equal($selectedOption[0].textContent.trim(), 'Option 2');
 });
 
 test('select value calls updated action', function(assert) {
@@ -71,7 +71,7 @@ test('shows optionLabel and selects optionValue', function(assert) {
                                  updated=(action "updated")}}`);
 
   let $option = this.$('.radio-select__option:eq(1)');
-  assert.equal($option[0].innerText.trim(), 'Option 2', 'shows option 2 label');
+  assert.equal($option[0].textContent.trim(), 'Option 2', 'shows option 2 label');
   $option.trigger('click');
 });
 
@@ -102,11 +102,11 @@ test('works with form-field wrapper', function(assert) {
   let $options = this.$('.radio-select__option');
 
   assert.equal($options.length, 3);
-  assert.equal($options[0].innerText.trim(), 'Option 1', 'shows option 1 value');
+  assert.equal($options[0].textContent.trim(), 'Option 1', 'shows option 1 value');
 
   let $selectedOptions = this.$('.radio-select__option--selected');
   assert.equal($selectedOptions.length, 1);
-  assert.equal($selectedOptions[0].innerText.trim(), 'Option 1');
+  assert.equal($selectedOptions[0].textContent.trim(), 'Option 1');
 
   let $option = this.$('.radio-select__option:eq(1)');
   $option.trigger('click');
@@ -149,19 +149,19 @@ test('cycle true: shows only selection and changes on click', function(assert) {
   assert.equal($options.length, 1);
 
   assert.equal($options.eq(0).hasClass('radio-select__option--empty'), true);
-  assert.equal($options[0].innerText.trim(), 'No option selected');
+  assert.equal($options[0].textContent.trim(), 'No option selected');
 
   $options.eq(0).click();
 
   $options = this.$('.radio-select__option');
-  assert.equal($options[0].innerText.trim(), 'Option 1');
+  assert.equal($options[0].textContent.trim(), 'Option 1');
 
   $options.eq(0).click();
-  assert.equal($options[0].innerText.trim(), 'Option 2');
+  assert.equal($options[0].textContent.trim(), 'Option 2');
 
   $options.eq(0).click();
-  assert.equal($options[0].innerText.trim(), 'Option 3');
+  assert.equal($options[0].textContent.trim(), 'Option 3');
 
   $options.eq(0).click();
-  assert.equal($options[0].innerText.trim(), 'Option 1');
+  assert.equal($options[0].textContent.trim(), 'Option 1');
 });
