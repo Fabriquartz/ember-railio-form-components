@@ -65,6 +65,25 @@
                    updated=(action "update")
                    disabled=disabled}}
 <br>
+{{paper-form-field type="date-picker"
+                   object=object
+                   propertyPath="date"
+                   updated=(action "update")
+                   disabled=disabled}}
+<br>
+{{paper-form-field type="check-box"
+                   object=object
+                   propertyPath="boolean"
+                   updated=(action "update")
+                   disabled=disabled}}
+<br>
+{{paper-form-field type="radio-group"
+                   object=object
+                   propertyPath="radioSelect"
+                   options=paperRadioGroupOptions
+                   updated=(action "update")
+                   disabled=disabled}}
+<br>
 {{paper-form-field type="file-input"
                    options=fileInputOptions
                    object=object

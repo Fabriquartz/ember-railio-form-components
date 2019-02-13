@@ -1,0 +1,10 @@
+{{#paper-radio-group groupValue=(readonly selectedOption)
+                     onChange=(action "changed") as |group|}}
+  {{#each options as |option|}}
+    {{#group.radio value=(or (get option valuePropertyPath) option)
+                   primary=primary
+                   warn=warn}}
+      {{or (get option labelPropertyPath) option}}
+    {{/group.radio}}
+  {{/each}}
+{{/paper-radio-group}}

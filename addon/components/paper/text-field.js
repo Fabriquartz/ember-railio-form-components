@@ -1,12 +1,20 @@
 import Component     from '@ember/component';
-import { isPresent } from '@ember/utils';
 
 import formFieldOptions from
   'ember-railio-form-components/mixins/form-field-options';
 import { computed, get, set } from '@ember/object';
 
+function isFocusOutEvent(event) {
+  return event && event.type === 'focusout';
+}
+
 export default Component.extend(formFieldOptions, {
-  lazy: false,
+  layoutName: 'components/paper/input-field',
+  inputType:  'text',
+  lazy:       false,
+
+  format:    (value) => value,
+  serialize: (value) => value,
 
   focusIn() {
     set(this, 'hasFocus', true);
@@ -14,11 +22,7 @@ export default Component.extend(formFieldOptions, {
 
   focusOut(e) {
     set(this, 'hasFocus', false);
-
-    let value = get(this, '_value');
-    value = typeof this.format === 'function' ? this.format(value) : value;
-
-    this.send('changed', value, e);
+    this.send('changed', get(this, '_value'), e);
   },
 
   keyUp(e) {
@@ -28,11 +32,10 @@ export default Component.extend(formFieldOptions, {
 
   didReceiveAttrs() {
     this._super(...arguments);
+
     if (!get(this, 'hasFocus')) {
       let value = get(this, 'value');
-      value = typeof this.format === 'function' ? this.format(value) : value;
-
-      set(this, '_value', value);
+      set(this, '_value', this.format(value));
     }
   },
 
@@ -48,16 +51,16 @@ export default Component.extend(formFieldOptions, {
   }),
 
   actions: {
-    changed(value, event, lazy) {
-      lazy = isPresent(lazy) ? lazy : get(this, 'lazy');
+    changed(value, event, forceUpdate) {
+      let lazy = get(this, 'lazy');
 
-      set(this, '_value', value);
+      let _value = forceUpdate ||
+        isFocusOutEvent(event) ? this.format(value) : value;
 
-      if (typeof this.updated === 'function' &&
-          (!lazy || (event && event.type === 'focusout'))) {
+      set(this, '_value', _value);
 
-        let format = this.formatBeforeUpdate;
-        value = typeof format === 'function' ? format(value) : value;
+      if (forceUpdate || !lazy || isFocusOutEvent(event)) {
+        value = this.serialize(value);
         this.updated(value);
       }
     }

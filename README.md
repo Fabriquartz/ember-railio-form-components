@@ -34,7 +34,7 @@ Is like a normal text-field, but calls the update function not on each change / 
 
 #### number-field
 
-Is a lazy-text-field, but only accepts numeric values. You'll be able to use the arrow-up and arrow-down key to increase or decrease the value. 
+Is a lazy-text-field, but only accepts numeric values. You'll be able to use the arrow-up and arrow-down key to increase or decrease the value.
 
 #### check-box
 
