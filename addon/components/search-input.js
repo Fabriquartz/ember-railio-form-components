@@ -9,7 +9,7 @@ export default TextField.extend(TextInputMixin, formFieldOptions, {
 
   actions: {
     changed() {
-      this.sendAction('onQueryChange', this.get('value'));
+      this.onQueryChange && this.onQueryChange(this.get('value'));
     }
   }
 });

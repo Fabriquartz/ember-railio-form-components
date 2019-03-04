@@ -46,7 +46,7 @@ export default PaperTextField.extend({
     let hours   = _value.hours();
     let minutes = _value.minute();
 
-    return moment(value, format).add('hours', hours).add('minutes', minutes);
+    return moment(value, format).add(hours, 'hours').add(minutes, 'minutes');
   },
 
   actions: {
