@@ -11,7 +11,7 @@ export default Component.extend(formFieldOptions, {
 
   actions: {
     onQueryChange(query) {
-      this.sendAction('onQueryChange', query);
+      this.onQueryChange && this.onQueryChange(query);
     }
   }
 });
