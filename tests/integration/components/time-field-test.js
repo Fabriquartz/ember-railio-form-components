@@ -38,14 +38,14 @@ test('date gets formatted to a time string', function(assert) {
   this.set('value', new Date(2015, 0, 1, 12, 15));
   this.render(hbs`{{time-field value=value updated=(action "update")}}`);
 
-  let $input = this.$('input');
+  let $input = $('input');
   assert.equal($input.val(), '12:15');
 });
 
 test('null is a possibility', function(assert) {
   this.render(hbs`{{time-field}}`);
 
-  let $input = this.$('input');
+  let $input = $('input');
   assert.equal($input.val(), '');
 });
 
@@ -53,7 +53,7 @@ test('typing in a time updates the time part of a date', function(assert) {
   this.set('value', new Date(2015, 0, 1, 12, 15));
   this.render(hbs`{{time-field value=value updated=(action "update")}}`);
 
-  let $input = this.$('input');
+  let $input = $('input');
 
   fillIn($input, '12:30');
 
@@ -65,7 +65,7 @@ test('typing in an empty value', function(assert) {
   this.set('value', new Date(2015, 0, 1, 12, 15));
   this.render(hbs`{{time-field value=value updated=(action "update")}}`);
 
-  let $input = this.$('input');
+  let $input = $('input');
 
   fillIn($input, '');
 
@@ -77,7 +77,7 @@ test('typing in time shorthands', function(assert) {
   this.set('value', new Date(2015, 0, 1, 12, 15));
   this.render(hbs`{{time-field value=value updated=(action "update")}}`);
 
-  let $input = this.$('input');
+  let $input = $('input');
 
   fillIn($input, '1230');
 
@@ -104,7 +104,7 @@ test('typing in with different seperators', function(assert) {
   this.set('value', new Date(2015, 0, 1, 12, 15));
   this.render(hbs`{{time-field value=value updated=(action "update")}}`);
 
-  let $input = this.$('input');
+  let $input = $('input');
 
   fillIn($input, '12;30');
 
@@ -126,7 +126,7 @@ test('arrow up increases time by one hour', function(assert) {
   this.set('value', new Date(2015, 0, 1, 12, 15));
   this.render(hbs`{{time-field value=value updated=(action "update")}}`);
 
-  let $input = this.$('input');
+  let $input = $('input');
 
   arrowUp($input);
 
@@ -147,7 +147,7 @@ test('arrow down decreases time by one hour', function(assert) {
   this.set('value', new Date(2015, 0, 1, 12, 15));
   this.render(hbs`{{time-field value=value updated=(action "update")}}`);
 
-  let $input = this.$('input');
+  let $input = $('input');
 
   arrowDown($input);
 
@@ -168,7 +168,7 @@ test('shift + arrow up increases time by one minute', function(assert) {
   this.set('value', new Date(2015, 0, 1, 12, 15));
   this.render(hbs`{{time-field value=value updated=(action "update")}}`);
 
-  let $input = this.$('input');
+  let $input = $('input');
 
   arrowUp($input, true);
 
@@ -189,7 +189,7 @@ test('shift + arrow down decreases time by one minute', function(assert) {
   this.set('value', new Date(2015, 0, 1, 12, 15));
   this.render(hbs`{{time-field value=value updated=(action "update")}}`);
 
-  let $input = this.$('input');
+  let $input = $('input');
 
   arrowDown($input, true);
 

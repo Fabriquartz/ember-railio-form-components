@@ -1,19 +1,20 @@
-import Mixin from 'ember-metal/mixin';
-import get   from 'ember-metal/get';
-import set   from 'ember-metal/set';
+import Mixin        from '@ember/object/mixin';
+import { get, set } from '@ember/object';
+
+import $ from 'jquery';
 
 function handleChanged(event) {
   let value = this.readDOMAttr('value');
 
   if (typeof this.sanitizeValue === 'function') {
     let originalValue = value;
-    let [input]         = this.$();
+    let [input]       = $(this.element);
     let caretPos      = input.selectionStart;
 
     value = this.sanitizeValue(value);
 
     if (originalValue !== value) {
-      this.$().val(value);
+      $(this.element).val(value);
       input.setSelectionRange(caretPos - 1, caretPos - 1);
     }
   }

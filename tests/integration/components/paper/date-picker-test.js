@@ -4,6 +4,8 @@ import { render, find, focus,
   fillIn, blur, triggerKeyEvent } from '@ember/test-helpers';
 import { setupRenderingTest }     from 'ember-qunit';
 
+import $ from 'jquery';
+
 module('Integration | Component | {{paper/date-picker}}', function(hooks) {
   setupRenderingTest(hooks);
 
@@ -182,7 +184,7 @@ module('Integration | Component | {{paper/date-picker}}', function(hooks) {
     this.set('value', new Date(2015, 0));
     await render(hbs`{{paper/date-picker value=value updated=(action "update")}}`);
 
-    let $input = this.$('input');
+    let $input = $('input');
 
     await triggerKeyEvent('input', 'keydown', 38, { shiftKey: true });
 

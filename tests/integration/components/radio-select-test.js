@@ -4,6 +4,8 @@ import EmberObject from 'ember-object';
 import hbs from 'htmlbars-inline-precompile';
 import set from 'ember-metal/set';
 
+import $ from 'jquery';
+
 moduleForComponent('radio-select', 'Integration | Component | {{radio-select}}', {
   integration: true
 });
@@ -14,7 +16,7 @@ test('shows options', function(assert) {
 
   this.render(hbs`{{radio-select value=selection options=options}}`);
 
-  let $options = this.$('.radio-select__option');
+  let $options = $('.radio-select__option');
 
   assert.equal($options.length, 2, 'shows all options');
   assert.equal($options[0].textContent.trim(), 'Option 1', 'shows option 1 value');
@@ -28,7 +30,7 @@ test('value selected', function(assert) {
 
   this.render(hbs`{{radio-select value=selection options=options}}`);
 
-  let $selectedOption = this.$('.radio-select__option--selected');
+  let $selectedOption = $('.radio-select__option--selected');
   assert.equal($selectedOption.length, 1);
   assert.equal($selectedOption[0].textContent.trim(), 'Option 2');
 });
@@ -48,7 +50,7 @@ test('select value calls updated action', function(assert) {
                                  options=options
                                  updated=(action 'updated')}}`);
 
-  let $option = this.$('.radio-select__option:eq(1)');
+  let $option = $('.radio-select__option:eq(1)');
   $option.trigger('click');
 });
 
@@ -70,7 +72,7 @@ test('shows optionLabel and selects optionValue', function(assert) {
                                  optionValuePath="value"
                                  updated=(action "updated")}}`);
 
-  let $option = this.$('.radio-select__option:eq(1)');
+  let $option = $('.radio-select__option:eq(1)');
   assert.equal($option[0].textContent.trim(), 'Option 2', 'shows option 2 label');
   $option.trigger('click');
 });
@@ -99,16 +101,16 @@ test('works with form-field wrapper', function(assert) {
                      updated=updated}}
     {{/form-field}}`);
 
-  let $options = this.$('.radio-select__option');
+  let $options = $('.radio-select__option');
 
   assert.equal($options.length, 3);
   assert.equal($options[0].textContent.trim(), 'Option 1', 'shows option 1 value');
 
-  let $selectedOptions = this.$('.radio-select__option--selected');
+  let $selectedOptions = $('.radio-select__option--selected');
   assert.equal($selectedOptions.length, 1);
   assert.equal($selectedOptions[0].textContent.trim(), 'Option 1');
 
-  let $option = this.$('.radio-select__option:eq(1)');
+  let $option = $('.radio-select__option:eq(1)');
   $option.trigger('click');
 
   assert.equal(this.get('object.selection'), 'Option 2', 'selected option set');
@@ -122,12 +124,12 @@ test('shows icon', function(assert) {
                                  options=options
                                  showIcon=showIcon}}`);
 
-  let $icons = this.$('.radio-select__option .fa');
+  let $icons = $('.radio-select__option .fa');
   assert.equal($icons.length, 2);
 
   this.set('showIcon', false);
 
-  $icons = this.$('.radio-select__option .fa');
+  $icons = $('.radio-select__option .fa');
   assert.equal($icons.length, 0);
 });
 
@@ -145,7 +147,7 @@ test('cycle true: shows only selection and changes on click', function(assert) {
                                  options=options
                                  updated=(action 'updated')}}`);
 
-  let $options = this.$('.radio-select__option');
+  let $options = $('.radio-select__option');
   assert.equal($options.length, 1);
 
   assert.equal($options.eq(0).hasClass('radio-select__option--empty'), true);
@@ -153,7 +155,7 @@ test('cycle true: shows only selection and changes on click', function(assert) {
 
   $options.eq(0).click();
 
-  $options = this.$('.radio-select__option');
+  $options = $('.radio-select__option');
   assert.equal($options[0].textContent.trim(), 'Option 1');
 
   $options.eq(0).click();

@@ -16,7 +16,7 @@ moduleForComponent('number-field', 'Integration | Component | {{number-field}}',
 test('empty sets value to null', function(assert) {
   this.render(hbs`{{number-field value=number}}`);
 
-  let $input = this.$('input');
+  let $input = $('input');
 
   run(() => {
     $input.val('');
@@ -31,7 +31,7 @@ test('value gets formatted with two decimals', function(assert) {
   this.set('number', 42);
   this.render(hbs`{{number-field value=number maxDecimals=2}}`);
 
-  let $input = this.$('input');
+  let $input = $('input');
   assert.equal($input.val(), '42,00');
 });
 
@@ -40,7 +40,7 @@ test('typing in value gets formatted', function(assert) {
     {{number-field maxDecimals="2" value=number updated=(action "update")}}
   `);
 
-  let $input = this.$('input');
+  let $input = $('input');
 
   run(() => {
     $input.trigger('focusin');
@@ -58,7 +58,7 @@ test('arrow up increases value by one', function(assert) {
     {{number-field value=number updated=(action "update")}}
   `);
 
-  let $input = this.$('input');
+  let $input = $('input');
   assert.equal($input.val(), '1,345');
 
   run(() => {
@@ -77,7 +77,7 @@ test('arrow up when empty sets value to 1', function(assert) {
     {{number-field value=number updated=(action "update")}}
   `);
 
-  let $input = this.$('input');
+  let $input = $('input');
   assert.equal($input.val(), '');
 
   run(() => {
@@ -97,7 +97,7 @@ test('arrow down decreases value by one', function(assert) {
     {{number-field value=number updated=(action "update")}}
   `);
 
-  let $input = this.$('input');
+  let $input = $('input');
   assert.equal($input.val(), '8,456');
 
   run(() => {
@@ -116,7 +116,7 @@ test('arrow down when empty sets value to -1', function(assert) {
     {{number-field value=number updated=(action "update")}}
   `);
 
-  let $input = this.$('input');
+  let $input = $('input');
   assert.equal($input.val(), '');
 
   run(() => {
@@ -136,7 +136,7 @@ test('arrow down to negative', function(assert) {
     {{number-field value=number updated=(action "update")}}
   `);
 
-  let $input = this.$('input');
+  let $input = $('input');
 
   run(() => {
     $input.trigger('focusin');
@@ -168,7 +168,7 @@ test('arrow up from negative to positive', function(assert) {
     {{number-field value=number updated=(action "update")}}
   `);
 
-  let $input = this.$('input');
+  let $input = $('input');
 
   run(() => {
     $input.trigger('focusin');

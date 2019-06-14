@@ -2,6 +2,8 @@ import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import run from 'ember-runloop';
 
+import $ from 'jquery';
+
 moduleForComponent('text-field', 'Integration | Component | {{text-field}}', {
   integration: true
 });
@@ -9,7 +11,7 @@ moduleForComponent('text-field', 'Integration | Component | {{text-field}}', {
 test('renders input with placeholder', function(assert) {
   this.render(hbs`{{text-field placeholder='Type your value here'}}`);
 
-  assert.equal(this.$('input')[0].getAttribute('placeholder'),
+  assert.equal($('input')[0].getAttribute('placeholder'),
                'Type your value here');
 });
 
@@ -17,7 +19,7 @@ test('input value is set to value', function(assert) {
   this.set('value', 'testing');
   this.render(hbs`{{text-field value=value}}`);
 
-  assert.equal(this.$('input').val(), 'testing');
+  assert.equal($('input').val(), 'testing');
 });
 
 test('changing value changes input text', function(assert) {
@@ -28,7 +30,7 @@ test('changing value changes input text', function(assert) {
     this.set('value', 'gnitset');
   });
 
-  assert.equal(this.$('input').val(), 'gnitset');
+  assert.equal($('input').val(), 'gnitset');
 });
 
 test(`typing doesn't change value but sends updated`, function(assert) {
@@ -41,7 +43,7 @@ test(`typing doesn't change value but sends updated`, function(assert) {
 
   this.render(hbs`{{text-field value=value updated=(action "update")}}`);
 
-  let $input = this.$('input');
+  let $input = $('input');
 
   run(() => {
     $input.val('x');
@@ -61,7 +63,7 @@ test('leaving the input triggers change', function(assert) {
 
   this.render(hbs`{{text-field value=value updated=(action "update")}}`);
 
-  let $input = this.$('input');
+  let $input = $('input');
 
   run(() => {
     $input.val('x');
@@ -81,7 +83,7 @@ test('"change" changes value', function(assert) {
 
   this.render(hbs`{{text-field value=value updated=(action "update")}}`);
 
-  let $input = this.$('input');
+  let $input = $('input');
 
   run(() => {
     $input.val('x');
@@ -101,7 +103,7 @@ test('Format function only triggers when focusOut', function(assert) {
 
   this.render(hbs`{{text-field value=value format=format}}`);
 
-  let $input = this.$('input');
+  let $input = $('input');
 
   run(() => {
     $input.val('2');

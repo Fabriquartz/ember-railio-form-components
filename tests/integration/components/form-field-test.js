@@ -4,6 +4,8 @@ import EmberObject from 'ember-object';
 import hbs from 'htmlbars-inline-precompile';
 import run from 'ember-runloop';
 
+import $ from 'jquery';
+
 moduleForComponent('form-field', 'Integration | Component | {{form-field}}', {
   integration: true,
   beforeEach() {
@@ -16,7 +18,7 @@ moduleForComponent('form-field', 'Integration | Component | {{form-field}}', {
 test(`Renders a div with class 'form-field'`, function(assert) {
   this.render(hbs `{{form-field updated=(action 'update')}}`);
 
-  let $component = this.$('div.form-field');
+  let $component = $('div.form-field');
   assert.equal($component.length, 1);
 });
 
@@ -24,7 +26,7 @@ test(`By default shows propertyPath as label`, function(assert) {
   this.render(hbs `{{form-field propertyPath="number"
                                 updated=(action 'update')}}`);
 
-  let $labels = this.$('.form-field').find('label');
+  let $labels = $('.form-field').find('label');
 
   assert.equal($labels.length, 1, 'shows a label');
 
@@ -36,7 +38,7 @@ test(`Splices label on camelcase`, function(assert) {
   this.render(hbs `{{form-field propertyPath="numberValue"
                                 updated=(action 'update')}}`);
 
-  let labelText  = this.$('.form-field').find('label').text();
+  let labelText  = $('.form-field').find('label').text();
 
   assert.equal(labelText, 'Number value');
 });
@@ -45,7 +47,7 @@ test(`Shows no label when label=false`, function(assert) {
   this.render(hbs `{{form-field label=false
                                 updated=(action 'update')}}`);
 
-  let $labels = this.$('.form-field').find('label');
+  let $labels = $('.form-field').find('label');
 
   assert.equal($labels.length, 0);
 });
@@ -54,7 +56,7 @@ test(`Shows given String as label`, function(assert) {
   this.render(hbs `{{form-field label="Object nr."
                                 updated=(action 'update')}}`);
 
-  let labelText  = this.$('.form-field').find('label').text();
+  let labelText  = $('.form-field').find('label').text();
 
   assert.equal(labelText, 'Object nr.');
 });
@@ -71,7 +73,7 @@ function(assert) {
                                propertyPath="numberValue"
                                updated=(action 'update')}}`);
 
-  let $component = this.$('.form-field');
+  let $component = $('.form-field');
 
   assert.ok($component.hasClass('form-field--invalid'));
 
@@ -89,7 +91,7 @@ test(`Gets class 'changed' when value is unsaved`, function(assert) {
                                propertyPath="numberValue"
                                updated=(action 'update')}}`);
 
-  let $component = this.$('.form-field');
+  let $component = $('.form-field');
   assert.ok($component.hasClass('form-field--changed'));
 
   run(() => this.set('object.numberValueIsChanged', false));
@@ -108,7 +110,7 @@ test(`Gets class 'changed' when origin value is unsaved`, function(assert) {
                  propertyPath="numberValue"
                  updated=(action 'update')}}`);
 
-  let $component = this.$('.form-field');
+  let $component = $('.form-field');
   assert.ok($component.hasClass('form-field--changed'));
 });
 
@@ -121,7 +123,7 @@ test(`Gets class 'different' when values are different`, function(assert) {
                                propertyPath="numberValue"
                                updated=(action 'update')}}`);
 
-  let $component = this.$('.form-field');
+  let $component = $('.form-field');
   assert.ok($component.hasClass('form-field--different'));
 
   run(() => this.set('object.numberValueIsDifferent', false));
@@ -141,7 +143,7 @@ test(`Shows a given template and aliasses value`, function(assert) {
       <div class="aGivenTemplateClass">{{value}}</div>
     {{/form-field}}`);
 
-  let $template = this.$('.form-field').find('.aGivenTemplateClass');
+  let $template = $('.form-field').find('.aGivenTemplateClass');
   assert.equal($template.length, 1, 'shows the given template');
 
   let templateText = $template.text();
@@ -164,7 +166,7 @@ test(`Passes update action to block template`, function(assert) {
       {{text-field value=value updated=updated}}
     {{/form-field}}`);
 
-  let $input = this.$('input');
+  let $input = $('input');
 
   run(() => {
     $input.val('Another value');
@@ -185,7 +187,7 @@ test(`Shows a component depending on the given type`, function(assert) {
                  propertyPath="name"
                  updated=(action 'update')}}`);
 
-  let $input = this.$('.form-field').find('input.text-field');
+  let $input = $('.form-field').find('input.text-field');
   assert.equal($input.length, 1, 'shows the component depending on given type');
 
   let inputText = $input.val();
@@ -204,7 +206,7 @@ test(`passes the name to the form field`, function(assert) {
                  name="person-name"
                  updated=(action 'update')}}`);
 
-  let $input = this.$('input.text-field');
+  let $input = $('input.text-field');
   assert.equal($input.attr('name'), 'person-name', 'passes name to component');
 });
 
@@ -231,7 +233,7 @@ function(assert) {
                  propertyPath="name"
                  updated=(action "update")}}`);
 
-  let $input = this.$('.form-field').find('input.text-field');
+  let $input = $('.form-field').find('input.text-field');
 
   run(() => {
     $input.val('John Black');

@@ -2,6 +2,8 @@ import { module, test }                from 'qunit';
 import { setupRenderingTest }          from 'ember-qunit';
 import { render, find, focus, fillIn } from '@ember/test-helpers';
 import hbs                             from 'htmlbars-inline-precompile';
+import $                               from 'jquery';
+
 module('Integration | Component | {{paper/lazy-text-field}}', function(hooks) {
   setupRenderingTest(hooks);
   hooks.beforeEach(function() {
@@ -48,7 +50,7 @@ module('Integration | Component | {{paper/lazy-text-field}}', function(hooks) {
     let $input = find('input');
     await focus($input);
     await fillIn($input, 'x');
-    this.$('input').trigger('focusout');
+    $('input').trigger('focusout');
     assert.equal(this.get('value'), '');
   });
 

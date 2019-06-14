@@ -1,17 +1,14 @@
-import Ember        from 'ember';
-import Component    from 'ember-component';
+import Component                              from '@ember/component';
+import { defineProperty, get, set, computed } from '@ember/object';
+import { not }                                from '@ember/object/computed';
+
+import invokeAction from 'ember-invoke-action';
+
 import layout       from '../templates/components/auto-complete';
 import groupBy      from '../utils/group-by';
-import invokeAction from 'ember-invoke-action';
-import get          from 'ember-metal/get';
-import set          from 'ember-metal/set';
-
-import computed, { not } from 'ember-computed';
 
 import formFieldOptions from
   'ember-railio-form-components/mixins/form-field-options';
-
-const { defineProperty } = Ember;
 
 export default Component.extend(formFieldOptions, {
   classNames:        ['auto-complete'],

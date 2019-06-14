@@ -38,14 +38,14 @@ test('date gets formatted to date string', function(assert) {
   this.set('value', new Date(2015, 0, 1));
   this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
-  let $input = this.$('input');
+  let $input = $('input');
   assert.equal($input.val(), '01-01-15');
 });
 
 test('null is an option', function(assert) {
   this.render(hbs`{{date-picker value=value}}`);
 
-  let $input = this.$('input');
+  let $input = $('input');
   fillIn($input, null);
 
   assert.equal($input.val(), '');
@@ -54,7 +54,7 @@ test('null is an option', function(assert) {
 test('filling in a date works', function(assert) {
   this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
-  let $input = this.$('input');
+  let $input = $('input');
 
   fillIn($input, '05-05-15');
 
@@ -66,7 +66,7 @@ test('typing in an empty value', function(assert) {
   this.set('value', new Date(2015, 0, 1));
   this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
-  let $input = this.$('input');
+  let $input = $('input');
 
   fillIn($input, '');
 
@@ -77,7 +77,7 @@ test('typing in an empty value', function(assert) {
 test('typing in date shorthands', function(assert) {
   this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
-  let $input  = this.$('input');
+  let $input  = $('input');
   let year    = (new Date()).getFullYear();
   let yearStr = year.toString().slice(-2);
   let month   = `0${(new Date()).getMonth() + 1}`.substr(-2);
@@ -116,7 +116,7 @@ test('typing in date shorthands', function(assert) {
 test('typing in with different separators', function(assert) {
   this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
-  let $input = this.$('input');
+  let $input = $('input');
 
   fillIn($input, '05;05;15');
 
@@ -148,7 +148,7 @@ test('arrow up increases date by one day', function(assert) {
   this.set('value', new Date(2015, 0, 1));
   this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
-  let $input = this.$('input');
+  let $input = $('input');
 
   arrowUp($input);
 
@@ -169,7 +169,7 @@ test('shift + arrow up increases date by one month', function(assert) {
   this.set('value', new Date(2015, 0));
   this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
-  let $input = this.$('input');
+  let $input = $('input');
 
   arrowUp($input, true);
 
@@ -190,7 +190,7 @@ test('arrow down decreases date by one day', function(assert) {
   this.set('value', new Date(2015, 0, 2));
   this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
-  let $input = this.$('input');
+  let $input = $('input');
 
   arrowDown($input);
 
@@ -211,7 +211,7 @@ test('shift + arrow month decreases date by one month', function(assert) {
   this.set('value', new Date(2015, 1));
   this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
-  let $input = this.$('input');
+  let $input = $('input');
 
   arrowDown($input, true);
 
@@ -233,7 +233,7 @@ test('Does not lose time after change the date', function(assert) {
 
   this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
-  fillIn(this.$('input'), '1-12-2018');
+  fillIn($('input'), '1-12-2018');
 
   assert.equal(+this.get('value'), +(new Date(2018, 11, 1, 14, 57)));
 });

@@ -4,6 +4,8 @@ import EmberObject from 'ember-object';
 import hbs from 'htmlbars-inline-precompile';
 import run from 'ember-runloop';
 
+import $ from 'jquery';
+
 moduleForComponent('text-area', 'Integration | Component | {{text-area}}', {
   integration: true
 });
@@ -12,7 +14,7 @@ test('renders a text-area with value', function(assert) {
   this.set('value', 'testing');
   this.render(hbs`{{text-area value=value}}`);
 
-  let $area = this.$('textarea.text-area');
+  let $area = $('textarea.text-area');
   assert.equal($area.length, 1, 'renders a textarea with class text-area');
 
   assert.equal($area.val(), 'testing');
@@ -28,7 +30,7 @@ skip('Sizes with input', function(assert) {
   this.render(hbs`{{text-area value=value
                               sizeOnInput=true}}`);
 
-  let $area = this.$('textarea.text-area');
+  let $area = $('textarea.text-area');
 
   $area.attr('style', `line-height: ${lineHeight}px; width: 150px;
                        font-family: monospace; font-size: 10px;`);
@@ -67,7 +69,7 @@ test(`typing doesn't change value but sends updated`, function(assert) {
 
   this.render(hbs`{{text-area value=value updated=(action "update")}}`);
 
-  let $input = this.$('.text-area');
+  let $input = $('.text-area');
 
   run(() => {
     $input.val('x');
@@ -98,7 +100,7 @@ test('works with form-field', function(assert) {
                  propertyPath="name"
                  updated=(action "update")}}`);
 
-  let $textarea = this.$('.form-field').find('textarea.text-area');
+  let $textarea = $('.form-field').find('textarea.text-area');
 
   run(() => {
     $textarea.val('John Black');

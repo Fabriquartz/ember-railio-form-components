@@ -1,6 +1,8 @@
 import LazyTextField from 'ember-railio-form-components/components/lazy-text-field';
 import { toNumber, formatNumber } from 'ember-railio-formatting';
 
+import $ from 'jquery';
+
 function sliceDecimals(value, decimals) {
   return Math.floor(value * Math.pow(10, decimals)) / Math.pow(10, decimals);
 }
@@ -43,10 +45,10 @@ export default LazyTextField.extend({
   },
 
   keyDown(e) {
-    let value = this.$().val();
+    let value = $(this.element).val();
 
     if ([38, 40].indexOf(e.keyCode) !== -1) {
-      this.$().trigger('input');
+      $(this.element).trigger('input');
       this.withLazyDisabled(() => {
         if (e.keyCode === 38) {
           this.send('changed', increaseNumber(value, 1));

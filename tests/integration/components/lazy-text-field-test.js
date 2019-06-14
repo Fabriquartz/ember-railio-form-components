@@ -3,6 +3,8 @@ import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import run from 'ember-runloop';
 
+import $ from 'jquery';
+
 moduleForComponent(
   'lazy-text-field', 'Integration | Component | {{lazy-text-field}}',
   { integration: true });
@@ -11,14 +13,14 @@ test('displays initial value', function(assert) {
   this.set('value', 'puddy kat');
   this.render(hbs`{{lazy-text-field value=value}}`);
 
-  assert.equal(this.$('input').val(), 'puddy kat');
+  assert.equal($('input').val(), 'puddy kat');
 });
 
 test('focus in does not lose value', function(assert) {
   this.set('value', 'test');
   this.render(hbs`{{lazy-text-field value=value}}`);
 
-  let $input = this.$('input');
+  let $input = $('input');
 
   run(() => {
     $input.trigger('focusin');
@@ -38,7 +40,7 @@ test('typing with focus does not call updated', function(assert) {
 
   this.render(hbs`{{lazy-text-field value=value updated=(action "update")}}`);
 
-  let $input = this.$('input');
+  let $input = $('input');
 
   run(() => {
     $input.trigger('focusin');
@@ -59,7 +61,7 @@ test('losing focus sends updated', function(assert) {
 
   this.render(hbs`{{lazy-text-field value=value updated=(action "update")}}`);
 
-  let $input = this.$('input');
+  let $input = $('input');
 
   run(() => {
     $input.trigger('focusin');
@@ -76,7 +78,7 @@ test('when having focus, updates to value are ignored', function(assert) {
   this.set('value', '');
   this.render(hbs`{{lazy-text-field value=value}}`);
 
-  let $input = this.$('input');
+  let $input = $('input');
 
   run(() => {
     $input.trigger('focusin');
@@ -94,5 +96,5 @@ test('when not having focus update to value are propagated', function(assert) {
     this.set('value', 'x');
   });
 
-  assert.equal(this.$('input').val(), 'x');
+  assert.equal($('input').val(), 'x');
 });
