@@ -45,10 +45,11 @@ export default Component.extend(formFieldOptions, {
     this._super(...arguments);
   },
 
-  errors: computed('propertyPath', 'object.errors.[]', function() {
+  errors: computed('propertyPath', 'object.errors', function() {
     let propertyPath = get(this, 'propertyPath');
+    let errors       = get(this, 'object.errors');
 
-    return get(this, 'object.errors').errorsFor(propertyPath);
+    return errors && errors.errorsFor && errors.errorsFor(propertyPath);
   }),
 
   isValid: computed('errors.[]', function() {

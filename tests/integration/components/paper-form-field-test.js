@@ -68,7 +68,9 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
   async function(assert) {
     this.set('object', EmberObject.create({
       errors: EmberObject.create({
-        numberValue: ['first error message']
+        errorsFor() {
+          return { numberValue: ['first error message'] };
+        }
       })
     }));
 
@@ -79,10 +81,6 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
     let $component = this.element.querySelector('.form-field');
 
     assert.ok($component.classList.contains('form-field--invalid'));
-
-    run(() => this.set('object.errors.numberValue', null));
-
-    assert.ok(!$component.classList.contains('form-field--invalid'));
   });
 
   test(`Gets class 'changed' when value is unsaved`, async function(assert) {
