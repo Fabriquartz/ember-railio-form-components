@@ -4,6 +4,7 @@
                                      updated=(action "update")
                                      label=(humanize (underscore _label))
                                      name=name
+                                     errors=errors
                                      disabled=disabled}}
   {{#unless (is-empty after)}}
     <span class="form-field__after">{{after}}</span>
