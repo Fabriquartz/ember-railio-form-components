@@ -21,10 +21,6 @@ export default Component.extend(formFieldOptions, {
     return label === false ? '' : label || propertyPath;
   }),
 
-  errorsPath: computed('propertyPath', function() {
-    return `object.errors.${this.get('propertyPath')}`;
-  }),
-
   validateUpdateAction() {
     let updated = get(this, 'updated');
 
@@ -40,23 +36,25 @@ export default Component.extend(formFieldOptions, {
 
     let originPath   = this.get('originPath');
     let propertyPath = this.get('propertyPath');
-    let errorsPath   = this.get('errorsPath');
+
     let changedPath  = originPath || propertyPath;
 
     defineProperty(this, 'isChanged',   reads(`object.${changedPath}IsChanged`));
     defineProperty(this, 'isDifferent', reads(`object.${propertyPath}IsDifferent`));
 
-    defineProperty(this, 'isValid', computed('errorsPath', errorsPath,
-      function() {
-        let errorsPath = get(this, 'errorsPath');
-        let errors     = get(this, errorsPath);
-
-        return isEmpty(errors);
-      }
-    ));
-
     this._super(...arguments);
   },
+
+  errors: computed('propertyPath', 'object.errors', function() {
+    let propertyPath = get(this, 'propertyPath');
+    let errors       = get(this, 'object.errors');
+
+    return errors && errors.errorsFor && errors.errorsFor(propertyPath);
+  }),
+
+  isValid: computed('errors.[]', function() {
+    return isEmpty(get(this, 'errors'));
+  }),
 
   actions: {
     update(value, ...args) {
