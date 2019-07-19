@@ -1,3 +1,5 @@
+[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=Fabriquartz/ember-railio-form-components)](https://dependabot.com)
+
 # Ember-railio-form-components
 
 An Ember addon for data-down/action-up based form-fields for (Ember) objects. By installing this addon, you can use the form-field component to add form-fields that can be used on data-down / action-up.
