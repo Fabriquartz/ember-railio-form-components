@@ -28,7 +28,7 @@
     "ember-cli-pretender": "^3.0.0",
     "ember-cli-release": "^1.0.0-beta.2",
     "ember-cli-sri": "^2.1.1",
-    "ember-cli-string-helpers": "^2.0.0",
+    "ember-cli-string-helpers": "^3.0.0",
     "ember-cli-template-lint": "^1.0.0-beta.3",
     "ember-cli-uglify": "^3.0.0",
     "ember-data": "~3.9.0",
