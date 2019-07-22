@@ -1,4 +1,5 @@
-[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=Fabriquartz/ember-railio-form-components)](https://dependabot.com)
+[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=Fabriquartz/ember-railio-form-components)](https://dependabot.com) 
+[![Build Status](https://travis-ci.com/Fabriquartz/ember-railio-form-components.svg?branch=master)](https://travis-ci.com/Fabriquartz/ember-railio-form-components)
 
 # Ember-railio-form-components
 
