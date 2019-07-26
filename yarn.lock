@@ -5005,9 +5005,9 @@ ember-moment@~7.8.0:
     ember-macro-helpers "^2.1.0"
 
 ember-paper@^1.0.0-beta.24:
-  version "1.0.0-beta.25"
-  resolved "https://registry.yarnpkg.com/ember-paper/-/ember-paper-1.0.0-beta.25.tgz#8234b6fa497d38bf90778f2fb9b82e4629fead08"
-  integrity sha512-yqYfIqVVWh797ZiplfNHH7kNpWkRUbJG+YB/oSOxVmrEZPK0Tw3SUxhdGpB9xB5tJhZczYS4P8nIAHqOE+DRpQ==
+  version "1.0.0-beta.26"
+  resolved "https://registry.yarnpkg.com/ember-paper/-/ember-paper-1.0.0-beta.26.tgz#ec029b516d60d5b9f29ad956555a472b5ea2e5f6"
+  integrity sha512-hK8n8DGvxTmjIPsw2iu/vMIuzIdhPKTrJG5lOg3Br2pPfHVEcOVEKrZVg8+mxckSYLSscfhpaRPBTGOy3JacZw==
   dependencies:
     angular-material-styles "^1.1.18"
     broccoli-file-creator "^2.1.1"
