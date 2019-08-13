@@ -6,7 +6,7 @@ import { module, test } from 'qunit';
 
 import { setupRenderingTest } from 'ember-qunit';
 
-import { render } from '@ember/test-helpers';
+import { render, click } from '@ember/test-helpers';
 
 module('Integration | Component | {{date-time-field}}', function(hooks) {
   setupRenderingTest(hooks);
@@ -45,7 +45,7 @@ module('Integration | Component | {{date-time-field}}', function(hooks) {
 
   test('set to now', async function(assert) {
     await render(hbs`{{date-time-field value=value updated=(action "update")}}`);
-    this.$('.date-time-field-clock').click();
+    await click('.date-time-field-clock');
     assert.equal(moment(this.get('value')).seconds(0).milliseconds(0).toISOString(),
                  moment().seconds(0).milliseconds(0).toISOString());
   });
@@ -53,7 +53,7 @@ module('Integration | Component | {{date-time-field}}', function(hooks) {
   test('unset time', async function(assert) {
     this.set('value', new Date());
     await render(hbs`{{date-time-field value=value updated=(action "update")}}`);
-    this.$('.date-time-field-reset').click();
+    await click('.date-time-field-reset');
     assert.equal(this.get('value'), null);
   });
 });

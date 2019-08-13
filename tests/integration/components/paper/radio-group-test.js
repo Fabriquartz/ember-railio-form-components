@@ -67,8 +67,11 @@ module('Integration | Component | {{paper/radio-group}}', function(hooks) {
                                          valuePropertyPath="value"
                                          updated=updated}}`);
 
-    assert.equal(findAll('md-radio-button')[1].textContent.trim(), 'Option 2',
-                 'shows option 2 label');
+    assert.equal(
+      findAll('md-radio-button')[1].textContent.trim(),
+      'Option 2',
+      'shows option 2 label'
+    );
 
     click(findAll('md-radio-button')[1]);
   });

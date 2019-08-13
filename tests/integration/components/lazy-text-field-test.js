@@ -1,7 +1,7 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 
-import { render } from '@ember/test-helpers';
+import { render, find } from '@ember/test-helpers';
 
 import hbs from 'htmlbars-inline-precompile';
 import run from 'ember-runloop';
@@ -18,7 +18,7 @@ module('Integration | Component | {{lazy-text-field}}', function(hooks) {
     this.set('value', 'puddy kat');
     await render(hbs`{{lazy-text-field value=value}}`);
 
-    assert.equal(this.$('input').val(), 'puddy kat');
+    assert.equal(find('input').value, 'puddy kat');
   });
 
   test('focus in does not lose value', async function(assert) {
@@ -101,6 +101,6 @@ module('Integration | Component | {{lazy-text-field}}', function(hooks) {
       this.set('value', 'x');
     });
 
-    assert.equal(this.$('input').val(), 'x');
+    assert.equal(find('input').value, 'x');
   });
 });

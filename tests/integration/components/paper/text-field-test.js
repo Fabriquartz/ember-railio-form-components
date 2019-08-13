@@ -1,8 +1,14 @@
 import { module, test }       from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
+
 import {
-  render, find, blur,
-  triggerEvent, focus, fillIn } from '@ember/test-helpers';
+  render,
+  find,
+  blur,
+  triggerEvent,
+  focus,
+  fillIn
+} from '@ember/test-helpers';
 
 import hbs from 'htmlbars-inline-precompile';
 
@@ -16,8 +22,7 @@ module('Integration | Component | {{paper/text-field}}', function(hooks) {
   test('renders input with placeholder', async function(assert) {
     await render(hbs`{{paper/text-field placeholder='Type your value here'}}`);
 
-    assert.equal(find('input').getAttribute('placeholder'),
-                 'Type your value here');
+    assert.equal(find('input').getAttribute('placeholder'), 'Type your value here');
   });
 
   test('input value is set to value', async function(assert) {

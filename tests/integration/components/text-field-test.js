@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
+import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import run from 'ember-runloop';
 
@@ -23,7 +23,7 @@ module('Integration | Component | {{text-field}}', function(hooks) {
     this.set('value', 'testing');
     await render(hbs`{{text-field value=value}}`);
 
-    assert.equal(this.$('input').val(), 'testing');
+    assert.equal(find('input').value, 'testing');
   });
 
   test('changing value changes input text', async function(assert) {
@@ -34,7 +34,7 @@ module('Integration | Component | {{text-field}}', function(hooks) {
       this.set('value', 'gnitset');
     });
 
-    assert.equal(this.$('input').val(), 'gnitset');
+    assert.equal(find('input').value, 'gnitset');
   });
 
   test(`typing doesn't change value but sends updated`, async function(assert) {
