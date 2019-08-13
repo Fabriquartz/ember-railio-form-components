@@ -1,10 +1,9 @@
-import { module, test } from 'qunit';
+import { module, test }       from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 
-import { render, fillIn, triggerEvent } from '@ember/test-helpers';
+import { render, fillIn } from '@ember/test-helpers';
 
 import hbs from 'htmlbars-inline-precompile';
-import run from 'ember-runloop';
 
 module('Integration | Component | {{search-input}}', function(hooks) {
   setupRenderingTest(hooks);
@@ -15,14 +14,11 @@ module('Integration | Component | {{search-input}}', function(hooks) {
   });
 
   test('typing sends out onQueryChange event', async function(assert) {
-    assert.expect(1);
+    assert.expect(2);
 
     this.actions.onQueryChange = (query) => assert.equal(query, 'foo');
     await render(hbs`{{search-input onQueryChange=(action "onQueryChange")}}`);
 
-    run(async function() {
-      await fillIn('input', 'foo');
-      await triggerEvent('input', 'input'); // syncs the value;
-    });
+    await fillIn('input', 'foo');
   });
 });

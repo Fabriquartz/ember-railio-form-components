@@ -1,7 +1,7 @@
 import { module, test }       from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 
-import { render, find, focus, fillIn, triggerEvent } from '@ember/test-helpers';
+import { render, find, focus, fillIn, blur } from '@ember/test-helpers';
 
 import hbs from 'htmlbars-inline-precompile';
 
@@ -51,7 +51,7 @@ module('Integration | Component | {{paper/lazy-text-field}}', function(hooks) {
     let $input = find('input');
     await focus($input);
     await fillIn($input, 'x');
-    await triggerEvent('input', 'focusout');
+    await blur('input');
     assert.equal(this.get('value'), '');
   });
 

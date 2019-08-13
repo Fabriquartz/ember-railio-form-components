@@ -238,18 +238,16 @@ module('Integration | Component | {{paper/date-picker}}', function(hooks) {
     this.set('value', new Date(2015, 0));
     await render(hbs`{{paper/date-picker value=value updated=(action "update")}}`);
 
-    let $input = find('input');
+    await triggerKeyEvent('input', 'keydown', 38, { shiftKey: true });
 
-    await triggerKeyEvent($input, 'keydown', 38, { shiftKey: true });
-
-    assert.equal($input.val(), '01-02-15');
+    assert.equal(find('input').value, '01-02-15');
     assert.equal(+this.get('value'), +new Date(2015, 1, 1));
 
     this.set('value', new Date(2015, 11));
 
     await triggerKeyEvent('input', 'keydown', 38, { shiftKey: true });
 
-    assert.equal($input.val(), '01-01-16');
+    assert.equal(find('input').value, '01-01-16');
     assert.equal(+this.get('value'), +new Date(2016, 0, 1));
   });
 
