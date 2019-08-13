@@ -1,239 +1,246 @@
 import hbs                          from 'htmlbars-inline-precompile';
 import run                          from 'ember-runloop';
 import $                            from 'jquery';
-import { moduleForComponent, test } from 'ember-qunit';
-import wait                         from 'ember-test-helpers/wait';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render, settled } from '@ember/test-helpers';
 
-moduleForComponent('date-picker', 'Integration | Component | {{date-picker}}', {
-  integration: true,
-  beforeEach() {
+module('Integration | Component | {{date-picker}}', function(hooks) {
+  setupRenderingTest(hooks);
+
+  hooks.beforeEach(function() {
+    this.actions = {};
+    this.send = (actionName, ...args) => this.actions[actionName].apply(this, args);
+  });
+
+  hooks.beforeEach(function() {
     this.set('value', new Date(2018, 9, 10, 0, 0));
-    this.on('update', function(value) {
+    this.actions.update = function(value) {
       this.set('value', value);
+    };
+  });
+
+  function fillIn(input, value) {
+    run(() => {
+      input.trigger('focusin');
+      input.val(value);
+      input.trigger('input');
+      input.trigger('focusout');
     });
   }
-});
 
-function fillIn(input, value) {
-  run(() => {
-    input.trigger('focusin');
-    input.val(value);
-    input.trigger('input');
-    input.trigger('focusout');
+  function arrowKey(input, upOrDown, shift = false) {
+    let keyCode = upOrDown === 'up' ? 38 : 40;
+
+    run(() => {
+      input.trigger('focusin');
+      input.trigger($.Event('keydown', { keyCode, shiftKey: shift }));
+    });
+  }
+  function arrowUp(input, shift)   { arrowKey(input, 'up', shift);   }
+  function arrowDown(input, shift) { arrowKey(input, 'down', shift); }
+
+  test('date gets formatted to date string', async function(assert) {
+    this.set('value', new Date(2015, 0, 1));
+    await render(hbs`{{date-picker value=value updated=(action "update")}}`);
+
+    let $input = this.$('input');
+    assert.equal($input.val(), '01-01-15');
   });
-}
 
-function arrowKey(input, upOrDown, shift = false) {
-  let keyCode = upOrDown === 'up' ? 38 : 40;
+  test('null is an option', async function(assert) {
+    await render(hbs`{{date-picker value=value}}`);
 
-  run(() => {
-    input.trigger('focusin');
-    input.trigger($.Event('keydown', { keyCode, shiftKey: shift }));
+    let $input = this.$('input');
+    fillIn($input, null);
+
+    assert.equal($input.val(), '');
   });
-}
-function arrowUp(input, shift)   { arrowKey(input, 'up', shift);   }
-function arrowDown(input, shift) { arrowKey(input, 'down', shift); }
 
-test('date gets formatted to date string', function(assert) {
-  this.set('value', new Date(2015, 0, 1));
-  this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
+  test('filling in a date works', async function(assert) {
+    await render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
-  let $input = this.$('input');
-  assert.equal($input.val(), '01-01-15');
-});
+    let $input = this.$('input');
 
-test('null is an option', function(assert) {
-  this.render(hbs`{{date-picker value=value}}`);
+    fillIn($input, '05-05-15');
 
-  let $input = this.$('input');
-  fillIn($input, null);
+    assert.equal($input.val(), '05-05-15');
+    assert.equal(+this.get('value'), +(new Date(2015, 4, 5)));
+  });
 
-  assert.equal($input.val(), '');
-});
+  test('typing in an empty value', async function(assert) {
+    this.set('value', new Date(2015, 0, 1));
+    await render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
-test('filling in a date works', function(assert) {
-  this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
+    let $input = this.$('input');
 
-  let $input = this.$('input');
+    fillIn($input, '');
 
-  fillIn($input, '05-05-15');
+    assert.equal($input.val(), '');
+    assert.equal(this.get('value'), null);
+  });
 
-  assert.equal($input.val(), '05-05-15');
-  assert.equal(+this.get('value'), +(new Date(2015, 4, 5)));
-});
+  test('typing in date shorthands', async function(assert) {
+    await render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
-test('typing in an empty value', function(assert) {
-  this.set('value', new Date(2015, 0, 1));
-  this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
+    let $input  = this.$('input');
+    let year    = (new Date()).getFullYear();
+    let yearStr = year.toString().slice(-2);
+    let month   = `0${(new Date()).getMonth() + 1}`.substr(-2);
 
-  let $input = this.$('input');
+    fillIn($input, '050515');
 
-  fillIn($input, '');
+    assert.equal($input.val(), '05-05-15');
+    assert.equal(+this.get('value'), +(new Date(2015, 4, 5)));
 
-  assert.equal($input.val(), '');
-  assert.equal(this.get('value'), null);
-});
+    fillIn($input, '150515');
 
-test('typing in date shorthands', function(assert) {
-  this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
+    assert.equal($input.val(), '15-05-15');
+    assert.equal(+this.get('value'), +(new Date(2015, 4, 15)));
 
-  let $input  = this.$('input');
-  let year    = (new Date()).getFullYear();
-  let yearStr = year.toString().slice(-2);
-  let month   = `0${(new Date()).getMonth() + 1}`.substr(-2);
+    fillIn($input, '50515');
 
-  fillIn($input, '050515');
+    assert.equal($input.val(), '05-05-15');
+    assert.equal(+this.get('value'), +(new Date(2015, 4, 5)));
 
-  assert.equal($input.val(), '05-05-15');
-  assert.equal(+this.get('value'), +(new Date(2015, 4, 5)));
+    fillIn($input, '1505');
 
-  fillIn($input, '150515');
+    assert.equal($input.val(), `15-05-${yearStr}`);
+    assert.equal(+this.get('value'), +(new Date(year, 4, 15)));
 
-  assert.equal($input.val(), '15-05-15');
-  assert.equal(+this.get('value'), +(new Date(2015, 4, 15)));
+    fillIn($input, '505');
 
-  fillIn($input, '50515');
+    assert.equal($input.val(), `05-05-${yearStr}`);
+    assert.equal(+this.get('value'), +(new Date(year, 4, 5)));
 
-  assert.equal($input.val(), '05-05-15');
-  assert.equal(+this.get('value'), +(new Date(2015, 4, 5)));
+    fillIn($input, '4');
 
-  fillIn($input, '1505');
+    assert.equal($input.val(), `04-${month}-${yearStr}`);
+    assert.equal(+this.get('value'), +(new Date(year, month - 1, 4)));
+  });
 
-  assert.equal($input.val(), `15-05-${yearStr}`);
-  assert.equal(+this.get('value'), +(new Date(year, 4, 15)));
+  test('typing in with different separators', async function(assert) {
+    await render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
-  fillIn($input, '505');
+    let $input = this.$('input');
 
-  assert.equal($input.val(), `05-05-${yearStr}`);
-  assert.equal(+this.get('value'), +(new Date(year, 4, 5)));
+    fillIn($input, '05;05;15');
 
-  fillIn($input, '4');
+    assert.equal($input.val(), '05-05-15');
+    assert.equal(+this.get('value'), +(new Date(2015, 4, 5)));
 
-  assert.equal($input.val(), `04-${month}-${yearStr}`);
-  assert.equal(+this.get('value'), +(new Date(year, month - 1, 4)));
-});
+    fillIn($input, '06/05/15');
 
-test('typing in with different separators', function(assert) {
-  this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
+    assert.equal($input.val(), '06-05-15');
+    assert.equal(+this.get('value'), +(new Date(2015, 4, 6)));
 
-  let $input = this.$('input');
+    fillIn($input, '05\\05\\15');
 
-  fillIn($input, '05;05;15');
+    assert.equal($input.val(), '05-05-15');
+    assert.equal(+this.get('value'), +(new Date(2015, 4, 5)));
 
-  assert.equal($input.val(), '05-05-15');
-  assert.equal(+this.get('value'), +(new Date(2015, 4, 5)));
+    fillIn($input, '06,05,15');
 
-  fillIn($input, '06/05/15');
+    assert.equal($input.val(), '06-05-15');
+    assert.equal(+this.get('value'), +(new Date(2015, 4, 6)));
 
-  assert.equal($input.val(), '06-05-15');
-  assert.equal(+this.get('value'), +(new Date(2015, 4, 6)));
+    fillIn($input, '05.05.15');
 
-  fillIn($input, '05\\05\\15');
+    assert.equal($input.val(), '05-05-15');
+    assert.equal(+this.get('value'), +(new Date(2015, 4, 5)));
+  });
 
-  assert.equal($input.val(), '05-05-15');
-  assert.equal(+this.get('value'), +(new Date(2015, 4, 5)));
+  test('arrow up increases date by one day', async function(assert) {
+    this.set('value', new Date(2015, 0, 1));
+    await render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
-  fillIn($input, '06,05,15');
+    let $input = this.$('input');
 
-  assert.equal($input.val(), '06-05-15');
-  assert.equal(+this.get('value'), +(new Date(2015, 4, 6)));
+    arrowUp($input);
 
-  fillIn($input, '05.05.15');
+    assert.equal($input.val(), '02-01-15');
+    assert.equal(+this.get('value'), +(new Date(2015, 0, 2)));
 
-  assert.equal($input.val(), '05-05-15');
-  assert.equal(+this.get('value'), +(new Date(2015, 4, 5)));
-});
+    this.set('value', new Date(2015, 0, 31));
 
-test('arrow up increases date by one day', function(assert) {
-  this.set('value', new Date(2015, 0, 1));
-  this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
+    arrowUp($input);
 
-  let $input = this.$('input');
+    assert.equal($input.val(), '01-02-15');
+    assert.equal(+this.get('value'), +(new Date(2015, 1, 1)));
 
-  arrowUp($input);
+    return settled();
+  });
 
-  assert.equal($input.val(), '02-01-15');
-  assert.equal(+this.get('value'), +(new Date(2015, 0, 2)));
+  test('shift + arrow up increases date by one month', async function(assert) {
+    this.set('value', new Date(2015, 0));
+    await render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
-  this.set('value', new Date(2015, 0, 31));
+    let $input = this.$('input');
 
-  arrowUp($input);
+    arrowUp($input, true);
 
-  assert.equal($input.val(), '01-02-15');
-  assert.equal(+this.get('value'), +(new Date(2015, 1, 1)));
+    assert.equal($input.val(), '01-02-15');
+    assert.equal(+this.get('value'), +(new Date(2015, 1, 1)));
 
-  return wait();
-});
+    this.set('value', new Date(2015, 11));
 
-test('shift + arrow up increases date by one month', function(assert) {
-  this.set('value', new Date(2015, 0));
-  this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
+    arrowUp($input, true);
 
-  let $input = this.$('input');
+    assert.equal($input.val(), '01-01-16');
+    assert.equal(+this.get('value'), +(new Date(2016, 0, 1)));
 
-  arrowUp($input, true);
+    return settled();
+  });
 
-  assert.equal($input.val(), '01-02-15');
-  assert.equal(+this.get('value'), +(new Date(2015, 1, 1)));
+  test('arrow down decreases date by one day', async function(assert) {
+    this.set('value', new Date(2015, 0, 2));
+    await render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
-  this.set('value', new Date(2015, 11));
+    let $input = this.$('input');
 
-  arrowUp($input, true);
+    arrowDown($input);
 
-  assert.equal($input.val(), '01-01-16');
-  assert.equal(+this.get('value'), +(new Date(2016, 0, 1)));
+    assert.equal($input.val(), '01-01-15');
+    assert.equal(+this.get('value'), +(new Date(2015, 0, 1)));
 
-  return wait();
-});
+    this.set('value', new Date(2015, 1, 1));
 
-test('arrow down decreases date by one day', function(assert) {
-  this.set('value', new Date(2015, 0, 2));
-  this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
+    arrowDown($input);
 
-  let $input = this.$('input');
+    assert.equal($input.val(), '31-01-15');
+    assert.equal(+this.get('value'), +(new Date(2015, 0, 31)));
 
-  arrowDown($input);
+    return settled();
+  });
 
-  assert.equal($input.val(), '01-01-15');
-  assert.equal(+this.get('value'), +(new Date(2015, 0, 1)));
+  test('shift + arrow month decreases date by one month', async function(assert) {
+    this.set('value', new Date(2015, 1));
+    await render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
-  this.set('value', new Date(2015, 1, 1));
+    let $input = this.$('input');
 
-  arrowDown($input);
+    arrowDown($input, true);
 
-  assert.equal($input.val(), '31-01-15');
-  assert.equal(+this.get('value'), +(new Date(2015, 0, 31)));
+    assert.equal($input.val(), '01-01-15');
+    assert.equal(+this.get('value'), +(new Date(2015, 0)));
 
-  return wait();
-});
+    this.set('value', new Date(2015, 0));
 
-test('shift + arrow month decreases date by one month', function(assert) {
-  this.set('value', new Date(2015, 1));
-  this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
+    arrowDown($input, true);
 
-  let $input = this.$('input');
+    assert.equal($input.val(), '01-12-14');
+    assert.equal(+this.get('value'), +(new Date(2014, 11)));
 
-  arrowDown($input, true);
+    return settled();
+  });
 
-  assert.equal($input.val(), '01-01-15');
-  assert.equal(+this.get('value'), +(new Date(2015, 0)));
+  test('Does not lose time after change the date', async function(assert) {
+    this.set('value', new Date(2018, 11, 5, 14, 57));
 
-  this.set('value', new Date(2015, 0));
+    await render(hbs`{{date-picker value=value updated=(action "update")}}`);
 
-  arrowDown($input, true);
+    fillIn(this.$('input'), '1-12-2018');
 
-  assert.equal($input.val(), '01-12-14');
-  assert.equal(+this.get('value'), +(new Date(2014, 11)));
-
-  return wait();
-});
-
-test('Does not lose time after change the date', function(assert) {
-  this.set('value', new Date(2018, 11, 5, 14, 57));
-
-  this.render(hbs`{{date-picker value=value updated=(action "update")}}`);
-
-  fillIn(this.$('input'), '1-12-2018');
-
-  assert.equal(+this.get('value'), +(new Date(2018, 11, 1, 14, 57)));
+    assert.equal(+this.get('value'), +(new Date(2018, 11, 1, 14, 57)));
+  });
 });

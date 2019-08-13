@@ -5,8 +5,7 @@ import Service                                        from 'ember-service';
 import Pretender                                      from 'pretender';
 import { module, test }                               from 'qunit';
 import { setupRenderingTest }                         from 'ember-qunit';
-import { render, findAll, find, triggerEvent, click,
-  fillIn } from '@ember/test-helpers';
+import { click, fillIn, find, findAll, render, settled, triggerEvent } from '@ember/test-helpers';
 
 import {
   getSelected,
@@ -18,7 +17,6 @@ import hbs  from 'htmlbars-inline-precompile';
 import get  from 'ember-metal/get';
 import set  from 'ember-metal/set';
 import $    from 'jquery';
-import wait from 'ember-test-helpers/wait';
 
 const { compare } = Ember;
 
@@ -206,7 +204,7 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
     await clickTrigger();
     await fillIn('.ember-power-select-dropdown input', 'bla');
     await clickTrigger();
-    return wait();
+    return settled();
   });
 
   test('Sorts preloaded list using given sorting function', async function(assert) {
