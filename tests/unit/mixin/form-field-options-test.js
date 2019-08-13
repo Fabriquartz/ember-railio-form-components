@@ -1,11 +1,10 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
-import FormFieldOptionsMixin from
-  'ember-railio-form-components/mixins/form-field-options';
+import FormFieldOptionsMixin
+  from 'ember-railio-form-components/mixins/form-field-options';
 
 import Component from 'ember-component';
-import getOwner  from 'ember-owner/get';
 
 import { get } from '@ember/object';
 
@@ -30,9 +29,15 @@ module('Unit | Mixin | form-field-options', function(hooks) {
     let component = this.subject();
     component.didReceiveAttrs();
 
-    assert.equal(get(component, 'fooBar'), 'Value for FooBar',
-                 'Property binded to the context');
-    assert.equal(get(component, 'fizBox')(), 'Value for FizBoz',
-                 'Function binded to the context');
+    assert.equal(
+      get(component, 'fooBar'),
+      'Value for FooBar',
+      'Property binded to the context'
+    );
+    assert.equal(
+      get(component, 'fizBox')(),
+      'Value for FizBoz',
+      'Function binded to the context'
+    );
   });
 });

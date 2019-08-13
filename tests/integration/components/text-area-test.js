@@ -36,8 +36,11 @@ module('Integration | Component | {{text-area}}', function(hooks) {
 
     let $area = this.$('textarea.text-area');
 
-    $area.attr('style', `line-height: ${lineHeight}px; width: 150px;
-                         font-family: monospace; font-size: 10px;`);
+    $area.attr(
+      'style',
+      `line-height: ${lineHeight}px; width: 150px;
+                         font-family: monospace; font-size: 10px;`
+    );
 
     function updateArea(append) {
       run(() => {
@@ -49,18 +52,27 @@ module('Integration | Component | {{text-area}}', function(hooks) {
 
     updateArea('');
 
-    assert.equal($area.height(), (1 * lineHeight) + chromeTextAreaMargin,
-                 'Resizes for first line');
+    assert.equal(
+      $area.height(),
+      1 * lineHeight + chromeTextAreaMargin,
+      'Resizes for first line'
+    );
 
     updateArea('This is the 2nd line');
 
-    assert.equal($area.height(), (2 * lineHeight) + chromeTextAreaMargin,
-                 'Resizes for second line');
+    assert.equal(
+      $area.height(),
+      2 * lineHeight + chromeTextAreaMargin,
+      'Resizes for second line'
+    );
 
     updateArea('This is the 3rd line');
 
-    assert.equal($area.height(), (3 * lineHeight) + chromeTextAreaMargin,
-                 'Resizes for third line');
+    assert.equal(
+      $area.height(),
+      3 * lineHeight + chromeTextAreaMargin,
+      'Resizes for third line'
+    );
   });
 
   test(`typing doesn't change value but sends updated`, async function(assert) {
@@ -112,6 +124,10 @@ module('Integration | Component | {{text-area}}', function(hooks) {
     });
 
     assert.equal($textarea.val(), 'John Black', 'changes the input value');
-    assert.equal(this.get('object.name'), 'John White', `doesn't update object value`);
+    assert.equal(
+      this.get('object.name'),
+      'John White',
+      `doesn't update object value`
+    );
   });
 });

@@ -20,7 +20,7 @@ module('Integration | Component | {{search-input}}', function(hooks) {
     this.actions.onQueryChange = (query) => assert.equal(query, 'foo');
     await render(hbs`{{search-input onQueryChange=(action "onQueryChange")}}`);
 
-    run(async () => {
+    run(async function() {
       await fillIn('input', 'foo');
       await triggerEvent('input', 'input'); // syncs the value;
     });

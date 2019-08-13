@@ -62,7 +62,8 @@ module('Integration | Component | {{paper/file-input}}', function(hooks) {
     );
   });
 
-  test('accept attribute on input is overridden by component attribute', async function(assert) {
+  test('accept attribute on input is overridden by component attribute',
+  async function(assert) {
     this.set('type', 'image');
     this.set('accept', '.foo');
 

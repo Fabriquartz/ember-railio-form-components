@@ -137,7 +137,8 @@ module('Integration | Component | {{radio-select}}', function(hooks) {
     assert.equal($icons.length, 0);
   });
 
-  test('cycle true: shows only selection and changes on click', async function(assert) {
+  test('cycle true: shows only selection and changes on click',
+  async function(assert) {
     set(this, 'cycle', true);
 
     set(this, 'options', ['Option 1', 'Option 2', 'Option 3']);

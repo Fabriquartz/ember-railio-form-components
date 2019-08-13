@@ -63,7 +63,8 @@ module('Integration | Component | {{paper/lazy-text-field}}', function(hooks) {
     assert.equal(find('input').value, '');
   });
 
-  test('when not having focus update to value are propagated', async function(assert) {
+  test('when not having focus update to value are propagated',
+  async function(assert) {
     this.set('value', '');
     await render(hbs`{{paper/lazy-text-field value=value}}`);
     this.set('value', 'x');
