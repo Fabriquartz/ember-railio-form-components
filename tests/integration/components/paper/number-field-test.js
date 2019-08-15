@@ -1,16 +1,26 @@
-import hbs                        from 'htmlbars-inline-precompile';
-import { module, test }           from 'qunit';
-import { render, find, focus,
-  fillIn, blur, triggerKeyEvent } from '@ember/test-helpers';
-import { setupRenderingTest }     from 'ember-qunit';
+import hbs              from 'htmlbars-inline-precompile';
+import { module, test } from 'qunit';
+
+import {
+  render,
+  find,
+  focus,
+  fillIn,
+  blur,
+  triggerKeyEvent
+} from '@ember/test-helpers';
+
+import { setupRenderingTest } from 'ember-qunit';
 
 module('Integration | Component | {{paper/number-field}}', function(hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function() {
-    this.actions = { update: (value) => {
-      this.set('number', value);
-    } };
+    this.actions = {
+      update: (value) => {
+        this.set('number', value);
+      }
+    };
   });
 
   test('empty sets value to null', async function(assert) {

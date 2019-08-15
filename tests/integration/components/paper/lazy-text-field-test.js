@@ -1,7 +1,10 @@
-import { module, test }                from 'qunit';
-import { setupRenderingTest }          from 'ember-qunit';
-import { render, find, focus, fillIn } from '@ember/test-helpers';
-import hbs                             from 'htmlbars-inline-precompile';
+import { module, test }       from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+
+import { render, find, focus, fillIn, blur } from '@ember/test-helpers';
+
+import hbs from 'htmlbars-inline-precompile';
+
 module('Integration | Component | {{paper/lazy-text-field}}', function(hooks) {
   setupRenderingTest(hooks);
   hooks.beforeEach(function() {
@@ -48,7 +51,7 @@ module('Integration | Component | {{paper/lazy-text-field}}', function(hooks) {
     let $input = find('input');
     await focus($input);
     await fillIn($input, 'x');
-    this.$('input').trigger('focusout');
+    await blur('input');
     assert.equal(this.get('value'), '');
   });
 
@@ -61,10 +64,10 @@ module('Integration | Component | {{paper/lazy-text-field}}', function(hooks) {
   });
 
   test('when not having focus update to value are propagated',
-    async function(assert) {
-      this.set('value', '');
-      await render(hbs`{{paper/lazy-text-field value=value}}`);
-      this.set('value', 'x');
-      assert.equal(find('input').value, 'x');
-    });
+  async function(assert) {
+    this.set('value', '');
+    await render(hbs`{{paper/lazy-text-field value=value}}`);
+    this.set('value', 'x');
+    assert.equal(find('input').value, 'x');
+  });
 });
