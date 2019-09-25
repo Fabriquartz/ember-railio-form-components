@@ -63,13 +63,13 @@
     "test": "tests"
   },
   "resolutions": {
-    "ember-concurrency": "1.0.0"
+    "ember-concurrency": "1.1.0"
   },
   "dependencies": {
     "ember-cli-babel": "7.11.1",
     "ember-cli-htmlbars": "^4.0.0",
     "ember-cli-sass": "10.0.1",
-    "ember-concurrency": "1.0.0",
+    "ember-concurrency": "1.1.0",
     "ember-paper": "^1.0.0-beta.24",
     "ember-power-select": "2.3.2"
   },
