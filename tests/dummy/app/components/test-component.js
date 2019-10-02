@@ -30,10 +30,7 @@ export default Component.extend({
   },
 
   timeFieldOptions: {
-    inputType: "datetime-local",
-    htmlAttributes: {
-      type: "datetime-local"
-    }
+    inputType:      'datetime-local'
   },
 
   actions: {
