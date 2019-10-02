@@ -1,0 +1,10 @@
+{
+    "workbench.colorTheme": "Monokai",
+    "editor.fontFamily": "Menlo, Monaco, Courier New, 'monospace'",
+    "[handlebars]": {
+        "editor.defaultFormatter": "eetami.whitespace-formatter"
+    },
+    "diffEditor.ignoreTrimWhitespace": false,
+    "search.location": "panel",
+    "workbench.editor.enablePreviewFromQuickOpen": false
+}
