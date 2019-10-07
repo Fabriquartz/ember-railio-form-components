@@ -29,6 +29,10 @@ export default Component.extend({
     multiple: true
   },
 
+  timeFieldOptions: {
+    inputType: 'datetime-local'
+  },
+
   actions: {
     update(object, propertyPath, value) {
       object.set(propertyPath, value);

@@ -41,8 +41,7 @@ export default Component.extend(formFieldOptions, {
 
   _htmlAttributes: computed('htmlAttributes', 'name', function() {
     let name           = get(this, 'name');
-    let options        = get(this, 'options') || {};
-    let htmlAttributes = get(options, 'htmlAttributes') || {};
+    let htmlAttributes = get(this, 'htmlAttributes') || {};
 
     if (!htmlAttributes.name && name) {
       htmlAttributes.name = name;
