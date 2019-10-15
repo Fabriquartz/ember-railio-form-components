@@ -1,6 +1,7 @@
 import Ember               from 'ember';
 import Component           from 'ember-component';
 import computed, { reads } from 'ember-computed';
+import layout              from '../templates/components/form-field';
 
 import formFieldOptions from
   'ember-railio-form-components/mixins/form-field-options';
@@ -20,6 +21,7 @@ function isValidComputedProperty() {
 }
 
 export default Component.extend(formFieldOptions, {
+  layout,
   classNames:        'form-field',
   classNameBindings: [
     'isValid::form-field--invalid',

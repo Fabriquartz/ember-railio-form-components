@@ -3,10 +3,14 @@ import { reads }                         from '@ember/object/computed';
 import { get, defineProperty, computed } from '@ember/object';
 import { isEmpty }                       from '@ember/utils';
 
+import layout from '../templates/components/paper-form-field';
+
 import formFieldOptions from
   'ember-railio-form-components/mixins/form-field-options';
 
 export default Component.extend(formFieldOptions, {
+  layout,
+
   classNames:        'form-field',
   classNameBindings: [
     'isValid::form-field--invalid',
