@@ -1,11 +1,13 @@
 import Component from 'ember-component';
 import run       from 'ember-runloop';
+import layout    from '../templates/components/model-auto-complete';
 import service   from 'ember-service/inject';
 
 import formFieldOptions from
   'ember-railio-form-components/mixins/form-field-options';
 
 export default Component.extend(formFieldOptions, {
+  layout,
   store: service('store'),
 
   lookupModel(query) {

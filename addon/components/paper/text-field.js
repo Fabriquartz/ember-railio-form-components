@@ -2,6 +2,10 @@ import Component     from '@ember/component';
 
 import formFieldOptions from
   'ember-railio-form-components/mixins/form-field-options';
+
+import layout from
+  'ember-railio-form-components/templates/components/paper/input-field';
+
 import { computed, get, set } from '@ember/object';
 
 function isFocusOutEvent(event) {
@@ -9,9 +13,10 @@ function isFocusOutEvent(event) {
 }
 
 export default Component.extend(formFieldOptions, {
-  layoutName: 'components/paper/input-field',
-  inputType:  'text',
-  lazy:       false,
+  layout,
+
+  inputType: 'text',
+  lazy:      false,
 
   format:    (value) => value,
   serialize: (value) => value,
