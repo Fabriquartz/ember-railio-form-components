@@ -1,50 +1,58 @@
-import Component     from '@ember/component';
-
-import formFieldOptions from
-  'ember-railio-form-components/mixins/form-field-options';
-
-import layout from
-  'ember-railio-form-components/templates/components/paper/input-field';
-
-import { computed, get, set } from '@ember/object';
+import { layout }                     from '@ember-decorators/component';
+import Component                      from '@ember/component';
+import { action, computed, get, set } from '@ember/object';
+import formFieldOptions               from 'ember-railio-form-components/mixins/form-field-options';
+import template                       from 'ember-railio-form-components/templates/components/paper/input-field';
 
 function isFocusOutEvent(event) {
   return event && event.type === 'focusout';
 }
 
-export default Component.extend(formFieldOptions, {
-  layout,
+export default
+@layout(template)
+class PaperTextField extends Component.extend(formFieldOptions) {
+  inputType = 'text';
+  lazy = false;
 
-  inputType: 'text',
-  lazy:      false,
+  format(value) {
+    return value;
+  }
 
-  format:    (value) => value,
-  serialize: (value) => value,
+  serialize(value) {
+    return value;
+  }
 
   focusIn() {
     set(this, 'hasFocus', true);
-  },
+  }
 
   focusOut(e) {
     set(this, 'hasFocus', false);
     this.send('changed', get(this, '_value'), e);
-  },
+  }
 
   keyUp(e) {
-    if (e.key === 'Enter')  { typeof this.enter  === 'function' && this.enter(e); }
-    if (e.key === 'Escape') { typeof this.escape === 'function' && this.escape(e); }
-  },
+    if (e.key === 'Enter') {
+      typeof this.enter === 'function' && this.enter(e);
+    }
+    if (e.key === 'Escape') {
+      typeof this.escape === 'function' && this.escape(e);
+    }
+  }
+
+  keyDown() {}
 
   didReceiveAttrs() {
-    this._super(...arguments);
+    super.didReceiveAttrs(...arguments);
 
     if (!get(this, 'hasFocus')) {
       let value = get(this, 'value');
       set(this, '_value', this.format(value));
     }
-  },
+  }
 
-  _htmlAttributes: computed('htmlAttributes', 'name', function() {
+  @computed('htmlAttributes', 'name')
+  get _htmlAttributes() {
     let name           = get(this, 'name');
     let htmlAttributes = get(this, 'htmlAttributes') || {};
 
@@ -52,21 +60,19 @@ export default Component.extend(formFieldOptions, {
       htmlAttributes.name = name;
     }
     return htmlAttributes;
-  }),
+  }
 
-  actions: {
-    changed(value, event, forceUpdate) {
-      let lazy = get(this, 'lazy');
+  @action
+  changed(value, event, forceUpdate) {
+    let lazy = get(this, 'lazy');
 
-      let _value = forceUpdate ||
-        isFocusOutEvent(event) ? this.format(value) : value;
+    let _value = forceUpdate || isFocusOutEvent(event) ? this.format(value) : value;
 
-      set(this, '_value', _value);
+    set(this, '_value', _value);
 
-      if (forceUpdate || !lazy || isFocusOutEvent(event)) {
-        value = this.serialize(value);
-        this.updated(value);
-      }
+    if (forceUpdate || !lazy || isFocusOutEvent(event)) {
+      value = this.serialize(value);
+      this.updated(value);
     }
   }
-});
+}

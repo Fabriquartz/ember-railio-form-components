@@ -10,13 +10,13 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function() {
-    this.actions = { update: (object, propertyPath, value) => {
+    this.update = (object, propertyPath, value) => {
       object.set(propertyPath, value);
-    } };
+    };
   });
 
   test(`Renders a div with class 'form-field'`, async function(assert) {
-    await render(hbs `{{paper-form-field updated=(action 'update')}}`);
+    await render(hbs`{{paper-form-field updated=(fn this.update)}}`);
 
     let $component = this.element.querySelectorAll('div.form-field');
     assert.equal($component.length, 1);
@@ -25,7 +25,7 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
   test(`By default shows propertyPath as label`, async function(assert) {
     await render(hbs `{{paper-form-field propertyPath="number"
                                          type="text-field"
-                                         updated=(action 'update')}}`);
+                                         updated=(fn this.update)}}`);
 
     let $labels = this.element.querySelectorAll('label');
     assert.equal($labels.length, 1, 'shows a label');
@@ -37,7 +37,7 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
   test(`Splices label on camelcase`, async function(assert) {
     await render(hbs `{{paper-form-field propertyPath="numberValue"
                                          type="text-field"
-                                         updated=(action 'update')}}`);
+                                         updated=(fn this.update)}}`);
 
     let labelText  = this.element.querySelector('label').textContent;
 
@@ -47,7 +47,7 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
   test(`Shows no label when label=false`, async function(assert) {
     await render(hbs `{{paper-form-field label=false
                                          type="text-field"
-                                         updated=(action 'update')}}`);
+                                         updated=(fn this.update)}}`);
 
     let $labels = this.element.querySelectorAll('label');
 
@@ -57,7 +57,7 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
   test(`Shows given String as label`, async function(assert) {
     await render(hbs `{{paper-form-field label="Object nr."
                                          type="text-field"
-                                         updated=(action 'update')}}`);
+                                         updated=(fn this.update)}}`);
 
     let labelText  = this.element.querySelector('label').textContent;
 
@@ -76,7 +76,7 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
 
     await render(hbs`{{paper-form-field object=object
                                         propertyPath="numberValue"
-                                        updated=(action 'update')}}`);
+                                        updated=(fn this.update)}}`);
 
     let $component = this.element.querySelector('.form-field');
 
@@ -90,7 +90,7 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
 
     await render(hbs`{{paper-form-field object=object
                                         propertyPath="numberValue"
-                                        updated=(action 'update')}}`);
+                                        updated=(fn this.update)}}`);
 
     let $component = this.element.querySelector('.form-field');
     assert.ok($component.classList.contains('form-field--changed'));
@@ -109,7 +109,7 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
       {{paper-form-field object=object
                          originPath="number"
                          propertyPath="numberValue"
-                         updated=(action 'update')}}`);
+                         updated=(fn this.update)}}`);
 
     let $component = this.element.querySelector('.form-field');
     assert.ok($component.classList.contains('form-field--changed'));
@@ -122,7 +122,7 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
 
     await render(hbs`{{paper-form-field object=object
                                         propertyPath="numberValue"
-                                        updated=(action 'update')}}`);
+                                        updated=(fn this.update)}}`);
 
     let $component = this.element.querySelector('.form-field');
     assert.ok($component.classList.contains('form-field--different'));
@@ -141,7 +141,7 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
       {{paper-form-field type="text-field"
                          object=object
                          propertyPath="name"
-                         updated=(action 'update')}}`);
+                         updated=(fn this.update)}}`);
 
     let $input = this.element.querySelector('input.md-input');
     assert.ok($input, 'shows the component depending on given type');
@@ -160,7 +160,7 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
                          object=object
                          propertyPath="name"
                          name="person-name"
-                         updated=(action 'update')}}`);
+                         updated=(fn this.update)}}`);
 
     let $input = this.element.querySelector('input.md-input');
     assert.equal($input.name, 'person-name', 'passes name to component');
@@ -176,7 +176,7 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
 
     this.set('object', person);
 
-    this.actions.update = function(object, propertyPath, value) {
+    this.update = function(object, propertyPath, value) {
       assert.equal(object, person, 'update function gets right object');
       assert.equal(propertyPath, 'name', 'update function gets right propertyPath');
       assert.equal(value, 'John Black', 'update function gets new value');
@@ -186,7 +186,7 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
       {{paper-form-field type="text-field"
                          object=object
                          propertyPath="name"
-                         updated=(action "update")}}`);
+                         updated=(fn this.update)}}`);
 
     let $input = this.element.querySelector('input.md-input');
 
@@ -207,7 +207,7 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
                          object=object
                          after=afterText
                          propertyPath="text"
-                         updated=(action 'update')}}`);
+                         updated=(fn this.update)}}`);
 
     let $component    = this.element.querySelector('.form-field');
     let $afterContent = this.element.querySelector('.form-field__after').textContent;
@@ -240,7 +240,7 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
                          object=object
                          propertyPath="name"
                          name="person-name"
-                         updated=(action 'update')}}`);
+                         updated=(fn this.update)}}`);
 
     let $input = this.element.querySelector('input.md-input');
     assert.equal($input.name, 'person-name', 'passes name to component');

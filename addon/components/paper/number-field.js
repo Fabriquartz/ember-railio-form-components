@@ -11,11 +11,10 @@ function increaseNumber(value, add) {
   return isBlank(value) ? 0 : value + add;
 }
 
-export default PaperTextField.extend({
-  layoutName: 'components/paper/input-field',
-  inputType:  'text',
-  decimals:   null,
-  lazy:       true,
+export default class PaperNumberField extends PaperTextField {
+  inputType = 'text';
+  decimals = null;
+  lazy = true;
 
   keyDown(e) {
     let addValue;
@@ -36,14 +35,14 @@ export default PaperTextField.extend({
       value = increaseNumber(value, addValue).toFixed(decimalsAmount);
       this.send('changed', toNumber(value), e, true);
     }
-  },
+  }
 
   format(value) {
     let decimals = get(this, 'decimals');
     return formatNumber(value, { decimals });
-  },
+  }
 
   serialize(value) {
     return toNumber(value);
   }
-});
+}

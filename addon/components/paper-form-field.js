@@ -1,30 +1,22 @@
-import Component                         from '@ember/component';
-import { reads }                         from '@ember/object/computed';
-import { get, defineProperty, computed } from '@ember/object';
-import { isEmpty }                       from '@ember/utils';
+import { layout, classNames, classNameBindings } from '@ember-decorators/component';
+import Component                                 from '@ember/component';
+import { reads }                                 from '@ember/object/computed';
+import { action, computed, defineProperty, get } from '@ember/object';
+import { isEmpty }                               from '@ember/utils';
+import formFieldOptions                          from 'ember-railio-form-components/mixins/form-field-options';
 
-import layout from '../templates/components/paper-form-field';
+import template                                  from '../templates/components/paper-form-field';
 
-import formFieldOptions from
-  'ember-railio-form-components/mixins/form-field-options';
-
-export default Component.extend(formFieldOptions, {
-  layout,
-
-  classNames:        'form-field',
-  classNameBindings: [
-    'isValid::form-field--invalid',
-    'isChanged:form-field--changed',
-    'isDifferent:form-field--different',
-    'after:form-field--has-after'],
-
-  _label: computed('label', 'propertyPath', function() {
-    let label        = get(this, 'label');
-    let propertyPath = get(this, 'propertyPath');
-
-    return label === false ? '' : label || propertyPath;
-  }),
-
+export default
+@layout(template)
+@classNames('form-field')
+@classNameBindings(
+  'isValid::form-field--invalid',
+  'isChanged:form-field--changed',
+  'isDifferent:form-field--different',
+  'after:form-field--has-after'
+)
+class PaperFormField extends Component.extend(formFieldOptions) {
   validateUpdateAction() {
     let updated = get(this, 'updated');
 
@@ -33,7 +25,7 @@ export default Component.extend(formFieldOptions, {
     } else if (typeof updated !== 'function') {
       throw new Error(`The 'update' action on '{{form-field}} must be a function.`);
     }
-  },
+  }
 
   didReceiveAttrs() {
     this.validateUpdateAction();
@@ -47,27 +39,38 @@ export default Component.extend(formFieldOptions, {
     defineProperty(this, 'isDifferent', reads(`object.${propertyPath}IsDifferent`));
 
     this._super(...arguments);
-  },
+  }
 
-  errors: computed('propertyPath', 'object.errors.length', function() {
+  @computed('label', 'propertyPath')
+  get _label() {
+    let label        = get(this, 'label');
+    let propertyPath = get(this, 'propertyPath');
+
+    return label === false ? '' : label || propertyPath;
+  }
+
+  @computed('propertyPath', 'object.errors.length')
+  get errors() {
     let propertyPath = get(this, 'propertyPath');
     let errors       = get(this, 'object.errors');
 
     return errors && errors.errorsFor && errors.errorsFor(propertyPath);
-  }),
-
-  isValid: computed('errors.[]', function() {
-    return isEmpty(get(this, 'errors'));
-  }),
-
-  actions: {
-    update(value, ...args) {
-      if (get(this, 'disabled')) { return; }
-
-      let object       = get(this, 'object');
-      let propertyPath = get(this, 'propertyPath');
-
-      this.updated(object, propertyPath, value, ...args);
-    }
   }
-});
+
+  @computed('errors.[]')
+  get isValid() {
+    return isEmpty(get(this, 'errors'));
+  }
+
+  @action
+  update(value, ...args) {
+    if (get(this, 'disabled')) {
+      return;
+    }
+
+    let object       = get(this, 'object');
+    let propertyPath = get(this, 'propertyPath');
+
+    this.updated(object, propertyPath, value, ...args);
+  }
+}

@@ -1,13 +1,11 @@
-import moment         from 'moment';
-import { get }        from '@ember/object';
-import PaperTextField from
-  'ember-railio-form-components/components/paper/text-field';
+import { action, get } from '@ember/object';
+import PaperTextField  from 'ember-railio-form-components/components/paper/text-field';
+import moment          from 'moment';
 
-export default PaperTextField.extend({
-  layoutName: 'components/paper/input-field',
-  inputType:  'text',
-  lazy:       true,
-  dateFormat: 'DD-MM-YYYY',
+export default class PaperDatePicker extends PaperTextField {
+  inputType = 'text';
+  lazy = true;
+  dateFormat = 'DD-MM-YYYY';
 
   keyDown(e) {
     let addValue;
@@ -22,12 +20,12 @@ export default PaperTextField.extend({
       this.send('changed', value.add(addValue, scale).toDate(), e, true);
     }
 
-    this._super(...arguments);
-  },
+    super.keyDown(...arguments);
+  }
 
   format(value) {
     return value ? moment(value).format('DD-MM-YY') : '';
-  },
+  }
 
   serialize(value) {
     value = value === '' ? null : value;
@@ -46,14 +44,15 @@ export default PaperTextField.extend({
     let hours   = _value.hours();
     let minutes = _value.minute();
 
-    return moment(value, format).add(hours, 'hours').add(minutes, 'minutes');
-  },
-
-  actions: {
-    changed(value, e, lazy) {
-      value = value === '' ? null : value;
-
-      this._super(value, e, lazy);
-    }
+    return moment(value, format)
+      .add(hours, 'hours')
+      .add(minutes, 'minutes');
   }
-});
+
+  @action
+  changed(value, e, lazy) {
+    value = value === '' ? null : value;
+
+    super.changed(value, e, lazy);
+  }
+}
