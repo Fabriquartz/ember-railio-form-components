@@ -1,9 +1,6 @@
-import Component        from 'ember-component';
-import textInputMixin   from 'ember-railio-form-components/mixins/text-input-mixin';
-import formFieldOptions from
-  'ember-railio-form-components/mixins/form-field-options';
-
-import get from 'ember-metal/get';
+import get              from 'ember-metal/get';
+import TextInput        from 'ember-railio-form-components/components/text-input';
+import formFieldOptions from 'ember-railio-form-components/mixins/form-field-options';
 
 function textAreaAjust(element) {
   if (element && element.scrollHeight) {
@@ -12,7 +9,7 @@ function textAreaAjust(element) {
   }
 }
 
-export default Component.extend(textInputMixin, formFieldOptions, {
+export default TextInput.extend(formFieldOptions, {
   tagName:           'textarea',
   classNames:        ['text-area'],
   attributeBindings: ['disabled', 'cols', 'rows'],

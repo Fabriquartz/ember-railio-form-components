@@ -1,30 +1,26 @@
-import Component from 'ember-component';
-import computed  from 'ember-computed';
+import { layout, classNames, className } from '@ember-decorators/component';
+import Component                         from '@ember/component';
+import { computed }                      from '@ember/object';
+import { proxyIsEqual as isEqual }       from 'ember-proxy-util';
+import formFieldOptions                  from 'ember-railio-form-components/mixins/form-field-options';
+import template                          from 'ember-railio-form-components/templates/components/railio-radio-button';
 
-import { proxyIsEqual as isEqual } from 'ember-proxy-util';
-
-import formFieldOptions from
-  'ember-railio-form-components/mixins/form-field-options';
-import layout from
-  'ember-railio-form-components/templates/components/railio-radio-button';
-
-export default Component.extend(formFieldOptions, {
-  layout,
-
-  classNames:        ['radio-select__option'],
-  classNameBindings: [
-    'checked:radio-select__option--selected',
-    'icon::no-icon'
-  ],
-
-  icon: computed('showIcon', 'inline', function() {
+export default
+@layout(template)
+@classNames('radio-select__option')
+class RadioButton extends Component.extend(formFieldOptions) {
+  @className('', 'no-icon')
+  @computed('showIcon', 'inline')
+  get icon() {
     if (this.get('inline')) {
       return false;
     }
     return this.get('showIcon');
-  }),
+  }
 
-  checked: computed('option', 'selection', 'optionValuePath', function() {
+  @className('radio-select__option--selected')
+  @computed('option', 'selection', 'optionValuePath')
+  get checked() {
     let optionValuePath = this.get('optionValuePath');
 
     if (optionValuePath) {
@@ -32,16 +28,17 @@ export default Component.extend(formFieldOptions, {
     }
 
     return isEqual(this.get('option'), this.get('selection'));
-  }),
+  }
 
-  label: computed('option', 'optionLabelPath', function() {
+  @computed('option', 'optionLabelPath')
+  get label() {
     let optionLabelPath = this.get('optionLabelPath');
 
     if (optionLabelPath) {
       return this.get(`option.${optionLabelPath}`);
     }
     return this.get('option');
-  }),
+  }
 
   click() {
     let optionValuePath = this.get('optionValuePath');
@@ -51,8 +48,8 @@ export default Component.extend(formFieldOptions, {
       value = this.get(`option.${optionValuePath}`);
     }
 
-    if (typeof this.attrs.updated === 'function') {
-      this.attrs.updated(value);
+    if (typeof this.updated === 'function') {
+      this.updated(value);
     }
   }
-});
+}

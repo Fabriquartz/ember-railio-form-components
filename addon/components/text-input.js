@@ -1,36 +1,41 @@
-import Mixin        from '@ember/object/mixin';
-import { get, set } from '@ember/object';
+import { attributeBindings } from '@ember-decorators/component';
+import Component             from '@ember/component';
+import { action, get, set }  from '@ember/object';
 
-function handleChanged(event) {
-  let value = this.readDOMAttr('value');
+export default
+@attributeBindings('_value:value', 'disabled', 'placeholder', 'name')
+class TextInput extends Component {
+  handleChanged(event) {
+    let value = this.readDOMAttr('value');
 
-  if (typeof this.sanitizeValue === 'function') {
-    let originalValue = value;
-    let [input]         = this.$();
-    let caretPos      = input.selectionStart;
+    if (typeof this.sanitizeValue === 'function') {
+      let originalValue = value;
+      let [input]       = this.$();
+      let caretPos      = input.selectionStart;
 
-    value = this.sanitizeValue(value);
+      value = this.sanitizeValue(value);
 
-    if (originalValue !== value) {
-      this.$().val(value);
-      input.setSelectionRange(caretPos - 1, caretPos - 1);
+      if (originalValue !== value) {
+        this.$().val(value);
+        input.setSelectionRange(caretPos - 1, caretPos - 1);
+      }
     }
+
+    this.send('changed', value, event);
   }
 
-  this.send('changed', value, event);
-}
-
-export default Mixin.create({
-  attributeBindings: ['_value:value', 'disabled', 'placeholder', 'name'],
-
-  input:  handleChanged,
-  change: handleChanged,
+  input() {
+    return this.handleChanged(...arguments);
+  }
+  change() {
+    return this.handleChanged(...arguments);
+  }
 
   focusIn() {
     if (typeof this.attrs.focusIn === 'function') {
       this.attrs.focusIn();
     }
-  },
+  }
 
   focusOut() {
     let value = this.readDOMAttr('value');
@@ -44,7 +49,7 @@ export default Mixin.create({
     }
 
     this.send('changed', value);
-  },
+  }
 
   keyUp(e) {
     if (typeof this.attrs.keyUp === 'function') {
@@ -61,9 +66,9 @@ export default Mixin.create({
         this.attrs.escape();
       }
     }
-  },
+  }
 
-  keyDown() {},
+  keyDown() {}
 
   didReceiveAttrs() {
     let value = this.getAttr('value');
@@ -71,11 +76,12 @@ export default Mixin.create({
       value = this.formatValue(value);
     }
     this.set('_value', value);
-  },
+  }
 
+  @action
   changed(value, event) {
     if (typeof this.attrs.updated === 'function') {
       this.attrs.updated(value, event);
     }
   }
-});
+}

@@ -1,25 +1,18 @@
-import Ember from 'ember';
-import TextField from 'ember-railio-form-components/components/text-field';
+import { attribute }        from '@ember-decorators/component';
+import { action, computed } from '@ember/object';
+import { run }              from '@ember/runloop';
+import TextField            from 'ember-railio-form-components/components/text-field';
 
-const { computed, run } = Ember;
-
-export default TextField.extend({
-  attributeBindings: ['_lazyValue:value'],
-
-  _lazyValue: computed('_value', 'lostFocus', function() {
-    if (!this.get('isFocused')) {
-      return this.get('_value');
-    }
-  }),
-
+export default class LazyTextField extends TextField {
   focusIn() {
     this.set('isFocused', true);
-  },
+    super.focusIn(...arguments);
+  }
 
   focusOut() {
     this.set('isFocused', false);
-    this._super(...arguments);
-  },
+    super.focusOut(...arguments);
+  }
 
   withLazyDisabled(callback) {
     let originalFocus = this.get('isFocused');
@@ -28,13 +21,21 @@ export default TextField.extend({
     callback.call(this);
 
     run.next(() => this.set('isFocused', originalFocus));
-  },
+  }
 
-  actions: {
-    changed() {
-      if (!this.get('isFocused')) {
-        this._super(...arguments);
-      }
+  @attribute('value')
+  @computed('_value', 'lostFocus')
+  get _lazyValue() {
+    if (!this.get('isFocused')) {
+      return this.get('_value');
+    }
+    return '';
+  }
+
+  @action
+  changed() {
+    if (!this.get('isFocused')) {
+      super.changed(...arguments);
     }
   }
-});
+}

@@ -1,25 +1,22 @@
-import Component    from 'ember-component';
-import invokeAction from 'ember-invoke-action';
-import computed     from 'ember-computed';
-import get          from 'ember-metal/get';
+import { layout, classNames, className, attribute } from '@ember-decorators/component';
+import Component                                    from '@ember/component';
+import { action, computed, get }                    from '@ember/object';
+import formFieldOptions                             from 'ember-railio-form-components/mixins/form-field-options';
 
-import layout from '../templates/components/radio-select';
+import template                                     from '../templates/components/radio-select';
 
-import formFieldOptions from
-  'ember-railio-form-components/mixins/form-field-options';
+export default
+@layout(template)
+@classNames('radio-select')
+class RadioSelect extends Component.extend(formFieldOptions) {
+  showIcon = true;
+  defaultEmpty = 'No option selected';
 
-export default Component.extend(formFieldOptions, {
-  layout,
-  classNames:        ['radio-select'],
-  classNameBindings: ['inline:radio-select--inline'],
-  attributeBindings: ['title'],
+  @className('radio-select--inline') inline = false;
 
-  showIcon: true,
-  inline:   false,
-
-  defaultEmpty: 'No option selected',
-
-  title: computed('cycle', 'value', 'options', function() {
+  @attribute
+  @computed('cycle', 'value', 'options')
+  get title() {
     if (get(this, 'cycle')) {
       let next            = this._getNextOption();
       let optionLabelPath = get(this, 'optionLabelPath');
@@ -30,7 +27,9 @@ export default Component.extend(formFieldOptions, {
 
       return `Click to change value to ${next}`;
     }
-  }),
+
+    return '';
+  }
 
   _getNextOption() {
     let value           = get(this, 'value');
@@ -53,17 +52,16 @@ export default Component.extend(formFieldOptions, {
     }
 
     return newValue;
-  },
-
-  actions: {
-    selectItem(value) {
-      let cycle = get(this, 'cycle');
-
-      if (cycle) {
-        value = this._getNextOption();
-      }
-
-      invokeAction(this, 'updated', value);
-    }
   }
-});
+
+  @action
+  selectItem(value) {
+    let cycle = get(this, 'cycle');
+
+    if (cycle) {
+      value = this._getNextOption();
+    }
+
+    this.updated(value);
+  }
+}

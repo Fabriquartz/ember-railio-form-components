@@ -1,4 +1,6 @@
-import LazyTextField from 'ember-railio-form-components/components/lazy-text-field';
+import { classNames }             from '@ember-decorators/component';
+import { action }                 from '@ember/object';
+import LazyTextField              from 'ember-railio-form-components/components/lazy-text-field';
 import { toNumber, formatNumber } from 'ember-railio-formatting';
 
 function sliceDecimals(value, decimals) {
@@ -24,23 +26,23 @@ function increaseNumber(value, add) {
   return parseFloat(increasedValue.toFixed(decimalsAmount));
 }
 
-export default LazyTextField.extend({
-  classNames: ['number-field'],
-
-  maxDecimals: null,
+export default
+@classNames('number-field')
+class NumberField extends LazyTextField {
+  maxDecimals;
 
   didReceiveAttrs() {
     this.set('numberValue', this.getAttr('value'));
-    this._super(...arguments);
-  },
+    super.didReceiveAttrs(...arguments);
+  }
 
   sanitizeValue(value) {
     return value.replace(/[^0-9,.\- ]+/g, '');
-  },
+  }
 
   formatValue(value) {
     return formatNumber(value, { decimals: this.get('maxDecimals') });
-  },
+  }
 
   keyDown(e) {
     let value = this.$().val();
@@ -58,29 +60,28 @@ export default LazyTextField.extend({
       });
     }
 
-    this._super(...arguments);
-  },
-
-  actions: {
-    changed(value) {
-      let numberValue;
-
-      try {
-        numberValue = toNumber(value);
-
-        let maxDecimals = this.get('maxDecimals');
-        if (maxDecimals != null) {
-          numberValue = sliceDecimals(numberValue, this.get('maxDecimals'));
-        }
-      } catch(_) {
-        // continue regardless of error
-      }
-
-      if (isNaN(numberValue)) {
-        numberValue = null;
-      }
-
-      this._super(numberValue);
-    }
+    super.keyDown(...arguments);
   }
-});
+
+  @action
+  changed(value) {
+    let numberValue;
+
+    try {
+      numberValue = toNumber(value);
+
+      let maxDecimals = this.get('maxDecimals');
+      if (maxDecimals != null) {
+        numberValue = sliceDecimals(numberValue, this.get('maxDecimals'));
+      }
+    } catch(_) {
+      // continue regardless of error
+    }
+
+    if (isNaN(numberValue)) {
+      numberValue = null;
+    }
+
+    super.changed(numberValue);
+  }
+}

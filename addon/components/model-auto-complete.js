@@ -1,14 +1,16 @@
-import Component from 'ember-component';
-import run       from 'ember-runloop';
-import layout    from '../templates/components/model-auto-complete';
-import service   from 'ember-service/inject';
+import { layout }            from '@ember-decorators/component';
+import Component             from '@ember/component';
+import { action }            from '@ember/object';
+import { run }               from '@ember/runloop';
+import { inject as service } from '@ember/service';
+import formFieldOptions      from 'ember-railio-form-components/mixins/form-field-options';
 
-import formFieldOptions from
-  'ember-railio-form-components/mixins/form-field-options';
+import template              from '../templates/components/model-auto-complete';
 
-export default Component.extend(formFieldOptions, {
-  layout,
-  store: service('store'),
+export default
+@layout(template)
+class ModelAutoComplete extends Component.extend(formFieldOptions) {
+  @service store;
 
   lookupModel(query) {
     let rQuery    = new RegExp(query, 'i');
@@ -29,11 +31,10 @@ export default Component.extend(formFieldOptions, {
     });
 
     this.set('dataSet', dataSet);
-  },
-
-  actions: {
-    onQueryChange(query) {
-      run.debounce(this, this.lookupModel, query, 500);
-    }
   }
-});
+
+  @action
+  onQueryChange(query) {
+    run.debounce(this, this.lookupModel, query, 500);
+  }
+}

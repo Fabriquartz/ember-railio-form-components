@@ -1,17 +1,15 @@
-import Component from 'ember-component';
-import formFieldOptions from
-  'ember-railio-form-components/mixins/form-field-options';
+import { classNames, layout } from '@ember-decorators/component';
+import { action }             from '@ember/object';
+import Component              from 'ember-component';
+import formFieldOptions       from 'ember-railio-form-components/mixins/form-field-options';
+import template               from 'ember-railio-form-components/templates/components/select-auto-complete';
 
-import layout from
-  'ember-railio-form-components/templates/components/select-auto-complete';
-
-export default Component.extend(formFieldOptions, {
-  classNames: ['select-auto-complete'],
-  layout,
-
-  actions: {
-    onQueryChange(query) {
-      this.onQueryChange && this.onQueryChange(query);
-    }
+export default
+@classNames('select-auto-complete')
+@layout(template)
+class SelectAutoComplete extends Component.extend(formFieldOptions) {
+  @action
+  queryChange(query) {
+    this.onQueryChange && this.onQueryChange(query);
   }
-});
+}

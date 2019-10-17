@@ -4,14 +4,14 @@
                           optionValuePath=optionValuePath
                           option=value
                           selection=value
-                          updated=(action "selectItem")
+                          updated=(fn this.selectItem)
                           inline=inline}}
   {{else}}
     {{railio-radio-button optionLabelPath=optionLabelPath
                           optionValuePath=optionValuePath
                           option=defaultEmpty
                           selection=defaultEmpty
-                          updated=(action "selectItem")
+                          updated=(fn this.selectItem)
                           classNames="radio-select__option--empty"
                           inline=inline}}
   {{/if}}
@@ -21,7 +21,7 @@
                           optionValuePath=optionValuePath
                           option=option
                           selection=value
-                          updated=(action "selectItem")
+                          updated=(fn this.selectItem)
                           showIcon=showIcon
                           inline=inline}}
   {{/each}}

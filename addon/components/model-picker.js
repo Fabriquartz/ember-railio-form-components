@@ -1,26 +1,27 @@
-import Component             from '@ember/component';
-import { computed, get }     from '@ember/object';
-import { inject as service } from '@ember/service';
-import { isBlank }           from '@ember/utils';
+import { classNames, layout }    from '@ember-decorators/component';
+import Component                 from '@ember/component';
+import { action, computed, get } from '@ember/object';
+import { inject as service }     from '@ember/service';
+import { isBlank }               from '@ember/utils';
+import { restartableTask }       from 'ember-concurrency-decorators';
+import { timeout }               from 'ember-concurrency';
+import invokeAction              from 'ember-invoke-action';
+import formFieldOptions          from 'ember-railio-form-components/mixins/form-field-options';
 
-import layout from '../templates/components/model-picker';
+import template                  from '../templates/components/model-picker';
+import groupBy                   from '../utils/group-by';
 
-import formFieldOptions from
-  'ember-railio-form-components/mixins/form-field-options';
+export default
+@classNames('model-picker')
+@layout(template)
+class ModelPicker extends Component.extend(formFieldOptions) {
+  pageSizeParam = 'per_page';
+  emptyValue = [];
 
-import { task, timeout } from 'ember-concurrency';
-import invokeAction      from 'ember-invoke-action';
-import groupBy           from '../utils/group-by';
+  @service store;
 
-export default Component.extend(formFieldOptions, {
-  classNames: ['model-picker'],
-  layout,
-
-  pageSizeParam: 'per_page',
-
-  store: service(),
-
-  _selectAll: computed('multiSelect', 'content.[]', 'value.[]', function() {
+  @computed('multiSelect', 'content.[]', 'value.[]')
+  get _selectAll() {
     let content = get(this, 'content') || [];
     let value = get(this, 'value') || [];
 
@@ -33,18 +34,18 @@ export default Component.extend(formFieldOptions, {
       get(content, 'length') === get(value, 'length') &&
       value.every((item) => content.includes(item))
     );
-  }),
+  }
 
-  emptyValue: [],
-
-  lookupOnSearch: computed('preload', 'queryOnSearch', function() {
-    let preload = get(this, 'preload');
+  @computed('preload', 'queryOnSearch')
+  get lookupOnSearch() {
+    let preload       = get(this, 'preload');
     let queryOnSearch = get(this, 'queryOnSearch');
 
     return queryOnSearch || !preload;
-  }),
+  }
 
-  content: computed('preload', 'model', 'filter', function() {
+  @computed('preload', 'model', 'filter')
+  get content() {
     let filter  = get(this, 'filter');
     let preload = get(this, 'preload');
 
@@ -61,9 +62,10 @@ export default Component.extend(formFieldOptions, {
       query[get(this, 'pageSizeParam')] = preload;
     }
     return store.query(model, query);
-  }),
+  }
 
-  lookupModel: task(function* (term) {
+  @restartableTask
+  lookupModel = function* (term) {
     if (isBlank(term)) {
       return [];
     }
@@ -90,11 +92,10 @@ export default Component.extend(formFieldOptions, {
         }
         return groupBy(list, groupLabelPath);
       });
-  }).restartable(),
+  };
 
-  actions: {
-    update(value) {
-      invokeAction(this, 'updated', value);
-    }
+  @action
+  update(value) {
+    invokeAction(this, 'updated', value);
   }
-});
+}

@@ -1,15 +1,18 @@
-import LazyTextField from '../components/lazy-text-field';
-import moment        from 'moment';
-import { get, set }  from '@ember/object';
+import { classNames }       from '@ember-decorators/component';
+import { action, get, set } from '@ember/object';
+import moment               from 'moment';
 
-export default LazyTextField.extend({
-  classNames: ['date-picker'],
-  dateFormat: 'DD-MM-YYYY',
+import LazyTextField        from '../components/lazy-text-field';
+
+export default
+@classNames('date-picker')
+class DatePicker extends LazyTextField {
+  dateFormat = 'DD-MM-YYYY';
 
   didReceiveAttrs() {
+    super.didReceiveAttrs(...arguments);
     set(this, 'date', this.getAttr('value'));
-    this._super(...arguments);
-  },
+  }
 
   keyDown(e) {
     let value = moment(get(this, 'date'));
@@ -29,8 +32,8 @@ export default LazyTextField.extend({
       });
     }
 
-    this._super(...arguments);
-  },
+    super.keyDown(...arguments);
+  }
 
   formatValue(value) {
     if (!(value && value.getDate && value.getMonth && value.getFullYear)) {
@@ -42,28 +45,29 @@ export default LazyTextField.extend({
     let years  = value.getFullYear().toString().slice(-2);
 
     return `${days}-${months}-${years}`;
-  },
-
-  actions: {
-    changed(value) {
-      value = value === '' ? null : value;
-
-      if (value instanceof Date || value == null) {
-        return this._super(value);
-      }
-
-      // Add a zero for shorthand: DMM => DDMM or DMMYY => DDMMYY
-      if ([3, 5].includes(get(value, 'length'))) {
-        value = `0${value}`;
-      }
-
-      let format  = get(this, 'dateFormat');
-      let _value  = moment(get(this, 'value'));
-      let hours   = _value.hours();
-      let minutes = _value.minute();
-
-      value = moment(value, format).add(hours, 'hours').add(minutes, 'minutes');
-      this._super(value.toDate());
-    }
   }
-});
+
+  @action
+  changed(value) {
+    value = value === '' ? null : value;
+
+    if (value instanceof Date || value == null) {
+      return super.changed(value);
+    }
+
+    // Add a zero for shorthand: DMM => DDMM or DMMYY => DDMMYY
+    if ([3, 5].includes(get(value, 'length'))) {
+      value = `0${value}`;
+    }
+
+    let format  = get(this, 'dateFormat');
+    let _value  = moment(get(this, 'value'));
+    let hours   = _value.hours();
+    let minutes = _value.minute();
+
+    value = moment(value, format)
+      .add(hours, 'hours')
+      .add(minutes, 'minutes');
+    super.changed(value.toDate());
+  }
+}
