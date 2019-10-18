@@ -1,12 +1,8 @@
-import { module, test } from 'qunit';
-import { setupTest } from 'ember-qunit';
-
-import FormFieldOptionsMixin
-  from 'ember-railio-form-components/mixins/form-field-options';
-
-import Component from 'ember-component';
-
-import { get } from '@ember/object';
+import Component             from '@ember/component';
+import { get }               from '@ember/object';
+import { setupTest }         from 'ember-qunit';
+import FormFieldOptionsMixin from 'ember-railio-form-components/mixins/form-field-options';
+import { module, test }      from 'qunit';
 
 module('Unit | Mixin | form-field-options', function(hooks) {
   setupTest(hooks);

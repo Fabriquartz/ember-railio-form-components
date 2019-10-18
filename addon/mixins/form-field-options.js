@@ -1,7 +1,6 @@
-import Mixin              from 'ember-metal/mixin';
-import { reads }          from 'ember-computed';
-import { get }            from '@ember/object';
-import { defineProperty } from '@ember/object';
+import { reads }               from '@ember/object/computed';
+import Mixin                   from '@ember/object/mixin';
+import { defineProperty, get } from '@ember/object';
 
 export default Mixin.create({
   didReceiveAttrs() {
@@ -14,8 +13,7 @@ export default Mixin.create({
         return;
       }
 
-      defineProperty(this, attributeName,
-        reads(`componentProperties.${attributeName}`));
+      defineProperty(this, attributeName, reads(`componentProperties.${attributeName}`));
     });
   }
 });

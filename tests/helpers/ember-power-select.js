@@ -1,12 +1,12 @@
-import run               from 'ember-runloop';
-import $                 from 'jquery';
+import { run }           from '@ember/runloop';
 import { click, fillIn } from '@ember/test-helpers';
+import $                 from 'jquery';
 
 function fireNativeMouseEvent(eventType, selectorOrDomElement, options = {}) {
   let eventOptions = { bubbles: true, cancelable: true, view: window };
   let event        = new window.Event(eventType, eventOptions);
 
-  Object.keys(options).forEach((key) => event[key] = options[key]);
+  Object.keys(options).forEach((key) => (event[key] = options[key]));
   let target;
   if (typeof selectorOrDomElement === 'string') {
     target = $(selectorOrDomElement)[0];
@@ -82,7 +82,9 @@ export function typeInSearch(scopeOrText, text) {
     '.ember-power-select-search input',
     '.ember-power-select-trigger-multiple-input',
     'input[type="search"]'
-  ].map((selector) => `${scope} ${selector}`).join(', ');
+  ]
+    .map((selector) => `${scope} ${selector}`)
+    .join(', ');
 
   return fillIn(selectors, text);
 }

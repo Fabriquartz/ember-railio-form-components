@@ -1,16 +1,7 @@
-import hbs              from 'htmlbars-inline-precompile';
-import { module, test } from 'qunit';
-
-import {
-  render,
-  find,
-  focus,
-  fillIn,
-  blur,
-  triggerKeyEvent
-} from '@ember/test-helpers';
-
-import { setupRenderingTest } from 'ember-qunit';
+import { render, find, focus, fillIn, blur, triggerKeyEvent } from '@ember/test-helpers';
+import { setupRenderingTest }                                 from 'ember-qunit';
+import hbs                                                    from 'htmlbars-inline-precompile';
+import { module, test }                                       from 'qunit';
 
 module('Integration | Component | {{paper/date-picker}}', function(hooks) {
   setupRenderingTest(hooks);
@@ -60,20 +51,16 @@ module('Integration | Component | {{paper/date-picker}}', function(hooks) {
   test('Filling in date shorthands', async function(assert) {
     await render(hbs`{{paper/date-picker value=value updated=(action "update")}}`);
 
-    let $input = find('input');
-    let year = new Date().getFullYear();
+    let $input  = find('input');
+    let year    = new Date().getFullYear();
     let yearStr = year.toString().slice(-2);
-    let month = `0${new Date().getMonth() + 1}`.substr(-2);
+    let month   = `0${new Date().getMonth() + 1}`.substr(-2);
 
     await focus($input);
     await fillIn($input, '23052015');
     await blur($input);
 
-    assert.equal(
-      $input.value,
-      '23-05-15',
-      'Formats 8-digit shorthand to date string'
-    );
+    assert.equal($input.value, '23-05-15', 'Formats 8-digit shorthand to date string');
     assert.equal(
       +this.get('value'),
       +new Date(2015, 4, 23),
@@ -84,11 +71,7 @@ module('Integration | Component | {{paper/date-picker}}', function(hooks) {
     await fillIn($input, '150515');
     await blur($input);
 
-    assert.equal(
-      $input.value,
-      '15-05-15',
-      'Formats 6-digit shorthand to date string'
-    );
+    assert.equal($input.value, '15-05-15', 'Formats 6-digit shorthand to date string');
     assert.equal(
       +this.get('value'),
       +new Date(2015, 4, 15),
@@ -99,11 +82,7 @@ module('Integration | Component | {{paper/date-picker}}', function(hooks) {
     await fillIn($input, '90515');
     await blur($input);
 
-    assert.equal(
-      $input.value,
-      '09-05-15',
-      'Formats 5-digit shorthand to date string'
-    );
+    assert.equal($input.value, '09-05-15', 'Formats 5-digit shorthand to date string');
     assert.equal(
       +this.get('value'),
       +new Date(2015, 4, 9),

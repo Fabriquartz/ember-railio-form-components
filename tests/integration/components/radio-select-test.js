@@ -1,17 +1,15 @@
-import { module, test } from 'qunit';
+import EmberObject, { set }   from '@ember/object';
+import { render }             from '@ember/test-helpers';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
-import EmberObject from 'ember-object';
-
-import hbs from 'htmlbars-inline-precompile';
-import set from 'ember-metal/set';
+import hbs                    from 'htmlbars-inline-precompile';
+import { module, test }       from 'qunit';
 
 module('Integration | Component | {{radio-select}}', function(hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function() {
     this.actions = {};
-    this.send = (actionName, ...args) => this.actions[actionName].apply(this, args);
+    this.send    = (actionName, ...args) => this.actions[actionName].apply(this, args);
   });
 
   test('shows options', async function(assert) {
@@ -28,7 +26,7 @@ module('Integration | Component | {{radio-select}}', function(hooks) {
   });
 
   test('value selected', async function(assert) {
-    let selectValue =  'Option 2';
+    let selectValue = 'Option 2';
     this.set('options', ['Option 1', selectValue]);
     this.set('selection', selectValue);
 
@@ -42,7 +40,7 @@ module('Integration | Component | {{radio-select}}', function(hooks) {
   test('select value calls updated action', async function(assert) {
     assert.expect(1);
 
-    let selectValue =  'Option 2';
+    let selectValue = 'Option 2';
     this.set('options', ['Option 1', selectValue, 'Option 3']);
     this.set('selection', null);
 
@@ -60,7 +58,7 @@ module('Integration | Component | {{radio-select}}', function(hooks) {
 
   test('shows optionLabel and selects optionValue', async function(assert) {
     assert.expect(2);
-    let firstValue = { label: 'Option 1', value: 'Value 1' };
+    let firstValue  = { label: 'Option 1', value: 'Value 1' };
     let secondValue = { label: 'Option 2', value: 'Value 2' };
 
     this.set('options', [firstValue, secondValue]);
@@ -84,8 +82,8 @@ module('Integration | Component | {{radio-select}}', function(hooks) {
   test('works with form-field wrapper', async function(assert) {
     assert.expect(6);
 
-    let firstValue = 'Option 1';
-    let secondValue =  'Option 2';
+    let firstValue  = 'Option 1';
+    let secondValue = 'Option 2';
     this.set('options', [firstValue, secondValue, 'Option 3']);
     this.set('object', EmberObject.create({ selection: firstValue }));
 
@@ -137,8 +135,7 @@ module('Integration | Component | {{radio-select}}', function(hooks) {
     assert.equal($icons.length, 0);
   });
 
-  test('cycle true: shows only selection and changes on click',
-  async function(assert) {
+  test('cycle true: shows only selection and changes on click', async function(assert) {
     set(this, 'cycle', true);
 
     set(this, 'options', ['Option 1', 'Option 2', 'Option 3']);

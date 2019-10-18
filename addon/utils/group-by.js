@@ -1,12 +1,12 @@
-import EmberObject from 'ember-object';
-
-import { A } from 'ember-array/utils';
-import get   from 'ember-metal/get';
+import { A }                from '@ember/array';
+import EmberObject, { get } from '@ember/object';
 
 export default function groupBy(content, groupPath) {
   let groups = A();
 
-  if (!groupPath) { return content; }
+  if (!groupPath) {
+    return content;
+  }
 
   if (content && content.length) {
     content.forEach((item) => {

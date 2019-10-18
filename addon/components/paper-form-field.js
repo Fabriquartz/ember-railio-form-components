@@ -33,9 +33,9 @@ class PaperFormField extends Component.extend(formFieldOptions) {
     let originPath   = this.get('originPath');
     let propertyPath = this.get('propertyPath');
 
-    let changedPath  = originPath || propertyPath;
+    let changedPath = originPath || propertyPath;
 
-    defineProperty(this, 'isChanged',   reads(`object.${changedPath}IsChanged`));
+    defineProperty(this, 'isChanged', reads(`object.${changedPath}IsChanged`));
     defineProperty(this, 'isDifferent', reads(`object.${propertyPath}IsDifferent`));
 
     this._super(...arguments);

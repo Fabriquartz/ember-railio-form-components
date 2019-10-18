@@ -1,16 +1,7 @@
-import { module, test }       from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
-
-import {
-  render,
-  find,
-  blur,
-  triggerEvent,
-  focus,
-  fillIn
-} from '@ember/test-helpers';
-
-import hbs from 'htmlbars-inline-precompile';
+import { render, find, blur, triggerEvent, focus, fillIn } from '@ember/test-helpers';
+import { setupRenderingTest }                              from 'ember-qunit';
+import hbs                                                 from 'htmlbars-inline-precompile';
+import { module, test }                                    from 'qunit';
 
 module('Integration | Component | {{paper/text-field}}', function(hooks) {
   setupRenderingTest(hooks);
@@ -75,8 +66,7 @@ module('Integration | Component | {{paper/text-field}}', function(hooks) {
     assert.equal(this.get('value'), '');
   });
 
-  test('Format function only triggers on init and on focusOut',
-  async function(assert) {
+  test('Format function only triggers on init and on focusOut', async function(assert) {
     assert.expect(6);
 
     this.set('value', 'Foo');

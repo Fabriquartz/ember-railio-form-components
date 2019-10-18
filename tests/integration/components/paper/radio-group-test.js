@@ -1,7 +1,7 @@
-import { module, test }           from 'qunit';
 import { render, findAll, click } from '@ember/test-helpers';
-import hbs                        from 'htmlbars-inline-precompile';
 import { setupRenderingTest }     from 'ember-qunit';
+import hbs                        from 'htmlbars-inline-precompile';
+import { module, test }           from 'qunit';
 
 module('Integration | Component | {{paper/radio-group}}', function(hooks) {
   setupRenderingTest(hooks);

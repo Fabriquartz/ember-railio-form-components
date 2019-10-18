@@ -1,9 +1,6 @@
-import { get }     from '@ember/object';
-import { isBlank } from '@ember/utils';
-
-import PaperTextField from
-  'ember-railio-form-components/components/paper/text-field';
-
+import { get }                    from '@ember/object';
+import { isBlank }                from '@ember/utils';
+import PaperTextField             from 'ember-railio-form-components/components/paper/text-field';
 import { toNumber, formatNumber } from 'ember-railio-formatting';
 
 function increaseNumber(value, add) {
@@ -20,8 +17,12 @@ export default class PaperNumberField extends PaperTextField {
     let addValue;
     let value = get(this, 'value') || 0;
 
-    if (e.key === 'ArrowUp')   { addValue = 1; }
-    if (e.key === 'ArrowDown') { addValue = -1; }
+    if (e.key === 'ArrowUp') {
+      addValue = 1;
+    }
+    if (e.key === 'ArrowDown') {
+      addValue = -1;
+    }
 
     if (addValue) {
       e.preventDefault();

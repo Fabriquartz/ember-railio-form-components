@@ -1,11 +1,11 @@
-import { module, test }               from 'qunit';
-import { setupRenderingTest }         from 'ember-qunit';
+import EmberObject                    from '@ember/object';
 import { render }                     from '@ember/test-helpers';
-import EmberObject                    from 'ember-object';
-import { clickTrigger, typeInSearch } from '../../helpers/ember-power-select';
+import { setupRenderingTest }         from 'ember-qunit';
+import hbs                            from 'htmlbars-inline-precompile';
+import $                              from 'jquery';
+import { module, test }               from 'qunit';
 
-import hbs from 'htmlbars-inline-precompile';
-import $   from 'jquery';
+import { clickTrigger, typeInSearch } from '../../helpers/ember-power-select';
 
 module('Integration | Component | {{select-auto-complete}}', function(hooks) {
   setupRenderingTest(hooks);

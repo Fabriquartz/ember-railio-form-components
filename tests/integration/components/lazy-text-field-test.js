@@ -1,17 +1,15 @@
-import { module, test } from 'qunit';
+import { run }                from '@ember/runloop';
+import { render, find }       from '@ember/test-helpers';
 import { setupRenderingTest } from 'ember-qunit';
-
-import { render, find } from '@ember/test-helpers';
-
-import hbs from 'htmlbars-inline-precompile';
-import run from 'ember-runloop';
+import hbs                    from 'htmlbars-inline-precompile';
+import { module, test }       from 'qunit';
 
 module('Integration | Component | {{lazy-text-field}}', function(hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function() {
     this.actions = {};
-    this.send = (actionName, ...args) => this.actions[actionName].apply(this, args);
+    this.send    = (actionName, ...args) => this.actions[actionName].apply(this, args);
   });
 
   test('displays initial value', async function(assert) {
@@ -93,8 +91,7 @@ module('Integration | Component | {{lazy-text-field}}', function(hooks) {
     assert.equal($input.val(), '');
   });
 
-  test('when not having focus update to value are propagated',
-  async function(assert) {
+  test('when not having focus update to value are propagated', async function(assert) {
     this.set('value', '');
     await render(hbs`{{lazy-text-field value=value}}`);
 

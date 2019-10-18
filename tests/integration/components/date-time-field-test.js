@@ -1,19 +1,16 @@
-import hbs    from 'htmlbars-inline-precompile';
-import run    from 'ember-runloop';
-import moment from 'moment';
-
-import { module, test } from 'qunit';
-
+import { run }                from '@ember/runloop';
+import { render, click }      from '@ember/test-helpers';
 import { setupRenderingTest } from 'ember-qunit';
-
-import { render, click } from '@ember/test-helpers';
+import hbs                    from 'htmlbars-inline-precompile';
+import moment                 from 'moment';
+import { module, test }       from 'qunit';
 
 module('Integration | Component | {{date-time-field}}', function(hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function() {
     this.actions = {};
-    this.send = (actionName, ...args) => this.actions[actionName].apply(this, args);
+    this.send    = (actionName, ...args) => this.actions[actionName].apply(this, args);
   });
 
   hooks.beforeEach(function() {
@@ -39,15 +36,26 @@ module('Integration | Component | {{date-time-field}}', function(hooks) {
       $timeInput.trigger('input');
     });
 
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 2, 13, 30)),
-                 'updates date and time');
+    assert.equal(
+      +this.get('value'),
+      +new Date(2015, 0, 2, 13, 30),
+      'updates date and time'
+    );
   });
 
   test('set to now', async function(assert) {
     await render(hbs`{{date-time-field value=value updated=(action "update")}}`);
     await click('.date-time-field-clock');
-    assert.equal(moment(this.get('value')).seconds(0).milliseconds(0).toISOString(),
-                 moment().seconds(0).milliseconds(0).toISOString());
+    assert.equal(
+      moment(this.get('value'))
+        .seconds(0)
+        .milliseconds(0)
+        .toISOString(),
+      moment()
+        .seconds(0)
+        .milliseconds(0)
+        .toISOString()
+    );
   });
 
   test('unset time', async function(assert) {

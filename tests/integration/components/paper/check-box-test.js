@@ -1,7 +1,7 @@
-import { module, test }        from 'qunit';
 import { render, find, click } from '@ember/test-helpers';
-import hbs                     from 'htmlbars-inline-precompile';
 import { setupRenderingTest }  from 'ember-qunit';
+import hbs                     from 'htmlbars-inline-precompile';
+import { module, test }        from 'qunit';
 
 module('Integration | Component | {{paper/check-box}}', function(hooks) {
   setupRenderingTest(hooks);

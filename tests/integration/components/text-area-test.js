@@ -1,17 +1,16 @@
-import { module, skip, test } from 'qunit';
+import EmberObject            from '@ember/object';
+import { run }                from '@ember/runloop';
+import { render }             from '@ember/test-helpers';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
-import EmberObject from 'ember-object';
-
-import hbs from 'htmlbars-inline-precompile';
-import run from 'ember-runloop';
+import hbs                    from 'htmlbars-inline-precompile';
+import { module, skip, test } from 'qunit';
 
 module('Integration | Component | {{text-area}}', function(hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function() {
     this.actions = {};
-    this.send = (actionName, ...args) => this.actions[actionName].apply(this, args);
+    this.send    = (actionName, ...args) => this.actions[actionName].apply(this, args);
   });
 
   test('renders a text-area with value', async function(assert) {
@@ -27,7 +26,7 @@ module('Integration | Component | {{text-area}}', function(hooks) {
   // Skipped because test fails on Travis, but runs locally
   skip('Sizes with input', function(assert) {
     let chromeTextAreaMargin = 4;
-    let lineHeight = 25;
+    let lineHeight           = 25;
 
     this.set('value', 'This is the 1st line');
 
@@ -124,10 +123,6 @@ module('Integration | Component | {{text-area}}', function(hooks) {
     });
 
     assert.equal($textarea.val(), 'John Black', 'changes the input value');
-    assert.equal(
-      this.get('object.name'),
-      'John White',
-      `doesn't update object value`
-    );
+    assert.equal(this.get('object.name'), 'John White', `doesn't update object value`);
   });
 });

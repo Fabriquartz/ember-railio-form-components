@@ -1,10 +1,9 @@
-import Ember               from 'ember';
 import Component           from 'ember-component';
 import computed, { reads } from 'ember-computed';
-import layout              from '../templates/components/form-field';
+import formFieldOptions    from 'ember-railio-form-components/mixins/form-field-options';
+import Ember               from 'ember';
 
-import formFieldOptions from
-  'ember-railio-form-components/mixins/form-field-options';
+import layout              from '../templates/components/form-field';
 
 const { defineProperty } = Ember;
 
@@ -26,7 +25,8 @@ export default Component.extend(formFieldOptions, {
   classNameBindings: [
     'isValid::form-field--invalid',
     'isChanged:form-field--changed',
-    'isDifferent:form-field--different'],
+    'isDifferent:form-field--different'
+  ],
 
   labelText: computed('label', 'propertyPath', function() {
     let propertyPath = this.get('propertyPath');

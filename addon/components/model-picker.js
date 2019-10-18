@@ -23,7 +23,7 @@ class ModelPicker extends Component.extend(formFieldOptions) {
   @computed('multiSelect', 'content.[]', 'value.[]')
   get _selectAll() {
     let content = get(this, 'content') || [];
-    let value = get(this, 'value') || [];
+    let value   = get(this, 'value') || [];
 
     return (
       get(this, 'multiSelect') &&
@@ -72,12 +72,12 @@ class ModelPicker extends Component.extend(formFieldOptions) {
 
     yield timeout(1000);
 
-    let model = get(this, 'model');
-    let searchProperty = get(this, 'searchProperty');
-    let groupLabelPath = get(this, 'groupLabelPath');
-    let sortFunction = get(this, 'sortFunction');
-    let filter = get(this, 'filter') || {};
-    let query = { filter };
+    let model             = get(this, 'model');
+    let searchProperty    = get(this, 'searchProperty');
+    let groupLabelPath    = get(this, 'groupLabelPath');
+    let sortFunction      = get(this, 'sortFunction');
+    let filter            = get(this, 'filter') || {};
+    let query             = { filter };
     query[searchProperty] = term;
 
     return get(this, 'store')

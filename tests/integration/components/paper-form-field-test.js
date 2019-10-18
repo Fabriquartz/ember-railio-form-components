@@ -1,10 +1,9 @@
-import { module, test }       from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
+import EmberObject            from '@ember/object';
+import { run }                from '@ember/runloop';
 import { render, fillIn }     from '@ember/test-helpers';
-import EmberObject            from 'ember-object';
-
-import hbs from 'htmlbars-inline-precompile';
-import run from 'ember-runloop';
+import { setupRenderingTest } from 'ember-qunit';
+import hbs                    from 'htmlbars-inline-precompile';
+import { module, test }       from 'qunit';
 
 module('Integration | Component | {{paper-form-field}}', function(hooks) {
   setupRenderingTest(hooks);
@@ -23,7 +22,7 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
   });
 
   test(`By default shows propertyPath as label`, async function(assert) {
-    await render(hbs `{{paper-form-field propertyPath="number"
+    await render(hbs`{{paper-form-field propertyPath="number"
                                          type="text-field"
                                          updated=(fn this.update)}}`);
 
@@ -35,17 +34,17 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
   });
 
   test(`Splices label on camelcase`, async function(assert) {
-    await render(hbs `{{paper-form-field propertyPath="numberValue"
+    await render(hbs`{{paper-form-field propertyPath="numberValue"
                                          type="text-field"
                                          updated=(fn this.update)}}`);
 
-    let labelText  = this.element.querySelector('label').textContent;
+    let labelText = this.element.querySelector('label').textContent;
 
     assert.equal(labelText, 'Number value');
   });
 
   test(`Shows no label when label=false`, async function(assert) {
-    await render(hbs `{{paper-form-field label=false
+    await render(hbs`{{paper-form-field label=false
                                          type="text-field"
                                          updated=(fn this.update)}}`);
 
@@ -55,24 +54,26 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
   });
 
   test(`Shows given String as label`, async function(assert) {
-    await render(hbs `{{paper-form-field label="Object nr."
+    await render(hbs`{{paper-form-field label="Object nr."
                                          type="text-field"
                                          updated=(fn this.update)}}`);
 
-    let labelText  = this.element.querySelector('label').textContent;
+    let labelText = this.element.querySelector('label').textContent;
 
     assert.equal(labelText, 'Object nr.');
   });
 
-  test(`Gets class 'invalid' when object.errors.propertyPath has errors`,
-  async function(assert) {
-    this.set('object', EmberObject.create({
-      errors: EmberObject.create({
-        errorsFor() {
-          return { numberValue: ['first error message'] };
-        }
+  test(`Gets class 'invalid' when object.errors.propertyPath has errors`, async function(assert) {
+    this.set(
+      'object',
+      EmberObject.create({
+        errors: EmberObject.create({
+          errorsFor() {
+            return { numberValue: ['first error message'] };
+          }
+        })
       })
-    }));
+    );
 
     await render(hbs`{{paper-form-field object=object
                                         propertyPath="numberValue"
@@ -84,9 +85,12 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
   });
 
   test(`Gets class 'changed' when value is unsaved`, async function(assert) {
-    this.set('object', EmberObject.create({
-      numberValueIsChanged: true
-    }));
+    this.set(
+      'object',
+      EmberObject.create({
+        numberValueIsChanged: true
+      })
+    );
 
     await render(hbs`{{paper-form-field object=object
                                         propertyPath="numberValue"
@@ -101,9 +105,12 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
   });
 
   test(`Gets class 'changed' when origin value is unsaved`, async function(assert) {
-    this.set('object', EmberObject.create({
-      numberIsChanged: true
-    }));
+    this.set(
+      'object',
+      EmberObject.create({
+        numberIsChanged: true
+      })
+    );
 
     await render(hbs`
       {{paper-form-field object=object
@@ -116,9 +123,12 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
   });
 
   test(`Gets class 'different' when values are different`, async function(assert) {
-    this.set('object', EmberObject.create({
-      numberValueIsDifferent: true
-    }));
+    this.set(
+      'object',
+      EmberObject.create({
+        numberValueIsDifferent: true
+      })
+    );
 
     await render(hbs`{{paper-form-field object=object
                                         propertyPath="numberValue"
@@ -133,9 +143,12 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
   });
 
   test(`Shows a component depending on the given type`, async function(assert) {
-    this.set('object', EmberObject.create({
-      name: 'John White'
-    }));
+    this.set(
+      'object',
+      EmberObject.create({
+        name: 'John White'
+      })
+    );
 
     await render(hbs`
       {{paper-form-field type="text-field"
@@ -151,9 +164,12 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
   });
 
   test(`passes the name to the form field`, async function(assert) {
-    this.set('object', EmberObject.create({
-      name: 'John White'
-    }));
+    this.set(
+      'object',
+      EmberObject.create({
+        name: 'John White'
+      })
+    );
 
     await render(hbs`
       {{paper-form-field type="text-field"
@@ -166,8 +182,7 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
     assert.equal($input.name, 'person-name', 'passes name to component');
   });
 
-  test(`The component doesn't update the value, but calls an action`,
-  async function(assert) {
+  test(`The component doesn't update the value, but calls an action`, async function(assert) {
     assert.expect(5);
 
     let person = EmberObject.create({
@@ -193,12 +208,10 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
     await fillIn($input, 'John Black');
 
     assert.equal($input.value, 'John Black', 'changes the input value');
-    assert.equal(this.get('object.name'), 'John White',
-                 `doesn't update object value`);
+    assert.equal(this.get('object.name'), 'John White', `doesn't update object value`);
   });
 
-  test(`Shows after content depending on the given content`,
-  async function(assert) {
+  test(`Shows after content depending on the given content`, async function(assert) {
     this.set('object', EmberObject.create({ text: 'example' }));
     this.set('afterText', 'After text');
 
@@ -212,28 +225,44 @@ module('Integration | Component | {{paper-form-field}}', function(hooks) {
     let $component    = this.element.querySelector('.form-field');
     let $afterContent = this.element.querySelector('.form-field__after').textContent;
 
-    assert.ok($component.classList.contains('form-field--has-after'),
-               'Does have --has-after when after is a string ');
-    assert.equal($afterContent, 'After text',
-                 'shows after content when after is a string');
+    assert.ok(
+      $component.classList.contains('form-field--has-after'),
+      'Does have --has-after when after is a string '
+    );
+    assert.equal(
+      $afterContent,
+      'After text',
+      'shows after content when after is a string'
+    );
 
     this.set('afterText', '');
-    assert.notOk($component.classList.contains('form-field--has-after'),
-                 'Does not have --has-after when after is an empty string ');
-    assert.notOk(this.element.querySelector('.form-field__after'),
-                 'Does not have an after when after is an empty string');
+    assert.notOk(
+      $component.classList.contains('form-field--has-after'),
+      'Does not have --has-after when after is an empty string '
+    );
+    assert.notOk(
+      this.element.querySelector('.form-field__after'),
+      'Does not have an after when after is an empty string'
+    );
 
     this.set('afterText', null);
-    assert.notOk($component.classList.contains('form-field--has-after'),
-                'Does not have --has-after when after is null ');
-    assert.notOk(this.element.querySelector('.form-field__after'),
-                'Does not have an after when after is null');
+    assert.notOk(
+      $component.classList.contains('form-field--has-after'),
+      'Does not have --has-after when after is null '
+    );
+    assert.notOk(
+      this.element.querySelector('.form-field__after'),
+      'Does not have an after when after is null'
+    );
   });
 
   test(`passes the name to the form field`, async function(assert) {
-    this.set('object', EmberObject.create({
-      name: 'John White'
-    }));
+    this.set(
+      'object',
+      EmberObject.create({
+        name: 'John White'
+      })
+    );
 
     await render(hbs`
       {{paper-form-field type="text-field"

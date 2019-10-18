@@ -1,18 +1,16 @@
-import { module, test } from 'qunit';
+import { run }                from '@ember/runloop';
+import { render, settled }    from '@ember/test-helpers';
 import { setupRenderingTest } from 'ember-qunit';
-
-import { render, settled } from '@ember/test-helpers';
-
-import hbs  from 'htmlbars-inline-precompile';
-import run  from 'ember-runloop';
-import $    from 'jquery';
+import hbs                    from 'htmlbars-inline-precompile';
+import $                      from 'jquery';
+import { module, test }       from 'qunit';
 
 module('Integration | Component | {{time-field}}', function(hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function() {
     this.actions = {};
-    this.send = (actionName, ...args) => this.actions[actionName].apply(this, args);
+    this.send    = (actionName, ...args) => this.actions[actionName].apply(this, args);
   });
 
   hooks.beforeEach(function() {
@@ -38,8 +36,12 @@ module('Integration | Component | {{time-field}}', function(hooks) {
       input.trigger($.Event('keydown', { keyCode, shiftKey: shift }));
     });
   }
-  function arrowUp(input, shift)   { arrowKey(input, 'up', shift);   }
-  function arrowDown(input, shift) { arrowKey(input, 'down', shift); }
+  function arrowUp(input, shift) {
+    arrowKey(input, 'up', shift);
+  }
+  function arrowDown(input, shift) {
+    arrowKey(input, 'down', shift);
+  }
 
   test('date gets formatted to a time string', async function(assert) {
     this.set('value', new Date(2015, 0, 1, 12, 15));
@@ -65,7 +67,7 @@ module('Integration | Component | {{time-field}}', function(hooks) {
     fillIn($input, '12:30');
 
     assert.equal($input.val(), '12:30');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 12, 30)));
+    assert.equal(+this.get('value'), +new Date(2015, 0, 1, 12, 30));
   });
 
   test('typing in an empty value', async function(assert) {
@@ -77,7 +79,7 @@ module('Integration | Component | {{time-field}}', function(hooks) {
     fillIn($input, '');
 
     assert.equal($input.val(), '0:00');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 0, 0)));
+    assert.equal(+this.get('value'), +new Date(2015, 0, 1, 0, 0));
   });
 
   test('typing in time shorthands', async function(assert) {
@@ -89,22 +91,22 @@ module('Integration | Component | {{time-field}}', function(hooks) {
     fillIn($input, '1230');
 
     assert.equal($input.val(), '12:30');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 12, 30)));
+    assert.equal(+this.get('value'), +new Date(2015, 0, 1, 12, 30));
 
     fillIn($input, '930');
 
     assert.equal($input.val(), '9:30');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 9, 30)));
+    assert.equal(+this.get('value'), +new Date(2015, 0, 1, 9, 30));
 
     fillIn($input, '12');
 
     assert.equal($input.val(), '12:00');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 12, 0)));
+    assert.equal(+this.get('value'), +new Date(2015, 0, 1, 12, 0));
 
     fillIn($input, '1');
 
     assert.equal($input.val(), '1:00');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 1, 0)));
+    assert.equal(+this.get('value'), +new Date(2015, 0, 1, 1, 0));
   });
 
   test('typing in with different seperators', async function(assert) {
@@ -116,17 +118,17 @@ module('Integration | Component | {{time-field}}', function(hooks) {
     fillIn($input, '12;30');
 
     assert.equal($input.val(), '12:30');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 12, 30)));
+    assert.equal(+this.get('value'), +new Date(2015, 0, 1, 12, 30));
 
     fillIn($input, '13,30');
 
     assert.equal($input.val(), '13:30');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 13, 30)));
+    assert.equal(+this.get('value'), +new Date(2015, 0, 1, 13, 30));
 
     fillIn($input, '14.30');
 
     assert.equal($input.val(), '14:30');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 14, 30)));
+    assert.equal(+this.get('value'), +new Date(2015, 0, 1, 14, 30));
   });
 
   test('arrow up increases time by one hour', async function(assert) {
@@ -138,14 +140,14 @@ module('Integration | Component | {{time-field}}', function(hooks) {
     arrowUp($input);
 
     assert.equal($input.val(), '13:15');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 13, 15)));
+    assert.equal(+this.get('value'), +new Date(2015, 0, 1, 13, 15));
 
     this.set('value', new Date(2015, 0, 1, 23, 15));
 
     arrowUp($input);
 
     assert.equal($input.val(), '0:15');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 2, 0, 15)));
+    assert.equal(+this.get('value'), +new Date(2015, 0, 2, 0, 15));
 
     return settled();
   });
@@ -159,14 +161,14 @@ module('Integration | Component | {{time-field}}', function(hooks) {
     arrowDown($input);
 
     assert.equal($input.val(), '11:15');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 11, 15)));
+    assert.equal(+this.get('value'), +new Date(2015, 0, 1, 11, 15));
 
     this.set('value', new Date(2015, 0, 2, 0, 15));
 
     arrowDown($input);
 
     assert.equal($input.val(), '23:15');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 23, 15)));
+    assert.equal(+this.get('value'), +new Date(2015, 0, 1, 23, 15));
 
     return settled();
   });
@@ -180,14 +182,14 @@ module('Integration | Component | {{time-field}}', function(hooks) {
     arrowUp($input, true);
 
     assert.equal($input.val(), '12:16');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 12, 16)));
+    assert.equal(+this.get('value'), +new Date(2015, 0, 1, 12, 16));
 
     this.set('value', new Date(2015, 0, 1, 23, 59));
 
     arrowUp($input, true);
 
     assert.equal($input.val(), '0:00');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 2, 0, 0)));
+    assert.equal(+this.get('value'), +new Date(2015, 0, 2, 0, 0));
 
     return settled();
   });
@@ -201,14 +203,14 @@ module('Integration | Component | {{time-field}}', function(hooks) {
     arrowDown($input, true);
 
     assert.equal($input.val(), '12:14');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 12, 14)));
+    assert.equal(+this.get('value'), +new Date(2015, 0, 1, 12, 14));
 
     this.set('value', new Date(2015, 0, 2, 0, 0));
 
     arrowDown($input, true);
 
     assert.equal($input.val(), '23:59');
-    assert.equal(+this.get('value'), +(new Date(2015, 0, 1, 23, 59)));
+    assert.equal(+this.get('value'), +new Date(2015, 0, 1, 23, 59));
 
     return settled();
   });

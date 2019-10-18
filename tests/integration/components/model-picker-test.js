@@ -1,11 +1,6 @@
-/* eslint-disable camelcase */
-import Ember                  from 'ember';
-import EmberObject            from 'ember-object';
-import Service                from 'ember-service';
-import Pretender              from 'pretender';
-import { module, test }       from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
-
+import { get, set } from '@ember/object';
+import EmberObject  from '@ember/object';
+import Service      from '@ember/service';
 import {
   click,
   fillIn,
@@ -15,6 +10,12 @@ import {
   settled,
   triggerEvent
 } from '@ember/test-helpers';
+import { compare }            from '@ember/utils';
+import { setupRenderingTest } from 'ember-qunit';
+import hbs                    from 'htmlbars-inline-precompile';
+import $                      from 'jquery';
+import Pretender              from 'pretender';
+import { module, test }       from 'qunit';
 
 import {
   getSelected,
@@ -22,12 +23,6 @@ import {
   clickItem,
   typeInSearch
 } from '../../helpers/ember-power-select';
-
-import hbs          from 'htmlbars-inline-precompile';
-import { get, set } from '@ember/object';
-import $            from 'jquery';
-
-const { compare } = Ember;
 
 const FOOS = [
   { id: 1, type: 'foo', attributes: { name: 'chad' } },
@@ -63,8 +58,9 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
   });
 
   hooks.beforeEach(function() {
-    this.actions = {};
+    this.actions        = {};
     this.actions.update = function() {};
+
     this.send = (actionName, ...args) => this.actions[actionName].apply(this, args);
   });
 
@@ -74,11 +70,7 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
                                    searchProperty="name"
                                    prompt="Prompt text"}}`);
 
-    assert.equal(
-      findAll('.model-picker').length,
-      1,
-      'renders with model-picker class'
-    );
+    assert.equal(findAll('.model-picker').length, 1, 'renders with model-picker class');
     assert.equal(
       find('.ember-power-select-placeholder').textContent.trim(),
       'Prompt text',
@@ -152,8 +144,7 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
     assert.equal($items[1].textContent.trim(), 'bar');
   });
 
-  test('Pre-loads and queries again on search when queryOnSearch=true',
-  async function(assert) {
+  test('Pre-loads and queries again on search when queryOnSearch=true', async function(assert) {
     await render(hbs`{{model-picker updated=(action 'update')
                                    model="foo"
                                    preload=2
@@ -181,10 +172,12 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
   test('Uses given filters on query', async function(assert) {
     assert.expect(9);
 
+    /* eslint-disable camelcase */
     set(this, 'filters', {
       foo_eq:    'bar',
       code_cont: 'test'
     });
+    /* eslint-enable */
 
     let queryExpects = (query) => {
       assert.equal(query.per_page, 50, 'queries with preload amount');
@@ -265,11 +258,7 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
       'reloaded second item sorted'
     );
     assert.equal($items[2].textContent.trim(), 'chad', 'reloaded third item sorted');
-    assert.equal(
-      $items[3].textContent.trim(),
-      'dave',
-      'reloaded fourth item sorted'
-    );
+    assert.equal($items[3].textContent.trim(), 'dave', 'reloaded fourth item sorted');
     await clickTrigger();
   });
 
@@ -344,7 +333,7 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
                                    searchProperty="name"}}`);
 
     let $selectAll = $('.auto-complete__select-all');
-    let $input = $('input.ember-power-select-trigger-multiple-input');
+    let $input     = $('input.ember-power-select-trigger-multiple-input');
 
     assert.notOk(
       $selectAll[0].checked,

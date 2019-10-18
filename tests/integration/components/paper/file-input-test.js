@@ -1,7 +1,6 @@
-import { render, find } from '@ember/test-helpers';
-
-import hbs                    from 'htmlbars-inline-precompile';
+import { render, find }       from '@ember/test-helpers';
 import { setupRenderingTest } from 'ember-qunit';
+import hbs                    from 'htmlbars-inline-precompile';
 import { module, test }       from 'qunit';
 
 module('Integration | Component | {{paper/file-input}}', function(hooks) {
@@ -25,11 +24,7 @@ module('Integration | Component | {{paper/file-input}}', function(hooks) {
     await render(hbs`{{paper/file-input type=type}}`);
 
     let $input = find('input');
-    assert.equal(
-      $input.getAttribute('accept'),
-      '*/*',
-      'accept all files by default'
-    );
+    assert.equal($input.getAttribute('accept'), '*/*', 'accept all files by default');
 
     this.set('type', 'foobar');
     $input = find('input');
@@ -62,8 +57,7 @@ module('Integration | Component | {{paper/file-input}}', function(hooks) {
     );
   });
 
-  test('accept attribute on input is overridden by component attribute',
-  async function(assert) {
+  test('accept attribute on input is overridden by component attribute', async function(assert) {
     this.set('type', 'image');
     this.set('accept', '.foo');
 
@@ -84,10 +78,7 @@ module('Integration | Component | {{paper/file-input}}', function(hooks) {
     );
 
     this.set('fileCount', 1);
-    assert.ok(
-      find('.file-input__clear'),
-      'shows `clear` button when files are selected'
-    );
+    assert.ok(find('.file-input__clear'), 'shows `clear` button when files are selected');
   });
 
   test('shows file names', async function(assert) {
@@ -105,16 +96,8 @@ module('Integration | Component | {{paper/file-input}}', function(hooks) {
     let $fileNames = find('.file-input__file-names').querySelectorAll('li');
 
     assert.equal($fileNames.length, 2, 'list of file names shows 2 items');
-    assert.equal(
-      $fileNames[0].textContent.trim(),
-      'foo.bar',
-      'shows first file name'
-    );
-    assert.equal(
-      $fileNames[1].textContent.trim(),
-      'baz.bar',
-      'shows second file name'
-    );
+    assert.equal($fileNames[0].textContent.trim(), 'foo.bar', 'shows first file name');
+    assert.equal($fileNames[1].textContent.trim(), 'baz.bar', 'shows second file name');
   });
 
   test('shows number of files', async function(assert) {

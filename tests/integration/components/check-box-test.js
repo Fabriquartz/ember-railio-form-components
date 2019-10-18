@@ -1,17 +1,15 @@
-import { module, test } from 'qunit';
+import { run }                from '@ember/runloop';
+import { render }             from '@ember/test-helpers';
 import { setupRenderingTest } from 'ember-qunit';
-
-import { render } from '@ember/test-helpers';
-
-import hbs from 'htmlbars-inline-precompile';
-import run from 'ember-runloop';
+import hbs                    from 'htmlbars-inline-precompile';
+import { module, test }       from 'qunit';
 
 module('Integration | Component | {{check-box}}', function(hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function() {
     this.actions = {};
-    this.send = (actionName, ...args) => this.actions[actionName].apply(this, args);
+    this.send    = (actionName, ...args) => this.actions[actionName].apply(this, args);
   });
 
   hooks.beforeEach(function() {

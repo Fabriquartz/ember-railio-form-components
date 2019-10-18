@@ -1,17 +1,16 @@
-import { module, test } from 'qunit';
+import EmberObject            from '@ember/object';
+import { run }                from '@ember/runloop';
+import { render }             from '@ember/test-helpers';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
-import EmberObject from 'ember-object';
-
-import hbs from 'htmlbars-inline-precompile';
-import run from 'ember-runloop';
+import hbs                    from 'htmlbars-inline-precompile';
+import { module, test }       from 'qunit';
 
 module('Integration | Component | {{form-field}}', function(hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function() {
     this.actions = {};
-    this.send = (actionName, ...args) => this.actions[actionName].apply(this, args);
+    this.send    = (actionName, ...args) => this.actions[actionName].apply(this, args);
   });
 
   hooks.beforeEach(function() {
@@ -70,8 +69,7 @@ module('Integration | Component | {{form-field}}', function(hooks) {
     assert.equal(labelText, 'Object nr.');
   });
 
-  test(`Gets class 'invalid' when object.errors.propertyPath has errors`,
-  async function(assert) {
+  test(`Gets class 'invalid' when object.errors.propertyPath has errors`, async function(assert) {
     this.set(
       'object',
       EmberObject.create({
@@ -243,8 +241,7 @@ module('Integration | Component | {{form-field}}', function(hooks) {
     assert.equal($input.attr('name'), 'person-name', 'passes name to component');
   });
 
-  test(`The component doesn't update the value, but calls an action`,
-  async function(assert) {
+  test(`The component doesn't update the value, but calls an action`, async function(assert) {
     assert.expect(6);
 
     let person = EmberObject.create({
@@ -257,11 +254,7 @@ module('Integration | Component | {{form-field}}', function(hooks) {
       assert.equal(object, person, 'update function gets right object');
       assert.equal(propertyPath, 'name', 'update function gets right propertyPath');
       assert.equal(value, 'John Black', 'update function gets new value');
-      assert.equal(
-        event.handleObj.type,
-        'input',
-        'Event is passed as fourth element'
-      );
+      assert.equal(event.handleObj.type, 'input', 'Event is passed as fourth element');
     };
 
     await render(hbs`
@@ -278,10 +271,6 @@ module('Integration | Component | {{form-field}}', function(hooks) {
     });
 
     assert.equal($input.val(), 'John Black', 'changes the input value');
-    assert.equal(
-      this.get('object.name'),
-      'John White',
-      `doesn't update object value`
-    );
+    assert.equal(this.get('object.name'), 'John White', `doesn't update object value`);
   });
 });

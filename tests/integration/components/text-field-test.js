@@ -1,22 +1,21 @@
-import { module, test } from 'qunit';
+import { run }                from '@ember/runloop';
+import { render, find }       from '@ember/test-helpers';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, find } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
-import run from 'ember-runloop';
+import hbs                    from 'htmlbars-inline-precompile';
+import { module, test }       from 'qunit';
 
 module('Integration | Component | {{text-field}}', function(hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function() {
     this.actions = {};
-    this.send = (actionName, ...args) => this.actions[actionName].apply(this, args);
+    this.send    = (actionName, ...args) => this.actions[actionName].apply(this, args);
   });
 
   test('renders input with placeholder', async function(assert) {
     await render(hbs`{{text-field placeholder='Type your value here'}}`);
 
-    assert.equal(this.$('input')[0].getAttribute('placeholder'),
-                 'Type your value here');
+    assert.equal(this.$('input')[0].getAttribute('placeholder'), 'Type your value here');
   });
 
   test('input value is set to value', async function(assert) {

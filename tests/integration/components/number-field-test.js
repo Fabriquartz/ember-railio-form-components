@@ -1,16 +1,16 @@
-import hbs                          from 'htmlbars-inline-precompile';
-import run                          from 'ember-runloop';
-import $                            from 'jquery';
-import { module, test } from 'qunit';
+import { run }                from '@ember/runloop';
+import { render, settled }    from '@ember/test-helpers';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, settled } from '@ember/test-helpers';
+import hbs                    from 'htmlbars-inline-precompile';
+import $                      from 'jquery';
+import { module, test }       from 'qunit';
 
 module('Integration | Component | {{number-field}}', function(hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function() {
     this.actions = {};
-    this.send = (actionName, ...args) => this.actions[actionName].apply(this, args);
+    this.send    = (actionName, ...args) => this.actions[actionName].apply(this, args);
   });
 
   hooks.beforeEach(function() {

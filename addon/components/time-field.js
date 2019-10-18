@@ -78,8 +78,8 @@ export default LazyTextField.extend({
         }
 
         let [hours, minutes] = parsed.split(/:/, 2);
-        hours   = (+hours % 24) || 0;
-        minutes = (+minutes % 60) || 0;
+        hours                = +hours % 24 || 0;
+        minutes              = +minutes % 60 || 0;
 
         date.setHours(hours);
         date.setMinutes(minutes);

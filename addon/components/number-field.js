@@ -13,8 +13,8 @@ function increaseNumber(value, add) {
     value = 0;
   }
 
-  let stringValue = value.toString();
-  let decimalIndex = stringValue.indexOf('.');
+  let stringValue    = value.toString();
+  let decimalIndex   = stringValue.indexOf('.');
   let decimalsAmount = 0;
 
   if (decimalIndex !== -1) {
