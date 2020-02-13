@@ -23,15 +23,16 @@ module.exports = {
     'no-console':  ['error', { allow: ['error'] }],
     'quotes':      ['error', 'single', { allowTemplateLiterals: true }],
     'brace-style': ['error', '1tbs', { allowSingleLine: true }],
-    'indent':      ['error', 2, { FunctionExpression: { body: 1 },
-      CallExpression:     { arguments: 'off' } }],
     'key-spacing': ['error', { multiLine: { beforeColon: false },
       align:     { beforeColon: false, on: 'value' } }],
     'max-len': ['error', { code: 85 }],
 
     'max-statements-per-line': 'off',
     'new-cap':                 'off',
-    'operator-linebreak':      'off'
+    'operator-linebreak':      'off',
+
+    'template-curly-spacing': 'off',
+    indent:                   'off'
   },
   overrides: [
     // node files
