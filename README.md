@@ -8,7 +8,10 @@ An Ember addon for data-down/action-up based form-fields for (Ember) objects. By
 If you want to use our paper form fields, you install the addon as described below. [Click here](../master/paper-form-components) for
 the documentation.
 
-## Install
+## Compatibility
+* Ember.js v3.20 or above
+* Ember CLI v3.20 or above
+* Node.js v12 or above
 
 In your application's directory:
 

@@ -2,84 +2,85 @@
 'use strict';
 
 const getChannelURL = require('ember-source-channel-url');
+const { embroiderSafe, embroiderOptimized } = require('@embroider/test-setup');
 
-module.exports = function() {
-  return Promise.all([
-    getChannelURL('release'),
-    getChannelURL('beta'),
-    getChannelURL('canary')
-  ]).then((urls) => {
-    return {
-      useYarn:   true,
-      scenarios: [
-        {
-          name: 'ember-lts-3.8',
-          env:  {
-            EMBER_OPTIONAL_FEATURES: JSON.stringify({ 'jquery-integration': true })
+module.exports = async function () {
+  return {
+    useYarn: true,
+    scenarios: [
+      {
+        name: 'ember-lts-3.20',
+        npm: {
+          devDependencies: {
+            'ember-source': '~3.20.5',
           },
-          npm: {
-            devDependencies: {
-              '@ember/jquery': '^0.6.0',
-              'ember-source':  '~3.8.0'
-            }
-          },
-          bower: {}
         },
-        {
-          name: 'ember-lts-3.12',
-          env:  {
-            EMBER_OPTIONAL_FEATURES: JSON.stringify({ 'jquery-integration': true })
+      },
+      {
+        name: 'ember-lts-3.24',
+        npm: {
+          devDependencies: {
+            'ember-source': '~3.24.3',
           },
-          npm: {
-            devDependencies: {
-              '@ember/jquery': '^0.6.0',
-              'ember-source':  '~3.12.0'
-            }
-          },
-          bower: {}
         },
-        {
-          name: 'ember-release',
-          npm:  {
-            devDependencies: {
-              'ember-source': urls[0]
-            }
+      },
+      {
+        name: 'ember-release',
+        npm: {
+          devDependencies: {
+            'ember-source': await getChannelURL('release'),
           },
-          bower: {}
         },
-        {
-          name: 'ember-beta',
-          npm:  {
-            devDependencies: {
-              'ember-source': urls[1]
-            }
+      },
+      {
+        name: 'ember-beta',
+        npm: {
+          devDependencies: {
+            'ember-source': await getChannelURL('beta'),
           },
-          bower: {}
         },
-        {
-          name: 'ember-canary',
-          npm:  {
-            devDependencies: {
-              'ember-source': urls[2]
-            }
+      },
+      {
+        name: 'ember-canary',
+        npm: {
+          devDependencies: {
+            'ember-source': await getChannelURL('canary'),
           },
-          bower: {}
         },
-        {
-          name: 'ember-default-with-jquery',
-          env:  {
-            EMBER_OPTIONAL_FEATURES: JSON.stringify({
-              'jquery-integration': true
-            })
+      },
+      {
+        name: 'ember-default-with-jquery',
+        env: {
+          EMBER_OPTIONAL_FEATURES: JSON.stringify({
+            'jquery-integration': true,
+          }),
+        },
+        npm: {
+          devDependencies: {
+            '@ember/jquery': '^1.1.0',
           },
-          npm: {
-            devDependencies: {
-              '@ember/jquery': '^0.5.1'
-            }
+        },
+      },
+      {
+        name: 'ember-classic',
+        env: {
+          EMBER_OPTIONAL_FEATURES: JSON.stringify({
+            'application-template-wrapper': true,
+            'default-async-observers': false,
+            'template-only-glimmer-components': false,
+          }),
+        },
+        npm: {
+          devDependencies: {
+            'ember-source': '~3.28.0',
           },
-          bower: {}
-        }
-      ]
-    };
-  });
+          ember: {
+            edition: 'classic',
+          },
+        },
+      },
+      embroiderSafe(),
+      embroiderOptimized(),
+    ],
+  };
 };

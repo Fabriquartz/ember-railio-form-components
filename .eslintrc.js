@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = {
   root:          true,
   parser:        'babel-eslint',
@@ -5,66 +7,47 @@ module.exports = {
     ecmaVersion:  2018,
     sourceType:   'module',
     ecmaFeatures: {
-      legacyDecorators: true
-    }
+      legacyDecorators: true,
+    },
   },
+  plugins: ['ember'],
   extends: [
     'eslint:recommended',
-    'plugin:ember-suave/recommended'
+    'plugin:ember/recommended',
+    'plugin:prettier/recommended',
   ],
   env: {
     browser: true,
-    es6:     true
   },
-  rules: {
-    'array-bracket-spacing': 'off',
-    'object-curly-spacing':  ['error', 'always'],
-
-    'no-console':  ['error', { allow: ['error'] }],
-    'quotes':      ['error', 'single', { allowTemplateLiterals: true }],
-    'brace-style': ['error', '1tbs', { allowSingleLine: true }],
-    'indent':      ['error', 2, { FunctionExpression: { body: 1 },
-      CallExpression:     { arguments: 'off' } }],
-    'key-spacing': ['error', { multiLine: { beforeColon: false },
-      align:     { beforeColon: false, on: 'value' } }],
-    'max-len': ['error', { code: 85 }],
-
-    'max-statements-per-line': 'off',
-    'new-cap':                 'off',
-    'operator-linebreak':      'off'
-  },
+  rules: {},
   overrides: [
     // node files
     {
       files: [
-        '.eslintrc.js',
-        '.template-lintrc.js',
-        'ember-cli-build.js',
-        'index.js',
-        'testem.js',
-        'blueprints/*/index.js',
-        'config/**/*.js',
-        'tests/dummy/config/**/*.js'
-      ],
-      excludedFiles: [
-        'addon/**',
-        'addon-test-support/**',
-        'app/**',
-        'tests/dummy/app/**'
+        './.eslintrc.js',
+        './.prettierrc.js',
+        './.template-lintrc.js',
+        './ember-cli-build.js',
+        './index.js',
+        './testem.js',
+        './blueprints/*/index.js',
+        './config/**/*.js',
+        './tests/dummy/config/**/*.js',
       ],
       parserOptions: {
-        sourceType:  'script',
-        ecmaVersion: 2015
+        sourceType: 'script',
       },
       env: {
         browser: false,
-        node:    true
+        node: true,
       },
       plugins: ['node'],
-      rules:   Object.assign(
-        {}, require('eslint-plugin-node').configs.recommended.rules, {
-        // add your custom rules and overrides for node files here
-        })
-    }
-  ]
+      extends: ['plugin:node/recommended'],
+    },
+    {
+      // Test files:
+      files: ['tests/**/*-test.{js,ts}'],
+      extends: ['plugin:qunit/recommended'],
+    },
+  ],
 };

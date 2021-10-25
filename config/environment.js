@@ -3,7 +3,7 @@
 'use strict';
 
 module.exports = function() {
-  let ENV = {
+  return {
     contentSecurityPolicy: {
 
       // Allow fonts to be loaded from http://fonts.gstatic.com
@@ -15,5 +15,4 @@ module.exports = function() {
       'script-src': ["'self'", "'unsafe-eval'"]
     }
   };
-  return ENV;
 };
