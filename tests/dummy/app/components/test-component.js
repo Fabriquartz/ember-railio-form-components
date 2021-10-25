@@ -1,12 +1,12 @@
-import Component   from 'ember-component';
-import EmberObject from 'ember-object';
+import Component from '@ember/component';
+import EmberObject from '@ember/object';
 
 export default Component.extend({
   object: EmberObject.create({
-    number:     -3.4,
-    text:       'test text',
-    textArea:   'This is a text area',
-    radioValue: ''
+    number: -3.4,
+    text: 'test text',
+    textArea: 'This is a text area',
+    radioValue: '',
   }),
 
   optionList: ['OPTION 1', 'OPTION 2', 'OPTION 3'],
@@ -17,25 +17,25 @@ export default Component.extend({
     options: [
       { label: 'Option 1' },
       { label: 'Option 2' },
-      { label: 'Option 3' }
-    ]
+      { label: 'Option 3' },
+    ],
   },
 
   textAreaOptions: {
-    sizeOnInput: true
+    sizeOnInput: true,
   },
 
   fileInputOptions: {
-    multiple: true
+    multiple: true,
   },
 
   timeFieldOptions: {
-    inputType: 'datetime-local'
+    inputType: 'datetime-local',
   },
 
   actions: {
     update(object, propertyPath, value) {
       object.set(propertyPath, value);
-    }
-  }
+    },
+  },
 });

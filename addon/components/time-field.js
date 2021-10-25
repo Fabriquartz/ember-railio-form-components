@@ -1,7 +1,7 @@
 import LazyTextField from '../components/lazy-text-field';
 
 const A_MINUTE = 1000 * 60;
-const AN_HOUR  = A_MINUTE * 60;
+const AN_HOUR = A_MINUTE * 60;
 
 export default LazyTextField.extend({
   classNames: ['time-field'],
@@ -16,14 +16,14 @@ export default LazyTextField.extend({
       return null;
     }
 
-    let hours   = value.getHours();
+    let hours = value.getHours();
     let minutes = `0${value.getMinutes()}`.slice(-2);
 
     return `${hours}:${minutes}`;
   },
 
   keyDown(e) {
-    let value = this.get('datetime');
+    let value = this.datetime;
 
     let shift = e.shiftKey ? A_MINUTE : AN_HOUR;
 
@@ -48,7 +48,7 @@ export default LazyTextField.extend({
         return this._super(value);
       }
 
-      let date = this.get('datetime');
+      let date = this.datetime;
 
       if (date == null && (value == null || value === '')) {
         return '';
@@ -78,13 +78,13 @@ export default LazyTextField.extend({
         }
 
         let [hours, minutes] = parsed.split(/:/, 2);
-        hours   = (+hours % 24) || 0;
-        minutes = (+minutes % 60) || 0;
+        hours = +hours % 24 || 0;
+        minutes = +minutes % 60 || 0;
 
         date.setHours(hours);
         date.setMinutes(minutes);
       }
       this._super(date);
-    }
-  }
+    },
+  },
 });

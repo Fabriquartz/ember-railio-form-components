@@ -1,22 +1,7 @@
-{{#auto-complete content=content
-                 multiSelect=multiSelect
-                 enableSelectAll=enableSelectAll
-                 _selectAll=_selectAll
-                 value=(if _selectAll emptyValue value)
-                 search=(if lookupOnSearch (perform lookupModel))
-                 doubleClickItem=doubleClickItem
-                 optionLabelPath=optionLabelPath
-                 groupLabelPath=groupLabelPath
-                 sortFunction=sortFunction
-                 prompt=(if _selectAll "Selected all" prompt)
-                 name=name
-                 updated=(action "update")
-                 disableClear=disableClear
-                 disabled=disabled
-                 as |item|}}
-  {{#if hasBlock}}
+<AutoComplete @content={{content}} @multiSelect={{multiSelect}} @enableSelectAll={{enableSelectAll}} @_selectAll={{_selectAll}} @value={{if _selectAll emptyValue value}} @search={{if lookupOnSearch (perform lookupModel)}} @doubleClickItem={{doubleClickItem}} @optionLabelPath={{optionLabelPath}} @groupLabelPath={{groupLabelPath}} @sortFunction={{sortFunction}} @prompt={{if _selectAll "Selected all" prompt}} @name={{name}} @updated={{action "update"}} @disableClear={{disableClear}} @disabled={{disabled}} as |item|>
+  {{#if (has-block)}}
     {{yield item}}
   {{else}}
     {{get item optionLabelPath}}
   {{/if}}
-{{/auto-complete}}
+</AutoComplete>

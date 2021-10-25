@@ -39,7 +39,7 @@ export default LazyTextField.extend({
   },
 
   formatValue(value) {
-    return formatNumber(value, { decimals: this.get('maxDecimals') });
+    return formatNumber(value, { decimals: this.maxDecimals });
   },
 
   keyDown(e) {
@@ -68,11 +68,11 @@ export default LazyTextField.extend({
       try {
         numberValue = toNumber(value);
 
-        let maxDecimals = this.get('maxDecimals');
+        let maxDecimals = this.maxDecimals;
         if (maxDecimals != null) {
-          numberValue = sliceDecimals(numberValue, this.get('maxDecimals'));
+          numberValue = sliceDecimals(numberValue, this.maxDecimals);
         }
-      } catch(_) {
+      } catch (_) {
         // continue regardless of error
       }
 
@@ -81,6 +81,6 @@ export default LazyTextField.extend({
       }
 
       this._super(numberValue);
-    }
-  }
+    },
+  },
 });

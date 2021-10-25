@@ -27,7 +27,7 @@
              as |item|}}
   <span class="auto-complete__item"
         ondblclick={{action "doubleClickItem" multiSelect item}}>
-    {{#if hasBlock}}
+    {{#if (has-block)}}
       {{yield item}}
     {{else}}
       {{get item optionLabelPath}}

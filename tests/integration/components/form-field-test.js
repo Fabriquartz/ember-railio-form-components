@@ -1,33 +1,34 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
-import EmberObject from 'ember-object';
+import EmberObject from '@ember/object';
 
 import hbs from 'htmlbars-inline-precompile';
-import run from 'ember-runloop';
+import { run } from '@ember/runloop';
 
-module('Integration | Component | {{form-field}}', function(hooks) {
+module('Integration | Component | {{form-field}}', function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     this.actions = {};
-    this.send = (actionName, ...args) => this.actions[actionName].apply(this, args);
+    this.send = (actionName, ...args) =>
+      this.actions[actionName].apply(this, args);
   });
 
-  hooks.beforeEach(function() {
-    this.actions.update = function(object, propertyPath, value) {
+  hooks.beforeEach(function () {
+    this.actions.update = function (object, propertyPath, value) {
       object.set(propertyPath, value);
     };
   });
 
-  test(`Renders a div with class 'form-field'`, async function(assert) {
+  test(`Renders a div with class 'form-field'`, async function (assert) {
     await render(hbs`{{form-field updated=(action 'update')}}`);
 
     let $component = this.$('div.form-field');
     assert.equal($component.length, 1);
   });
 
-  test(`By default shows propertyPath as label`, async function(assert) {
+  test(`By default shows propertyPath as label`, async function (assert) {
     await render(hbs`{{form-field propertyPath="number"
                                   updated=(action 'update')}}`);
 
@@ -39,18 +40,16 @@ module('Integration | Component | {{form-field}}', function(hooks) {
     assert.equal(labelText, 'Number', 'label is same as propertyPath');
   });
 
-  test(`Splices label on camelcase`, async function(assert) {
+  test(`Splices label on camelcase`, async function (assert) {
     await render(hbs`{{form-field propertyPath="numberValue"
                                   updated=(action 'update')}}`);
 
-    let labelText = this.$('.form-field')
-      .find('label')
-      .text();
+    let labelText = this.$('.form-field').find('label').text();
 
     assert.equal(labelText, 'Number value');
   });
 
-  test(`Shows no label when label=false`, async function(assert) {
+  test(`Shows no label when label=false`, async function (assert) {
     await render(hbs`{{form-field label=false
                                   updated=(action 'update')}}`);
 
@@ -59,25 +58,22 @@ module('Integration | Component | {{form-field}}', function(hooks) {
     assert.equal($labels.length, 0);
   });
 
-  test(`Shows given String as label`, async function(assert) {
+  test(`Shows given String as label`, async function (assert) {
     await render(hbs`{{form-field label="Object nr."
                                   updated=(action 'update')}}`);
 
-    let labelText = this.$('.form-field')
-      .find('label')
-      .text();
+    let labelText = this.$('.form-field').find('label').text();
 
     assert.equal(labelText, 'Object nr.');
   });
 
-  test(`Gets class 'invalid' when object.errors.propertyPath has errors`,
-  async function(assert) {
+  test(`Gets class 'invalid' when object.errors.propertyPath has errors`, async function (assert) {
     this.set(
       'object',
       EmberObject.create({
         errors: EmberObject.create({
-          numberValue: ['first error message']
-        })
+          numberValue: ['first error message'],
+        }),
       })
     );
 
@@ -91,14 +87,14 @@ module('Integration | Component | {{form-field}}', function(hooks) {
 
     run(() => this.set('object.errors.numberValue', null));
 
-    assert.ok(!$component.hasClass('form-field--invalid'));
+    assert.notOk($component.hasClass('form-field--invalid'));
   });
 
-  test(`Gets class 'changed' when value is unsaved`, async function(assert) {
+  test(`Gets class 'changed' when value is unsaved`, async function (assert) {
     this.set(
       'object',
       EmberObject.create({
-        numberValueIsChanged: true
+        numberValueIsChanged: true,
       })
     );
 
@@ -111,14 +107,14 @@ module('Integration | Component | {{form-field}}', function(hooks) {
 
     run(() => this.set('object.numberValueIsChanged', false));
 
-    assert.ok(!$component.hasClass('form-field--changed'));
+    assert.notOk($component.hasClass('form-field--changed'));
   });
 
-  test(`Gets class 'changed' when origin value is unsaved`, async function(assert) {
+  test(`Gets class 'changed' when origin value is unsaved`, async function (assert) {
     this.set(
       'object',
       EmberObject.create({
-        numberIsChanged: true
+        numberIsChanged: true,
       })
     );
 
@@ -132,11 +128,11 @@ module('Integration | Component | {{form-field}}', function(hooks) {
     assert.ok($component.hasClass('form-field--changed'));
   });
 
-  test(`Gets class 'different' when values are different`, async function(assert) {
+  test(`Gets class 'different' when values are different`, async function (assert) {
     this.set(
       'object',
       EmberObject.create({
-        numberValueIsDifferent: true
+        numberValueIsDifferent: true,
       })
     );
 
@@ -149,14 +145,14 @@ module('Integration | Component | {{form-field}}', function(hooks) {
 
     run(() => this.set('object.numberValueIsDifferent', false));
 
-    assert.ok(!$component.hasClass('form-field--different'));
+    assert.notOk($component.hasClass('form-field--different'));
   });
 
-  test(`Shows a given template and aliasses value`, async function(assert) {
+  test(`Shows a given template and aliasses value`, async function (assert) {
     this.set(
       'object',
       EmberObject.create({
-        stringValue: 'Value string'
+        stringValue: 'Value string',
       })
     );
 
@@ -174,14 +170,14 @@ module('Integration | Component | {{form-field}}', function(hooks) {
     assert.equal(templateText, 'Value string', 'shows aliasses value');
   });
 
-  test(`Passes update action to block template`, async function(assert) {
+  test(`Passes update action to block template`, async function (assert) {
     this.set(
       'object',
       EmberObject.create({
-        stringValue: 'Value string'
+        stringValue: 'Value string',
       })
     );
-    this.actions.update = function(object, propertyPath, value) {
+    this.actions.update = function (object, propertyPath, value) {
       object.set(propertyPath, value);
     };
 
@@ -203,11 +199,11 @@ module('Integration | Component | {{form-field}}', function(hooks) {
     assert.equal(this.get('object.stringValue'), 'Another value');
   });
 
-  test(`Shows a component depending on the given type`, async function(assert) {
+  test(`Shows a component depending on the given type`, async function (assert) {
     this.set(
       'object',
       EmberObject.create({
-        name: 'John White'
+        name: 'John White',
       })
     );
 
@@ -218,17 +214,21 @@ module('Integration | Component | {{form-field}}', function(hooks) {
                    updated=(action 'update')}}`);
 
     let $input = this.$('.form-field').find('input.text-field');
-    assert.equal($input.length, 1, 'shows the component depending on given type');
+    assert.equal(
+      $input.length,
+      1,
+      'shows the component depending on given type'
+    );
 
     let inputText = $input.val();
     assert.equal(inputText, 'John White', 'shown component has correct value');
   });
 
-  test(`passes the name to the form field`, async function(assert) {
+  test(`passes the name to the form field`, async function (assert) {
     this.set(
       'object',
       EmberObject.create({
-        name: 'John White'
+        name: 'John White',
       })
     );
 
@@ -240,22 +240,29 @@ module('Integration | Component | {{form-field}}', function(hooks) {
                    updated=(action 'update')}}`);
 
     let $input = this.$('input.text-field');
-    assert.equal($input.attr('name'), 'person-name', 'passes name to component');
+    assert.equal(
+      $input.attr('name'),
+      'person-name',
+      'passes name to component'
+    );
   });
 
-  test(`The component doesn't update the value, but calls an action`,
-  async function(assert) {
+  test(`The component doesn't update the value, but calls an action`, async function (assert) {
     assert.expect(6);
 
     let person = EmberObject.create({
-      name: 'John White'
+      name: 'John White',
     });
 
     this.set('object', person);
 
-    this.actions.update = function(object, propertyPath, value, event) {
+    this.actions.update = function (object, propertyPath, value, event) {
       assert.equal(object, person, 'update function gets right object');
-      assert.equal(propertyPath, 'name', 'update function gets right propertyPath');
+      assert.equal(
+        propertyPath,
+        'name',
+        'update function gets right propertyPath'
+      );
       assert.equal(value, 'John Black', 'update function gets new value');
       assert.equal(
         event.handleObj.type,

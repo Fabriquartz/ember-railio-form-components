@@ -1,30 +1,33 @@
-import Component from 'ember-component';
-import run       from 'ember-runloop';
-import layout    from '../templates/components/model-auto-complete';
-import service   from 'ember-service/inject';
+import Component from '@ember/component';
+import { run } from '@ember/runloop';
+import layout from '../templates/components/model-auto-complete';
+import { inject as service } from '@ember/service';
 
-import formFieldOptions from
-  'ember-railio-form-components/mixins/form-field-options';
+import formFieldOptions from 'ember-railio-form-components/mixins/form-field-options';
 
 export default Component.extend(formFieldOptions, {
   layout,
   store: service('store'),
 
   lookupModel(query) {
-    let rQuery    = new RegExp(query, 'i');
-    let modelName = this.get('modelName');
-    let labelPath = this.get('optionLabelPath');
-    let queryKey  = this.get('queryKey');
-    let params    = this.get('params');
+    let rQuery = new RegExp(query, 'i');
+    let modelName = this.modelName;
+    let labelPath = this.optionLabelPath;
+    let queryKey = this.queryKey;
+    let params = this.params;
 
-    if (params == null || typeof params !== 'object') { params = {}; }
-    if (query == null || query === '') { return; }
+    if (params == null || typeof params !== 'object') {
+      params = {};
+    }
+    if (query == null || query === '') {
+      return;
+    }
 
     if (typeof queryKey === 'string') {
       params[`by_${queryKey.underscore()}`] = query;
     }
 
-    let dataSet = this.get('store').filter(modelName, params, function(model) {
+    let dataSet = this.store.filter(modelName, params, function (model) {
       return model.get(labelPath).match(rQuery);
     });
 
@@ -34,6 +37,6 @@ export default Component.extend(formFieldOptions, {
   actions: {
     onQueryChange(query) {
       run.debounce(this, this.lookupModel, query, 500);
-    }
-  }
+    },
+  },
 });

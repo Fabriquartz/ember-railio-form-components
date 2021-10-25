@@ -1,12 +1,14 @@
-import EmberObject from 'ember-object';
+import EmberObject from '@ember/object';
 
-import { A } from 'ember-array/utils';
-import get   from 'ember-metal/get';
+import { A } from '@ember/array';
+import { get } from '@ember/object';
 
 export default function groupBy(content, groupPath) {
   let groups = A();
 
-  if (!groupPath) { return content; }
+  if (!groupPath) {
+    return content;
+  }
 
   if (content && content.length) {
     content.forEach((item) => {
@@ -18,13 +20,13 @@ export default function groupBy(content, groupPath) {
         if (group == null) {
           group = EmberObject.create({
             groupName: label,
-            options:   A()
+            options: A(),
           });
 
           groups.pushObject(group);
         }
 
-        get(group, 'options').pushObject(item);
+        group.options.pushObject(item);
       } else {
         groups.pushObject(item);
       }

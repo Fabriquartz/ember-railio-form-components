@@ -1,6 +1,6 @@
 import LazyTextField from '../components/lazy-text-field';
-import moment        from 'moment';
-import { get, set }  from '@ember/object';
+import moment from 'moment';
+import { get, set } from '@ember/object';
 
 export default LazyTextField.extend({
   classNames: ['date-picker'],
@@ -12,17 +12,19 @@ export default LazyTextField.extend({
   },
 
   keyDown(e) {
-    let value = moment(get(this, 'date'));
+    let value = moment(this.date);
     let scale = e.shiftKey ? 'month' : 'day';
 
     if ([38, 40].indexOf(e.keyCode) !== -1) {
       this.withLazyDisabled(() => {
-        if (e.keyCode === 38) { // arrow up
+        if (e.keyCode === 38) {
+          // arrow up
           value = value.add(1, scale);
           return this.send('changed', value);
         }
 
-        if (e.keyCode === 40) { // arrow down
+        if (e.keyCode === 40) {
+          // arrow down
           value = value.subtract(1, scale);
           return this.send('changed', value);
         }
@@ -37,9 +39,9 @@ export default LazyTextField.extend({
       return null;
     }
 
-    let days   = `0${value.getDate()}`.slice(-2);
+    let days = `0${value.getDate()}`.slice(-2);
     let months = `0${value.getMonth() + 1}`.slice(-2);
-    let years  = value.getFullYear().toString().slice(-2);
+    let years = value.getFullYear().toString().slice(-2);
 
     return `${days}-${months}-${years}`;
   },
@@ -53,17 +55,17 @@ export default LazyTextField.extend({
       }
 
       // Add a zero for shorthand: DMM => DDMM or DMMYY => DDMMYY
-      if ([3, 5].includes(get(value, 'length'))) {
+      if ([3, 5].includes(value.length)) {
         value = `0${value}`;
       }
 
-      let format  = get(this, 'dateFormat');
-      let _value  = moment(get(this, 'value'));
-      let hours   = _value.hours();
+      let format = this.dateFormat;
+      let _value = moment(this.value);
+      let hours = _value.hours();
       let minutes = _value.minute();
 
       value = moment(value, format).add(hours, 'hours').add(minutes, 'minutes');
       this._super(value.toDate());
-    }
-  }
+    },
+  },
 });

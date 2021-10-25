@@ -1,8 +1,7 @@
-import { get }     from '@ember/object';
+import { get } from '@ember/object';
 import { isBlank } from '@ember/utils';
 
-import PaperTextField from
-  'ember-railio-form-components/components/paper/text-field';
+import PaperTextField from 'ember-railio-form-components/components/paper/text-field';
 
 import { toNumber, formatNumber } from 'ember-railio-formatting';
 
@@ -13,20 +12,24 @@ function increaseNumber(value, add) {
 
 export default PaperTextField.extend({
   layoutName: 'components/paper/input-field',
-  inputType:  'text',
-  decimals:   null,
-  lazy:       true,
+  inputType: 'text',
+  decimals: null,
+  lazy: true,
 
   keyDown(e) {
     let addValue;
-    let value = get(this, 'value') || 0;
+    let value = this.value || 0;
 
-    if (e.key === 'ArrowUp')   { addValue = 1; }
-    if (e.key === 'ArrowDown') { addValue = -1; }
+    if (e.key === 'ArrowUp') {
+      addValue = 1;
+    }
+    if (e.key === 'ArrowDown') {
+      addValue = -1;
+    }
 
     if (addValue) {
       e.preventDefault();
-      let decimalIndex   = value.toString().indexOf('.');
+      let decimalIndex = value.toString().indexOf('.');
       let decimalsAmount = 0;
 
       if (decimalIndex !== -1) {
@@ -39,11 +42,11 @@ export default PaperTextField.extend({
   },
 
   format(value) {
-    let decimals = get(this, 'decimals');
+    let decimals = this.decimals;
     return formatNumber(value, { decimals });
   },
 
   serialize(value) {
     return toNumber(value);
-  }
+  },
 });

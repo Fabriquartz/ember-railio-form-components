@@ -1,10 +1,8 @@
-import Component     from '@ember/component';
+import Component from '@ember/component';
 
-import formFieldOptions from
-  'ember-railio-form-components/mixins/form-field-options';
+import formFieldOptions from 'ember-railio-form-components/mixins/form-field-options';
 
-import layout from
-  'ember-railio-form-components/templates/components/paper/input-field';
+import layout from 'ember-railio-form-components/templates/components/paper/input-field';
 
 import { computed, get, set } from '@ember/object';
 
@@ -16,9 +14,9 @@ export default Component.extend(formFieldOptions, {
   layout,
 
   inputType: 'text',
-  lazy:      false,
+  lazy: false,
 
-  format:    (value) => value,
+  format: (value) => value,
   serialize: (value) => value,
 
   focusIn() {
@@ -27,26 +25,30 @@ export default Component.extend(formFieldOptions, {
 
   focusOut(e) {
     set(this, 'hasFocus', false);
-    this.send('changed', get(this, '_value'), e);
+    this.send('changed', this._value, e);
   },
 
   keyUp(e) {
-    if (e.key === 'Enter')  { typeof this.enter  === 'function' && this.enter(e); }
-    if (e.key === 'Escape') { typeof this.escape === 'function' && this.escape(e); }
+    if (e.key === 'Enter') {
+      typeof this.enter === 'function' && this.enter(e);
+    }
+    if (e.key === 'Escape') {
+      typeof this.escape === 'function' && this.escape(e);
+    }
   },
 
   didReceiveAttrs() {
     this._super(...arguments);
 
-    if (!get(this, 'hasFocus')) {
-      let value = get(this, 'value');
+    if (!this.hasFocus) {
+      let value = this.value;
       set(this, '_value', this.format(value));
     }
   },
 
-  _htmlAttributes: computed('htmlAttributes', 'name', function() {
-    let name           = get(this, 'name');
-    let htmlAttributes = get(this, 'htmlAttributes') || {};
+  _htmlAttributes: computed('htmlAttributes', 'name', function () {
+    let name = this.name;
+    let htmlAttributes = this.htmlAttributes || {};
 
     if (!htmlAttributes.name && name) {
       htmlAttributes.name = name;
@@ -56,10 +58,10 @@ export default Component.extend(formFieldOptions, {
 
   actions: {
     changed(value, event, forceUpdate) {
-      let lazy = get(this, 'lazy');
+      let lazy = this.lazy;
 
-      let _value = forceUpdate ||
-        isFocusOutEvent(event) ? this.format(value) : value;
+      let _value =
+        forceUpdate || isFocusOutEvent(event) ? this.format(value) : value;
 
       set(this, '_value', _value);
 
@@ -67,6 +69,6 @@ export default Component.extend(formFieldOptions, {
         value = this.serialize(value);
         this.updated(value);
       }
-    }
-  }
+    },
+  },
 });

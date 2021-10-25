@@ -1,2 +1,1 @@
-export { default } from
-  'ember-railio-form-components/components/paper/date-picker';
+export { default } from 'ember-railio-form-components/components/paper/date-picker';

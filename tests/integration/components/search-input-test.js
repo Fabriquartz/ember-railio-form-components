@@ -1,19 +1,20 @@
-import { module, test }       from 'qunit';
+import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 
 import { render, fillIn } from '@ember/test-helpers';
 
 import hbs from 'htmlbars-inline-precompile';
 
-module('Integration | Component | {{search-input}}', function(hooks) {
+module('Integration | Component | {{search-input}}', function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     this.actions = {};
-    this.send = (actionName, ...args) => this.actions[actionName].apply(this, args);
+    this.send = (actionName, ...args) =>
+      this.actions[actionName].apply(this, args);
   });
 
-  test('typing sends out onQueryChange event', async function(assert) {
+  test('typing sends out onQueryChange event', async function (assert) {
     assert.expect(2);
 
     this.actions.onQueryChange = (query) => assert.equal(query, 'foo');

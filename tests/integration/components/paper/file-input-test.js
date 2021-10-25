@@ -1,13 +1,13 @@
 import { render, find } from '@ember/test-helpers';
 
-import hbs                    from 'htmlbars-inline-precompile';
+import hbs from 'htmlbars-inline-precompile';
 import { setupRenderingTest } from 'ember-qunit';
-import { module, test }       from 'qunit';
+import { module, test } from 'qunit';
 
-module('Integration | Component | {{paper/file-input}}', function(hooks) {
+module('Integration | Component | {{paper/file-input}}', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     await render(hbs`{{paper/file-input}}`);
     assert.ok(find('button'), 'shows a button');
     assert.ok(find('button > i.fa.fa-upload'), 'shows default icon in button');
@@ -19,7 +19,7 @@ module('Integration | Component | {{paper/file-input}}', function(hooks) {
     );
   });
 
-  test('sets `accept` attribute on input', async function(assert) {
+  test('sets `accept` attribute on input', async function (assert) {
     this.set('type', 'null');
 
     await render(hbs`{{paper/file-input type=type}}`);
@@ -62,8 +62,7 @@ module('Integration | Component | {{paper/file-input}}', function(hooks) {
     );
   });
 
-  test('accept attribute on input is overridden by component attribute',
-  async function(assert) {
+  test('accept attribute on input is overridden by component attribute', async function (assert) {
     this.set('type', 'image');
     this.set('accept', '.foo');
 
@@ -75,7 +74,7 @@ module('Integration | Component | {{paper/file-input}}', function(hooks) {
     );
   });
 
-  test('shows `clear` button', async function(assert) {
+  test('shows `clear` button', async function (assert) {
     this.set('fileCount', 0);
     await render(hbs`{{paper/file-input fileCount=fileCount}}`);
     assert.notOk(
@@ -90,10 +89,12 @@ module('Integration | Component | {{paper/file-input}}', function(hooks) {
     );
   });
 
-  test('shows file names', async function(assert) {
+  test('shows file names', async function (assert) {
     this.set('fileNames', ['foo.bar', 'baz.bar']);
     this.set('fileCount', 0);
-    await render(hbs`{{paper/file-input fileCount=fileCount fileNames=fileNames}}`);
+    await render(
+      hbs`{{paper/file-input fileCount=fileCount fileNames=fileNames}}`
+    );
 
     assert.notOk(
       find('.file-input__file-names'),
@@ -117,7 +118,7 @@ module('Integration | Component | {{paper/file-input}}', function(hooks) {
     );
   });
 
-  test('shows number of files', async function(assert) {
+  test('shows number of files', async function (assert) {
     this.set('fileCount', 0);
 
     await render(hbs`{{paper/file-input fileCount=fileCount multiple=true}}`);
@@ -141,7 +142,7 @@ module('Integration | Component | {{paper/file-input}}', function(hooks) {
     );
   });
 
-  test('labels are showing given type', async function(assert) {
+  test('labels are showing given type', async function (assert) {
     this.set('fileCount', 0);
     this.set('multiple', false);
     this.set('type', 'image');

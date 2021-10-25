@@ -2,31 +2,34 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import run from 'ember-runloop';
+import { run } from '@ember/runloop';
 
-module('Integration | Component | {{text-field}}', function(hooks) {
+module('Integration | Component | {{text-field}}', function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     this.actions = {};
-    this.send = (actionName, ...args) => this.actions[actionName].apply(this, args);
+    this.send = (actionName, ...args) =>
+      this.actions[actionName].apply(this, args);
   });
 
-  test('renders input with placeholder', async function(assert) {
+  test('renders input with placeholder', async function (assert) {
     await render(hbs`{{text-field placeholder='Type your value here'}}`);
 
-    assert.equal(this.$('input')[0].getAttribute('placeholder'),
-                 'Type your value here');
+    assert.equal(
+      this.$('input')[0].getAttribute('placeholder'),
+      'Type your value here'
+    );
   });
 
-  test('input value is set to value', async function(assert) {
+  test('input value is set to value', async function (assert) {
     this.set('value', 'testing');
     await render(hbs`{{text-field value=value}}`);
 
     assert.equal(find('input').value, 'testing');
   });
 
-  test('changing value changes input text', async function(assert) {
+  test('changing value changes input text', async function (assert) {
     this.set('value', 'testing');
     await render(hbs`{{text-field value=value}}`);
 
@@ -37,11 +40,11 @@ module('Integration | Component | {{text-field}}', function(hooks) {
     assert.equal(find('input').value, 'gnitset');
   });
 
-  test(`typing doesn't change value but sends updated`, async function(assert) {
+  test(`typing doesn't change value but sends updated`, async function (assert) {
     assert.expect(2);
 
     this.set('value', '');
-    this.actions.update = function(value) {
+    this.actions.update = function (value) {
       assert.equal(value, 'x', 'calls update function with new value');
     };
 
@@ -54,14 +57,14 @@ module('Integration | Component | {{text-field}}', function(hooks) {
       $input.trigger('input');
     });
 
-    assert.equal(this.get('value'), '');
+    assert.equal(this.value, '');
   });
 
-  test('leaving the input triggers change', async function(assert) {
+  test('leaving the input triggers change', async function (assert) {
     assert.expect(2);
 
     this.set('value', '');
-    this.actions.update = function(value) {
+    this.actions.update = function (value) {
       assert.equal(value, 'x', 'calls update function with new value');
     };
 
@@ -74,14 +77,14 @@ module('Integration | Component | {{text-field}}', function(hooks) {
       $input.trigger('blur');
     });
 
-    assert.equal(this.get('value'), '');
+    assert.equal(this.value, '');
   });
 
-  test('"change" changes value', async function(assert) {
+  test('"change" changes value', async function (assert) {
     assert.expect(2);
 
     this.set('value', '');
-    this.actions.update = function(value) {
+    this.actions.update = function (value) {
       assert.equal(value, 'x', 'calls update function with new value');
     };
 
@@ -94,10 +97,10 @@ module('Integration | Component | {{text-field}}', function(hooks) {
       $input.trigger('change');
     });
 
-    assert.equal(this.get('value'), '');
+    assert.equal(this.value, '');
   });
 
-  test('Format function only triggers when focusOut', async function(assert) {
+  test('Format function only triggers when focusOut', async function (assert) {
     this.set('value', '');
 
     this.set('format', (value) => {

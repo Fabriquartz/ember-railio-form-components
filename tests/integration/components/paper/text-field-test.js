@@ -1,4 +1,4 @@
-import { module, test }       from 'qunit';
+import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 
 import {
@@ -7,32 +7,35 @@ import {
   blur,
   triggerEvent,
   focus,
-  fillIn
+  fillIn,
 } from '@ember/test-helpers';
 
 import hbs from 'htmlbars-inline-precompile';
 
-module('Integration | Component | {{paper/text-field}}', function(hooks) {
+module('Integration | Component | {{paper/text-field}}', function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     this.actions = { updated: () => {} };
   });
 
-  test('renders input with placeholder', async function(assert) {
+  test('renders input with placeholder', async function (assert) {
     await render(hbs`{{paper/text-field placeholder='Type your value here'}}`);
 
-    assert.equal(find('input').getAttribute('placeholder'), 'Type your value here');
+    assert.equal(
+      find('input').getAttribute('placeholder'),
+      'Type your value here'
+    );
   });
 
-  test('input value is set to value', async function(assert) {
+  test('input value is set to value', async function (assert) {
     this.set('value', 'testing');
     await render(hbs`{{paper/text-field value=value}}`);
 
     assert.equal(find('input').value, 'testing');
   });
 
-  test('changing value changes input text', async function(assert) {
+  test('changing value changes input text', async function (assert) {
     this.set('value', 'testing');
     await render(hbs`{{paper/text-field value=value}}`);
 
@@ -41,49 +44,56 @@ module('Integration | Component | {{paper/text-field}}', function(hooks) {
     assert.equal(find('input').value, 'gnitset');
   });
 
-  test(`typing doesn't change value but sends updated`, async function(assert) {
+  test(`typing doesn't change value but sends updated`, async function (assert) {
     assert.expect(2);
 
     this.set('value', '');
-    this.actions.update = function(value) {
+    this.actions.update = function (value) {
       assert.equal(value, 'x', 'calls update function with new value');
     };
 
-    await render(hbs`{{paper/text-field value=value updated=(action "update")}}`);
+    await render(
+      hbs`{{paper/text-field value=value updated=(action "update")}}`
+    );
 
     let $input = find('input');
     await fillIn($input, 'x');
 
-    assert.equal(this.get('value'), '');
+    assert.equal(this.value, '');
   });
 
-  test('"input" changes value', async function(assert) {
+  test('"input" changes value', async function (assert) {
     assert.expect(2);
 
     this.set('value', '');
-    this.actions.update = function(value) {
+    this.actions.update = function (value) {
       assert.equal(value, 'x', 'calls update function with new value');
     };
 
-    await render(hbs`{{paper/text-field value=value updated=(action "update")}}`);
+    await render(
+      hbs`{{paper/text-field value=value updated=(action "update")}}`
+    );
 
     let $input = find('input');
 
     $input.value = 'x';
     await triggerEvent($input, 'input');
 
-    assert.equal(this.get('value'), '');
+    assert.equal(this.value, '');
   });
 
-  test('Format function only triggers on init and on focusOut',
-  async function(assert) {
+  test('Format function only triggers on init and on focusOut', async function (assert) {
     assert.expect(6);
 
     this.set('value', 'Foo');
     this.set('updated', () => {});
 
     this.set('format', (value) => {
-      assert.equal(value, expectedValue, 'calls the format function with value');
+      assert.equal(
+        value,
+        expectedValue,
+        'calls the format function with value'
+      );
       return `${value}z`;
     });
 

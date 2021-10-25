@@ -1,9 +1,9 @@
-{{#paper-button class="file-input__button" disabled=disabled iconButton=true raised=true onClick=(action "triggerInput")}}
+<PaperButton @class="file-input__button" @disabled={{disabled}} @iconButton={{true}} @raised={{true}} @onClick={{action "triggerInput"}}>
   {{component iconComponent iconName}}
-  {{#paper-tooltip}}
+  <PaperTooltip>
     Select {{if multiple (pluralize type) (singularize type)}}
-  {{/paper-tooltip}}
-{{/paper-button}}
+  </PaperTooltip>
+</PaperButton>
 
 {{#if fileCount}}
   <span class="file-input__file-count">
@@ -16,9 +16,9 @@
   </ul>
   <div class="file-input__clear" {{action "clear"}}>
     {{fa-icon "times"}}
-    {{#paper-tooltip}}
+    <PaperTooltip>
       Clear {{pluralize fileCount type without-count=(not multiple)}}
-    {{/paper-tooltip}}
+    </PaperTooltip>
   </div>
 {{else}}
   <span class="file-input__no-files">

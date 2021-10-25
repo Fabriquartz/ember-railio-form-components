@@ -1,32 +1,33 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
-import EmberObject from 'ember-object';
+import EmberObject from '@ember/object';
 
-import run   from 'ember-runloop';
-import hbs   from 'htmlbars-inline-precompile';
-import { A } from 'ember-array/utils';
-import $     from 'jquery';
+import { run } from '@ember/runloop';
+import hbs from 'htmlbars-inline-precompile';
+import { A } from '@ember/array';
+import $ from 'jquery';
 
 import {
   getSelected,
   getMultipleTrigger,
   getClearButton,
   clickTrigger,
-  currentOptions } from '../../helpers/ember-power-select';
+  currentOptions,
+} from '../../helpers/ember-power-select';
 
-module('Integration | Component | {{auto-complete}}', function(hooks) {
+module('Integration | Component | {{auto-complete}}', function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     this.actions = { updated: () => {} };
   });
 
-  test('renders the content', async function(assert) {
+  test('renders the content', async function (assert) {
     this.set('content', [
       EmberObject.create({ foo: 'a' }),
       EmberObject.create({ foo: 'b' }),
-      EmberObject.create({ foo: 'c' })
+      EmberObject.create({ foo: 'c' }),
     ]);
 
     await render(hbs`{{auto-complete content=content
@@ -44,12 +45,8 @@ module('Integration | Component | {{auto-complete}}', function(hooks) {
     assert.equal($items[2].textContent.trim(), 'c', 'shows third item');
   });
 
-  test('sorts the content', async function(assert) {
-    this.set('content', [
-      { foo: 'b' },
-      { foo: 'c' },
-      { foo: 'a' }
-    ]);
+  test('sorts the content', async function (assert) {
+    this.set('content', [{ foo: 'b' }, { foo: 'c' }, { foo: 'a' }]);
 
     await render(hbs`{{auto-complete content=content
                                     optionLabelPath="foo"
@@ -65,7 +62,9 @@ module('Integration | Component | {{auto-complete}}', function(hooks) {
 
     await clickTrigger();
 
-    this.set('sortFunction', (a, b) => a.foo > b.foo ? 1 : a.foo < b.foo ? -1 : 0);
+    this.set('sortFunction', (a, b) =>
+      a.foo > b.foo ? 1 : a.foo < b.foo ? -1 : 0
+    );
 
     await clickTrigger();
     $items = $('.ember-power-select-dropdown li');
@@ -75,11 +74,11 @@ module('Integration | Component | {{auto-complete}}', function(hooks) {
     assert.equal($items.eq(2).text().trim(), 'c', 'shows third item sorted');
   });
 
-  test('renders with custom block content', async function(assert) {
+  test('renders with custom block content', async function (assert) {
     this.set('content', [
       EmberObject.create({ foo: 'a' }),
       EmberObject.create({ foo: 'b' }),
-      EmberObject.create({ foo: 'c' })
+      EmberObject.create({ foo: 'c' }),
     ]);
 
     await render(hbs`
@@ -102,12 +101,11 @@ module('Integration | Component | {{auto-complete}}', function(hooks) {
     assert.equal($items.eq(2).text().trim(), 'c', 'shows third item content');
   });
 
-  test('auto-complete items have label set to items optionLabelPath',
-  async function(assert) {
+  test('auto-complete items have label set to items optionLabelPath', async function (assert) {
     this.set('content', [
       EmberObject.create({ foo: 'a' }),
       EmberObject.create({ foo: 'b' }),
-      EmberObject.create({ foo: 'c' })
+      EmberObject.create({ foo: 'c' }),
     ]);
 
     await render(hbs`{{auto-complete content=content
@@ -123,7 +121,7 @@ module('Integration | Component | {{auto-complete}}', function(hooks) {
     assert.equal($items[2].textContent.trim(), 'c');
   });
 
-  test('renders the search input on open', async function(assert) {
+  test('renders the search input on open', async function (assert) {
     await render(hbs`{{auto-complete updated=(action 'updated')}}`);
 
     await clickTrigger();
@@ -131,7 +129,7 @@ module('Integration | Component | {{auto-complete}}', function(hooks) {
     assert.equal($('.ember-power-select-dropdown input').length, 1);
   });
 
-  test('search input disabled', async function(assert) {
+  test('search input disabled', async function (assert) {
     await render(hbs`{{auto-complete disableSearch=true
                                     updated=(action 'updated')}}`);
 
@@ -140,12 +138,12 @@ module('Integration | Component | {{auto-complete}}', function(hooks) {
     assert.equal($('.ember-power-select-dropdown input').length, 0);
   });
 
-  test('content grouped by groupLabelPath', async function(assert) {
+  test('content grouped by groupLabelPath', async function (assert) {
     this.set('content', [
       EmberObject.create({ foo: 'a', bar: 'group 1' }),
       EmberObject.create({ foo: 'b', bar: 'group 2' }),
       EmberObject.create({ foo: 'c', bar: 'group 1' }),
-      EmberObject.create({ foo: 'd' })
+      EmberObject.create({ foo: 'd' }),
     ]);
 
     await render(hbs`{{auto-complete content=content
@@ -158,32 +156,38 @@ module('Integration | Component | {{auto-complete}}', function(hooks) {
     let $groups = $('li.ember-power-select-group');
     let $items1 = $groups.eq(0).find('li.ember-power-select-option');
     let $items2 = $groups.eq(1).find('li.ember-power-select-option');
-    let $items  = $('li.ember-power-select-option');
+    let $items = $('li.ember-power-select-option');
 
     assert.equal($groups.length, 2, 'renders 2 groups');
     assert.equal($items1.length, 2, 'renders 2 items for group 1');
     assert.equal($items2.length, 1, 'renders 1 item for group 2');
-    assert.equal($items.length,  4, 'renders 4');
+    assert.equal($items.length, 4, 'renders 4');
 
-    assert.notEqual($groups.eq(0).text().indexOf('group 1'), -1,
-                    'show group 1 label');
+    assert.notEqual(
+      $groups.eq(0).text().indexOf('group 1'),
+      -1,
+      'show group 1 label'
+    );
     assert.equal($items1.eq(0).text().trim(), 'a', 'show group 1 first item');
     assert.equal($items1.eq(1).text().trim(), 'c', 'show group 1 second item');
 
-    assert.notEqual($groups.eq(1).text().indexOf('group 2'), -1,
-                    'show group 2 label');
+    assert.notEqual(
+      $groups.eq(1).text().indexOf('group 2'),
+      -1,
+      'show group 2 label'
+    );
     assert.equal($items2.eq(0).text().trim(), 'b', 'show group 2 item');
 
     assert.equal($items.eq(3).text().trim(), 'd', 'show item outside groups');
   });
 
-  test('value selected', async function(assert) {
+  test('value selected', async function (assert) {
     let selected = EmberObject.create({ foo: 'b' });
 
     this.set('content', [
       EmberObject.create({ foo: 'a' }),
       selected,
-      EmberObject.create({ foo: 'c' })
+      EmberObject.create({ foo: 'c' }),
     ]);
     this.set('selection', selected);
 
@@ -198,7 +202,7 @@ module('Integration | Component | {{auto-complete}}', function(hooks) {
     assert.equal($selection[0].textContent.trim(), 'b', 'value selected');
   });
 
-  test('typing sends out onQueryChange event', async function(assert) {
+  test('typing sends out onQueryChange event', async function (assert) {
     assert.expect(2);
 
     this.actions.onQueryChange = () => {
@@ -226,11 +230,11 @@ module('Integration | Component | {{auto-complete}}', function(hooks) {
     });
   });
 
-  test('typing filters content', async function(assert) {
+  test('typing filters content', async function (assert) {
     this.set('content', [
       EmberObject.create({ foo: 'Chris' }),
       EmberObject.create({ foo: 'Alex' }),
-      EmberObject.create({ foo: 'Bart' })
+      EmberObject.create({ foo: 'Bart' }),
     ]);
 
     await render(hbs`{{auto-complete content=content
@@ -251,15 +255,19 @@ module('Integration | Component | {{auto-complete}}', function(hooks) {
 
     assert.equal($items.length, 2);
     assert.equal($highlighted.length, 1);
-    assert.equal($highlighted[0].textContent.trim(), 'Alex', 'first item selected');
+    assert.equal(
+      $highlighted[0].textContent.trim(),
+      'Alex',
+      'first item selected'
+    );
   });
 
-  test('remove button clears the selection', async function(assert) {
+  test('remove button clears the selection', async function (assert) {
     let selected = EmberObject.create({ foo: 'a' });
 
     this.set('content', [selected]);
     this.set('selection', selected);
-    this.actions.updated = function(value) {
+    this.actions.updated = function (value) {
       this.set('selection', value);
     };
 
@@ -270,15 +278,18 @@ module('Integration | Component | {{auto-complete}}', function(hooks) {
 
     let $clearButton = getClearButton();
 
-    assert.equal($clearButton.length, 1,
-                 'Show clear button when something selected');
+    assert.equal(
+      $clearButton.length,
+      1,
+      'Show clear button when something selected'
+    );
 
     run(() => $clearButton.trigger('mousedown'));
 
-    assert.equal(this.get('selection'), null);
+    assert.equal(this.selection, null);
   });
 
-  test('No clear button when disableClear', async function(assert) {
+  test('No clear button when disableClear', async function (assert) {
     let selected = EmberObject.create({ foo: 'a' });
 
     this.set('content', [selected]);
@@ -290,16 +301,22 @@ module('Integration | Component | {{auto-complete}}', function(hooks) {
                                     updated=(action "updated")
                                     optionLabelPath="foo"}}`);
 
-    assert.equal(getClearButton().length, 1,
-                 'By default show clear button when something selected');
+    assert.equal(
+      getClearButton().length,
+      1,
+      'By default show clear button when something selected'
+    );
 
     this.set('disableClear', true);
 
-    assert.equal(getClearButton().length, 0,
-                 'No clear button when disableClear is true');
+    assert.equal(
+      getClearButton().length,
+      0,
+      'No clear button when disableClear is true'
+    );
   });
 
-  test('auto-complete changes content', async function(assert) {
+  test('auto-complete changes content', async function (assert) {
     let object1 = EmberObject.create();
     let object2 = EmberObject.create();
     let object3 = EmberObject.create();
@@ -323,37 +340,39 @@ module('Integration | Component | {{auto-complete}}', function(hooks) {
     assert.equal($items.length, 2);
   });
 
-  test('when selection changes from elsewhere, it changes here',
-    async function(assert) {
-      let selected = EmberObject.create({ foo: 'a' });
-      let option   = EmberObject.create({ foo: 'b' });
+  test('when selection changes from elsewhere, it changes here', async function (assert) {
+    let selected = EmberObject.create({ foo: 'a' });
+    let option = EmberObject.create({ foo: 'b' });
 
-      this.set('content', [selected, option]);
-      this.set('selection', selected);
-      this.actions.updated = function(value) {
-        this.set('selection', value);
-      };
+    this.set('content', [selected, option]);
+    this.set('selection', selected);
+    this.actions.updated = function (value) {
+      this.set('selection', value);
+    };
 
-      await render(hbs`{{auto-complete content=content
+    await render(hbs`{{auto-complete content=content
                                       value=selection
                                       updated=(action "updated")
                                       optionLabelPath="foo"}}`);
 
-      run(() => {
-        this.set('selection', option);
-      });
-
-      assert.equal(getSelected()[0].textContent.trim().indexOf('b'), 0,
-                   'change selected item');
-
-      run(() => {
-        this.set('selection', null);
-      });
-
-      assert.equal(getSelected().length, 0, 'empty selected item');
+    run(() => {
+      this.set('selection', option);
     });
 
-  test('pass prompt as placeholder', async function(assert) {
+    assert.equal(
+      getSelected()[0].textContent.trim().indexOf('b'),
+      0,
+      'change selected item'
+    );
+
+    run(() => {
+      this.set('selection', null);
+    });
+
+    assert.equal(getSelected().length, 0, 'empty selected item');
+  });
+
+  test('pass prompt as placeholder', async function (assert) {
     await render(hbs`{{auto-complete content=content
                                     value=selection
                                     updated=(action "updated")
@@ -365,10 +384,10 @@ module('Integration | Component | {{auto-complete}}', function(hooks) {
     assert.equal(autoCompleteText, 'Select your item');
   });
 
-  test('Renders as multi-select when multiSelect=true', async function(assert) {
+  test('Renders as multi-select when multiSelect=true', async function (assert) {
     this.set('selection', [
       EmberObject.create({ name: 'foo' }),
-      EmberObject.create({ name: 'bar' })
+      EmberObject.create({ name: 'bar' }),
     ]);
     await render(hbs`{{auto-complete content=content
                                     multiSelect=true
@@ -385,12 +404,12 @@ module('Integration | Component | {{auto-complete}}', function(hooks) {
     assert.ok($selectedOptions.eq(1).text().includes('bar'));
   });
 
-  test('Doubleclick action on multi-select item', async function(assert) {
+  test('Doubleclick action on multi-select item', async function (assert) {
     assert.expect(2);
 
     let selection = this.set('selection', [
       EmberObject.create({ name: 'foo' }),
-      EmberObject.create({ name: 'bar' })
+      EmberObject.create({ name: 'bar' }),
     ]);
 
     this.actions.dblClickItem = (item) => {
@@ -406,23 +425,30 @@ module('Integration | Component | {{auto-complete}}', function(hooks) {
 
     let $items = $('.auto-complete__item');
 
-    assert.equal($items.length, 2, 'renders items with auto-complete__item class');
+    assert.equal(
+      $items.length,
+      2,
+      'renders items with auto-complete__item class'
+    );
 
     $items.eq(0).dblclick();
   });
 
-  test('enableSelectAll will show a select all button', async function(assert) {
+  test('enableSelectAll will show a select all button', async function (assert) {
     assert.expect(13);
     this.set('multiSelect', true);
 
     this.set('content', [
       EmberObject.create({ name: 'foo' }),
-      EmberObject.create({ name: 'bar' })
+      EmberObject.create({ name: 'bar' }),
     ]);
 
     let updateAssert = (value) => {
-      assert.deepEqual(value, this.get('content'),
-                       'triggers update action with full content as value');
+      assert.deepEqual(
+        value,
+        this.content,
+        'triggers update action with full content as value'
+      );
     };
 
     this.actions.updated = (value) => {
@@ -440,10 +466,12 @@ module('Integration | Component | {{auto-complete}}', function(hooks) {
     let $selectAll = $('.auto-complete__select-all');
 
     assert.equal($selectAll.length, 1, 'shows select all checkbox');
-    assert.equal($('.auto-complete__select-all-label').eq(0).text().trim(),
-                   'Select all (2)',
-                   'shows select all label with content amount');
-    assert.equal($selectAll[0].checked, false, 'checkbox not checked');
+    assert.equal(
+      $('.auto-complete__select-all-label').eq(0).text().trim(),
+      'Select all (2)',
+      'shows select all label with content amount'
+    );
+    assert.false($selectAll[0].checked, 'checkbox not checked');
 
     let $selectedOptions = $('.ember-power-select-multiple-option');
 
@@ -451,41 +479,54 @@ module('Integration | Component | {{auto-complete}}', function(hooks) {
 
     $selectAll.click();
 
-    assert.equal($selectAll[0].checked, true, 'checkbox checked');
+    assert.true($selectAll[0].checked, 'checkbox checked');
 
     $selectedOptions = $('.ember-power-select-multiple-option');
 
-    assert.equal($selectedOptions.length, 2, 'all options selected on select all');
+    assert.equal(
+      $selectedOptions.length,
+      2,
+      'all options selected on select all'
+    );
     assert.ok($selectedOptions.eq(0).text().includes('foo'));
     assert.ok($selectedOptions.eq(1).text().includes('bar'));
 
     updateAssert = (value) => {
-      assert.deepEqual(value, [],
-                       'triggers update action with empty array on deselect all');
+      assert.deepEqual(
+        value,
+        [],
+        'triggers update action with empty array on deselect all'
+      );
     };
 
     $selectAll.click();
 
-    assert.equal($selectAll[0].checked, false, 'checkbox not checked');
+    assert.false($selectAll[0].checked, 'checkbox not checked');
 
     $selectedOptions = $('.ember-power-select-multiple-option');
 
-    assert.equal($selectedOptions.length, 0,
-                 'clicking select all again will deselect everything');
+    assert.equal(
+      $selectedOptions.length,
+      0,
+      'clicking select all again will deselect everything'
+    );
 
     this.set('multiSelect', false);
 
-    assert.equal($('.auto-complete__select-all').length, 0,
-                 'no select all button when not in multiSelect mode');
+    assert.equal(
+      $('.auto-complete__select-all').length,
+      0,
+      'no select all button when not in multiSelect mode'
+    );
   });
 
-  test('selectAll true when already everything selected', async function(assert) {
+  test('selectAll true when already everything selected', async function (assert) {
     let foo = EmberObject.create({ name: 'foo' });
     let bar = EmberObject.create({ name: 'bar' });
     let baz = EmberObject.create({ name: 'baz' });
 
-    this.set('content',   [ foo, bar ]);
-    this.set('selection', [ foo, baz ]);
+    this.set('content', [foo, bar]);
+    this.set('selection', [foo, baz]);
 
     await render(hbs`{{auto-complete content=content
                                     multiSelect=true
@@ -495,12 +536,16 @@ module('Integration | Component | {{auto-complete}}', function(hooks) {
                                     optionLabelPath="name"}}`);
 
     let $selectAll = $('.auto-complete__select-all');
-    assert.equal($selectAll[0].checked, false,
-                 'not selected all when different value than content');
+    assert.false(
+      $selectAll[0].checked,
+      'not selected all when different value than content'
+    );
 
-    this.set('selection', [ foo, bar ]);
+    this.set('selection', [foo, bar]);
 
-    assert.equal($selectAll[0].checked, true,
-                 'all selected when current value equals content');
+    assert.true(
+      $selectAll[0].checked,
+      'all selected when current value equals content'
+    );
   });
 });

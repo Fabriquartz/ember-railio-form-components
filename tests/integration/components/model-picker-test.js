@@ -1,9 +1,9 @@
 /* eslint-disable camelcase */
-import Ember                  from 'ember';
-import EmberObject            from 'ember-object';
-import Service                from 'ember-service';
-import Pretender              from 'pretender';
-import { module, test }       from 'qunit';
+import Ember from 'ember';
+import EmberObject from '@ember/object';
+import Service from '@ember/service';
+import Pretender from 'pretender';
+import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 
 import {
@@ -13,19 +13,19 @@ import {
   findAll,
   render,
   settled,
-  triggerEvent
+  triggerEvent,
 } from '@ember/test-helpers';
 
 import {
   getSelected,
   clickTrigger,
   clickItem,
-  typeInSearch
+  typeInSearch,
 } from '../../helpers/ember-power-select';
 
-import hbs          from 'htmlbars-inline-precompile';
+import hbs from 'htmlbars-inline-precompile';
 import { get, set } from '@ember/object';
-import $            from 'jquery';
+import $ from 'jquery';
 
 const { compare } = Ember;
 
@@ -33,15 +33,15 @@ const FOOS = [
   { id: 1, type: 'foo', attributes: { name: 'chad' } },
   { id: 2, type: 'foo', attributes: { name: 'bar' } },
   { id: 3, type: 'foo', attributes: { name: 'dave' } },
-  { id: 4, type: 'foo', attributes: { name: 'bar second' } }
+  { id: 4, type: 'foo', attributes: { name: 'bar second' } },
 ];
 
-module('Integration | Component | {{model-picker}}', function(hooks) {
+module('Integration | Component | {{model-picker}}', function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.before(function() {
-    new Pretender(function() {
-      this.get('/foos', function(request) {
+  hooks.before(function () {
+    new Pretender(function () {
+      this.get('/foos', function (request) {
         let filter = request.queryParams.name;
         let amount = request.queryParams.per_page || 300;
 
@@ -62,13 +62,14 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
     });
   });
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     this.actions = {};
-    this.actions.update = function() {};
-    this.send = (actionName, ...args) => this.actions[actionName].apply(this, args);
+    this.actions.update = function () {};
+    this.send = (actionName, ...args) =>
+      this.actions[actionName].apply(this, args);
   });
 
-  test('Renders with classes and given placeholder', async function(assert) {
+  test('Renders with classes and given placeholder', async function (assert) {
     await render(hbs`{{model-picker model="foo"
                                    optionLabelPath="name"
                                    searchProperty="name"
@@ -86,7 +87,7 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
     );
   });
 
-  test('Searches for given model by attribute', async function(assert) {
+  test('Searches for given model by attribute', async function (assert) {
     await render(hbs`{{model-picker updated=(action 'update')
                                     model="foo"
                                     optionLabelPath="name"
@@ -109,7 +110,7 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
     await clickTrigger();
   });
 
-  test('Pre-loads content on preload=true', async function(assert) {
+  test('Pre-loads content on preload=true', async function (assert) {
     await render(hbs`{{model-picker updated=(action 'update')
                                    model="foo"
                                    preload=true
@@ -136,7 +137,7 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
     await clickTrigger();
   });
 
-  test('Pre-loads amount of objects given to preload', async function(assert) {
+  test('Pre-loads amount of objects given to preload', async function (assert) {
     await render(hbs`{{model-picker updated=(action 'update')
                                    model="foo"
                                    preload=2
@@ -152,8 +153,7 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
     assert.equal($items[1].textContent.trim(), 'bar');
   });
 
-  test('Pre-loads and queries again on search when queryOnSearch=true',
-  async function(assert) {
+  test('Pre-loads and queries again on search when queryOnSearch=true', async function (assert) {
     await render(hbs`{{model-picker updated=(action 'update')
                                    model="foo"
                                    preload=2
@@ -178,12 +178,12 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
     await clickTrigger();
   });
 
-  test('Uses given filters on query', async function(assert) {
+  test('Uses given filters on query', async function (assert) {
     assert.expect(9);
 
     set(this, 'filters', {
-      foo_eq:    'bar',
-      code_cont: 'test'
+      foo_eq: 'bar',
+      code_cont: 'test',
     });
 
     let queryExpects = (query) => {
@@ -197,7 +197,7 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
         assert.equal(modelName, 'foo', 'queries with given modelName');
         queryExpects(query);
         return;
-      }
+      },
     });
 
     await render(hbs`{{model-picker updated=(action 'update')
@@ -221,9 +221,9 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
     return settled();
   });
 
-  test('Sorts preloaded list using given sorting function', async function(assert) {
-    set(this, 'customSorting', function(a, b) {
-      return compare(get(a, 'name'), get(b, 'name'));
+  test('Sorts preloaded list using given sorting function', async function (assert) {
+    set(this, 'customSorting', function (a, b) {
+      return compare(a.name, b.name);
     });
 
     await render(hbs`{{model-picker updated=(action 'update')
@@ -237,14 +237,22 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
 
     let $items = $('.ember-power-select-dropdown li');
 
-    assert.equal($items[0].textContent.trim(), 'bar', 'preloaded item 1 sorted');
-    assert.equal($items[1].textContent.trim(), 'chad', 'preloaded item 2 sorted');
+    assert.equal(
+      $items[0].textContent.trim(),
+      'bar',
+      'preloaded item 1 sorted'
+    );
+    assert.equal(
+      $items[1].textContent.trim(),
+      'chad',
+      'preloaded item 2 sorted'
+    );
     await clickTrigger();
   });
 
-  test('Sorts queried list using given sorting function', async function(assert) {
-    set(this, 'customSorting', function(a, b) {
-      return compare(get(a, 'name'), get(b, 'name'));
+  test('Sorts queried list using given sorting function', async function (assert) {
+    set(this, 'customSorting', function (a, b) {
+      return compare(a.name, b.name);
     });
 
     await render(hbs`{{model-picker updated=(action 'update')
@@ -258,13 +266,21 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
 
     let $items = $('.ember-power-select-dropdown li');
 
-    assert.equal($items[0].textContent.trim(), 'bar', 'reloaded first item sorted');
+    assert.equal(
+      $items[0].textContent.trim(),
+      'bar',
+      'reloaded first item sorted'
+    );
     assert.equal(
       $items[1].textContent.trim(),
       'bar second',
       'reloaded second item sorted'
     );
-    assert.equal($items[2].textContent.trim(), 'chad', 'reloaded third item sorted');
+    assert.equal(
+      $items[2].textContent.trim(),
+      'chad',
+      'reloaded third item sorted'
+    );
     assert.equal(
       $items[3].textContent.trim(),
       'dave',
@@ -273,7 +289,7 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
     await clickTrigger();
   });
 
-  test('Shows selected item', async function(assert) {
+  test('Shows selected item', async function (assert) {
     set(this, 'currentFoo', EmberObject.create({ id: 6, name: 'bar test' }));
     await render(hbs`{{model-picker value=currentFoo
                                     updated=(action 'update')
@@ -286,13 +302,13 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
     await clickTrigger();
   });
 
-  test('selectAll true when already everything selected', async function(assert) {
+  test('selectAll true when already everything selected', async function (assert) {
     this.set('selection', [{}, {}, {}, {}]);
 
     this.set('store', {
       query() {
         return FOOS;
-      }
+      },
     });
 
     await render(hbs`{{model-picker value=selection
@@ -307,27 +323,25 @@ module('Integration | Component | {{model-picker}}', function(hooks) {
 
     let $selectAll = $('.auto-complete__select-all');
 
-    assert.equal(
+    assert.false(
       $selectAll[0].checked,
-      false,
       'not selected all when different value than content'
     );
     this.set('selection', FOOS);
-    assert.equal(
+    assert.true(
       $selectAll[0].checked,
-      true,
       'all selected when current value equals content'
     );
     await clickTrigger();
   });
 
-  test('selectAll does not show all selected values', async function(assert) {
+  test('selectAll does not show all selected values', async function (assert) {
     this.owner.register(
       'service:store',
       Service.extend({
         query() {
           return FOOS;
-        }
+        },
       })
     );
 

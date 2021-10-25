@@ -1,21 +1,24 @@
-import moment         from 'moment';
-import { get }        from '@ember/object';
-import PaperTextField from
-  'ember-railio-form-components/components/paper/text-field';
+import moment from 'moment';
+import { get } from '@ember/object';
+import PaperTextField from 'ember-railio-form-components/components/paper/text-field';
 
 export default PaperTextField.extend({
   layoutName: 'components/paper/input-field',
-  inputType:  'text',
-  lazy:       true,
+  inputType: 'text',
+  lazy: true,
   dateFormat: 'DD-MM-YYYY',
 
   keyDown(e) {
     let addValue;
-    let value = moment(get(this, 'value'), get(this, 'dateFormat'));
+    let value = moment(this.value, this.dateFormat);
     let scale = e.shiftKey ? 'month' : 'day';
 
-    if (e.key === 'ArrowUp')   { addValue = 1; }
-    if (e.key === 'ArrowDown') { addValue = -1; }
+    if (e.key === 'ArrowUp') {
+      addValue = 1;
+    }
+    if (e.key === 'ArrowDown') {
+      addValue = -1;
+    }
 
     if (addValue) {
       e.preventDefault();
@@ -37,13 +40,13 @@ export default PaperTextField.extend({
     }
 
     // Add a zero for shorthand: DMM => DDMM or DMMYY => DDMMYY
-    if ([3, 5].includes(get(value, 'length'))) {
+    if ([3, 5].includes(value.length)) {
       value = `0${value}`;
     }
 
-    let format  = get(this, 'dateFormat');
-    let _value  = moment(get(this, 'value'));
-    let hours   = _value.hours();
+    let format = this.dateFormat;
+    let _value = moment(this.value);
+    let hours = _value.hours();
     let minutes = _value.minute();
 
     return moment(value, format).add(hours, 'hours').add(minutes, 'minutes');
@@ -54,6 +57,6 @@ export default PaperTextField.extend({
       value = value === '' ? null : value;
 
       this._super(value, e, lazy);
-    }
-  }
+    },
+  },
 });

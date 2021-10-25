@@ -1,6 +1,5 @@
-import Component from 'ember-component';
-import formFieldOptions
-  from 'ember-railio-form-components/mixins/form-field-options';
+import Component from '@ember/component';
+import formFieldOptions from 'ember-railio-form-components/mixins/form-field-options';
 import layout from '../templates/components/date-time-field';
 
 export default Component.extend(formFieldOptions, {
@@ -9,13 +8,13 @@ export default Component.extend(formFieldOptions, {
 
   actions: {
     setDatetimeToCurrent() {
-      if (!this.get('disabled')) {
+      if (!this.disabled) {
         this.send('changed', new Date());
       }
     },
 
     clearDateTime() {
-      if (!this.get('disabled')) {
+      if (!this.disabled) {
         this.send('changed', null);
       }
     },
@@ -24,6 +23,6 @@ export default Component.extend(formFieldOptions, {
       if (typeof this.attrs.updated === 'function') {
         this.attrs.updated(value);
       }
-    }
-  }
+    },
+  },
 });

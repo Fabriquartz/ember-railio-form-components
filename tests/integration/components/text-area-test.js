@@ -1,20 +1,21 @@
 import { module, skip, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
-import EmberObject from 'ember-object';
+import EmberObject from '@ember/object';
 
 import hbs from 'htmlbars-inline-precompile';
-import run from 'ember-runloop';
+import { run } from '@ember/runloop';
 
-module('Integration | Component | {{text-area}}', function(hooks) {
+module('Integration | Component | {{text-area}}', function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     this.actions = {};
-    this.send = (actionName, ...args) => this.actions[actionName].apply(this, args);
+    this.send = (actionName, ...args) =>
+      this.actions[actionName].apply(this, args);
   });
 
-  test('renders a text-area with value', async function(assert) {
+  test('renders a text-area with value', async function (assert) {
     this.set('value', 'testing');
     await render(hbs`{{text-area value=value}}`);
 
@@ -25,7 +26,7 @@ module('Integration | Component | {{text-area}}', function(hooks) {
   });
 
   // Skipped because test fails on Travis, but runs locally
-  skip('Sizes with input', function(assert) {
+  skip('Sizes with input', function (assert) {
     let chromeTextAreaMargin = 4;
     let lineHeight = 25;
 
@@ -75,11 +76,11 @@ module('Integration | Component | {{text-area}}', function(hooks) {
     );
   });
 
-  test(`typing doesn't change value but sends updated`, async function(assert) {
+  test(`typing doesn't change value but sends updated`, async function (assert) {
     assert.expect(2);
 
     this.set('value', '');
-    this.actions.update = function(value) {
+    this.actions.update = function (value) {
       assert.equal(value, 'x', 'calls update function with new value');
     };
 
@@ -92,21 +93,25 @@ module('Integration | Component | {{text-area}}', function(hooks) {
       $input.trigger('input');
     });
 
-    assert.equal(this.get('value'), '');
+    assert.equal(this.value, '');
   });
 
-  test('works with form-field', async function(assert) {
+  test('works with form-field', async function (assert) {
     assert.expect(5);
 
     let person = EmberObject.create({
-      name: 'John White'
+      name: 'John White',
     });
 
     this.set('object', person);
 
-    this.actions.update = function(object, propertyPath, value) {
+    this.actions.update = function (object, propertyPath, value) {
       assert.equal(object, person, 'update function gets right object');
-      assert.equal(propertyPath, 'name', 'update function gets right propertyPath');
+      assert.equal(
+        propertyPath,
+        'name',
+        'update function gets right propertyPath'
+      );
       assert.equal(value, 'John Black', 'update function gets new value');
     };
 

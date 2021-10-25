@@ -1,14 +1,14 @@
-import Mixin from 'ember-metal/mixin';
-import get   from 'ember-metal/get';
-import set   from 'ember-metal/set';
+import Mixin from '@ember/object/mixin';
+import { get } from '@ember/object';
+import { set } from '@ember/object';
 
 function handleChanged(event) {
   let value = this.readDOMAttr('value');
 
   if (typeof this.sanitizeValue === 'function') {
     let originalValue = value;
-    let [input]         = this.$();
-    let caretPos      = input.selectionStart;
+    let [input] = this.$();
+    let caretPos = input.selectionStart;
 
     value = this.sanitizeValue(value);
 
@@ -24,7 +24,7 @@ function handleChanged(event) {
 export default Mixin.create({
   attributeBindings: ['_value:value', 'disabled', 'placeholder', 'name'],
 
-  input:  handleChanged,
+  input: handleChanged,
   change: handleChanged,
 
   focusIn() {
@@ -39,7 +39,7 @@ export default Mixin.create({
       this.attrs.focusOut();
     }
 
-    if (typeof get(this, 'format') === 'function') {
+    if (typeof this.format === 'function') {
       value = this.format(value);
       set(this, '_value', value);
     }
@@ -65,6 +65,7 @@ export default Mixin.create({
   },
 
   didReceiveAttrs() {
+    this._super();
     let value = this.getAttr('value');
     if (typeof this.formatValue === 'function') {
       value = this.formatValue(value);
@@ -77,6 +78,6 @@ export default Mixin.create({
       if (typeof this.attrs.updated === 'function') {
         this.attrs.updated(value, event);
       }
-    }
-  }
+    },
+  },
 });
